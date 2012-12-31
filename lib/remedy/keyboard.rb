@@ -1,5 +1,5 @@
-require_relative 'console'
-require_relative 'key'
+require 'remedy/console'
+require 'remedy/key'
 
 module Keyboard
   module_function

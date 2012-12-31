@@ -1,5 +1,5 @@
-require_relative 'keyboard'
-require_relative 'ansi'
+require 'remedy/keyboard'
+require 'remedy/ansi'
 
 class Interaction
   def initialize message = nil

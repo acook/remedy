@@ -1,0 +1,56 @@
+require 'view'
+require 'size'
+require 'content'
+
+class Viewport
+  def draw content, center = Size.new(0,0), header = [], footer = []
+    range = range_find content, center, content_size(header,footer)
+
+    if content.size.fits_into? range then
+      viewable_content = content
+    else
+      viewable_content = content.excerpt *range
+    end
+
+    view = View.new viewable_content, header, footer
+
+    ANSI.screen.safe_reset!
+    Console.output << view
+  end
+
+  def range_find map, center, heightwidth
+    row_size, col_size = heightwidth
+    row_limit, col_limit = map.size
+
+    center_row, center_col = center.coords
+
+    row_range = center_range center_row, row_size, row_limit
+    col_range = center_range center_col, col_size, col_limit
+    [row_range, col_range]
+  end
+
+  def content_size header, footer
+    trim = Size [header.length + footer.length, 0]
+    size - trim
+  end
+
+  def size
+    Size Console.size
+  end
+
+  def center_range center, width, limit
+    range_start = center - (width / 2)
+
+    if range_start + width > limit then
+      range_start = limit - width
+    end
+
+    if range_start < 0 then
+      range_start = 0
+    end
+
+    range_end = range_start + width
+
+    (range_start...range_end)
+  end
+end

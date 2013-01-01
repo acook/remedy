@@ -55,7 +55,7 @@ The Interaction object wraps raw keyboard reads and streamlines some aspects of 
 
 ### Viewport
 
-Viewport is the object that draws on your screen, you can give it any compatible Remedy::Patial object, or something that responds like one.
+Viewport is the object that draws on your screen, you can give it any compatible Remedy::Partial object, or something that responds like one.
 
 ```ruby
   include Remedy

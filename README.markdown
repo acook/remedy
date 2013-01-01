@@ -16,13 +16,13 @@ Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-  gem 'remedy'
+  gem 'remedy', '~> 0.0.4.pre'
 ```
 
 If you're only going to use part of Remedy, you can tell Bundler to not automatically require the whole thing:
 
 ```ruby
-  gem 'remedy', require: false
+  gem 'remedy', '~> 0.0.4.pre', require: false
 ```
 
 And then execute:
@@ -31,7 +31,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install remedy
+    $ gem install remedy --pre
 
 Usage
 -----

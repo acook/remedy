@@ -90,13 +90,13 @@ module Remedy
       raise "Different numbers of dimensions!" unless length == other_size.length
     end
   end
+end
 
-  def Size *sizeable
-    sizeable.flatten!
-    if sizeable.first.is_a? Size then
-      sizeable
-    else
-      Size.new sizeable
-    end
+def Size *sizeable
+  sizeable.flatten!
+  if sizeable.first.is_a? Remedy::Size then
+    sizeable
+  else
+    Remedy::Size.new sizeable
   end
 end

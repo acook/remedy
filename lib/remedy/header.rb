@@ -1,7 +1,7 @@
 require 'remedy/partial'
 
 module Remedy
-  class Header < Partial
+  class Header < Remedy::Partial
   end
 end
 

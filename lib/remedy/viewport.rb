@@ -19,9 +19,9 @@ module Remedy
       Console.output << view
     end
 
-    def range_find map, center, heightwidth
+    def range_find partial, center, heightwidth
       row_size, col_size = heightwidth
-      row_limit, col_limit = map.size
+      row_limit, col_limit = partial.size
 
       center_row, center_col = center.coords
 

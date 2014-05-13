@@ -40,11 +40,11 @@ Usage
 
 Remedy makes a few different classes and modules available to allow straight forward half-duplex communication with users via the console.
 
-There are obejcts for input as well as output, including low level console keystroke reads and screen drawing.
+There are objects for input as well as output, including low level console keystroke reads and screen drawing.
 
 ### Interaction
 
-The Interaction object wraps raw keyboard reads and streamlines some aspects of accepting keyboard input.
+The `Interaction` object wraps raw keyboard reads and streamlines some aspects of accepting keyboard input.
 
 ```ruby
   include Remedy
@@ -57,7 +57,7 @@ The Interaction object wraps raw keyboard reads and streamlines some aspects of 
 
 ### Viewport
 
-Viewport is the object that draws on your screen, you can give it any compatible Remedy::Partial object, or something that responds like one.
+`Viewport` is the object that draws on your screen, you can give it any compatible `Remedy::Partial` object, or something that responds like one.
 
 ```ruby
   include Remedy
@@ -69,7 +69,7 @@ Viewport is the object that draws on your screen, you can give it any compatible
   screen.draw joke
 ```
 
-Remedy::Partial has the subclasses Header, Footer, and Content.
+`Remedy::Partial` has the subclasses `Header`, `Footer`, and `Content`.
 
 You can use the above classes to divide your Views into 3 seperate pieces. Content will be truncated as needed to accomodate the header and footer and the dimensions of the console. You can also specify the cursor/scroll position of the content being drawn, and when specifying headers or footers, you must.
 
@@ -91,7 +91,7 @@ You can use the above classes to divide your Views into 3 seperate pieces. Conte
 
 ### Console
 
-If you want easy access to some lower level console commands, you can use Console.
+If you want easy access to some lower level console commands, you can use `Console`.
 
 The most interesting function in my opinion is the callback that gets triggered when the user resizes the console window.
 

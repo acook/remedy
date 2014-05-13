@@ -3,6 +3,8 @@ Remedy
 
 Remedy is a console interaction framework along the lines of Curses written in pure Ruby with an Object-Oriented approach and baked-in support for bulding MVC applications.
 
+[![TravisCI](http://img.shields.io/travis/acook/remedy.svg?style=flat)](https://travis-ci.org/acook/remedy)
+
 THIS SOFTWARE IS PRE-ALPHA!!
 ----------------------------
 

@@ -37,6 +37,16 @@ module Remedy
       %x{stty -raw echo 2> /dev/null}
     end
 
+    def columns
+      size.last
+    end
+    alias_method :width, :columns
+    
+    def rows
+      size.first
+    end
+    alias_method :height, :rows
+
     def size
       str = [0, 0, 0, 0].pack('SSSS')
       if input.ioctl(TIOCGWINSZ, str) >= 0 then

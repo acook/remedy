@@ -24,7 +24,6 @@ module Remedy
 
     def parse sequence
       key = Key.new sequence
-      $log.debug("Key read", key) unless $log.nil?
 
       if raise_on_control_c? && key.control_c? then
         raise ControlC, "User pressed Control-C"

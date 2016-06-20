@@ -9,11 +9,11 @@ module Remedy
     module_function
 
     def input
-      STDIN
+      @input ||= $stdin
     end
 
     def output
-      STDOUT
+      @output ||= $stdout
     end
 
     def raw
@@ -41,7 +41,7 @@ module Remedy
       size.last
     end
     alias_method :width, :columns
-    
+
     def rows
       size.first
     end

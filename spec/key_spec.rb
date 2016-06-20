@@ -29,7 +29,7 @@ describe Remedy::Key do
       expect(key.nonprintable?).to be(true)
     end
   end
-  
+
   describe '#sequence?' do
     it 'indicates if the key is a multibyte sequence' do
       expect(key.sequence?).to be(true)

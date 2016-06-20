@@ -33,8 +33,6 @@ module Remedy
     def cooked!
       input.echo = true
       input.cooked!
-    rescue NoMethodError
-      %x{stty -raw echo 2> /dev/null}
     end
 
     def columns

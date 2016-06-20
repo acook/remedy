@@ -1,7 +1,4 @@
 require 'remedy/partial'
 
-module Remedy
-  class Footer < Remedy::Partial
-  end
+class Remedy::Footer < Remedy::Partial
 end
-

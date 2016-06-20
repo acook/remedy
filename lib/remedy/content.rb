@@ -1,4 +1,4 @@
 require 'remedy/partial'
 
-class Content < Remedy::Partial
+class Remedy::Content < Remedy::Partial
 end

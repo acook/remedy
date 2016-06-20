@@ -1,4 +1,4 @@
-require 'remedy/console_resized'
+require 'remedy/console_resize'
 
 module Remedy
   module Console
@@ -21,7 +21,6 @@ module Remedy
       result = yield
     ensure
       cooked!
-
       return result
     end
 
@@ -59,7 +58,7 @@ module Remedy
     end
 
     def set_console_resized_hook!
-      ConsoleResized.set_console_resized_hook! do
+      Console::Resize.set_console_resized_hook! do
         yield
       end
     end

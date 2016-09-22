@@ -1,14 +1,9 @@
 Remedy
 ======
 
-Remedy is a console interaction framework along the lines of Curses written in pure Ruby with an Object-Oriented approach and baked-in support for bulding MVC applications.
+Remedy is a console interaction framework along the lines of Curses written in pure Ruby with an Object-Oriented approach and well-seperated concerns making it easy to use what you need and ignore the rest.
 
 [![TravisCI](http://img.shields.io/travis/acook/remedy.svg?style=flat)](https://travis-ci.org/acook/remedy)
-
-THIS SOFTWARE IS PRE-ALPHA!!
-----------------------------
-
-It's under active development and is being used in my own projects. However, expect bugs, missing features, etc.
 
 If you have any suggestions or find any bugs, drop them in GitHub/issues so I can keep track of them. Thanks!
 
@@ -18,13 +13,13 @@ Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-  gem 'remedy', '~> 0.0.4.pre'
+  gem 'remedy'
 ```
 
 If you're only going to use part of Remedy, you can tell Bundler to not automatically require the whole thing:
 
 ```ruby
-  gem 'remedy', '~> 0.0.4.pre', require: false
+  gem 'remedy', require: false
 ```
 
 And then execute:
@@ -33,7 +28,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install remedy --pre
+    $ gem install remedy
 
 Usage
 -----

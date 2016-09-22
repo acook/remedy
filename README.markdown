@@ -4,6 +4,7 @@ Remedy
 Remedy is a console interaction framework along the lines of Curses written in pure Ruby with an Object-Oriented approach and well-seperated concerns making it easy to use what you need and ignore the rest.
 
 [![TravisCI](http://img.shields.io/travis/acook/remedy.svg?style=flat)](https://travis-ci.org/acook/remedy)
+[![Code Climate](https://codeclimate.com/github/acook/remedy/badges/gpa.svg)](https://codeclimate.com/github/acook/remedy)
 
 If you have any suggestions or find any bugs, drop them in GitHub/issues so I can keep track of them. Thanks!
 

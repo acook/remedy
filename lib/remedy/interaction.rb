@@ -63,5 +63,12 @@ module Remedy
         yield key
       end
     end
+
+    def get_key
+      print " -- #{message}" if message
+
+      ANSI.cursor.hide!
+      key = Keyboard.get
+    end
   end
 end

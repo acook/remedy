@@ -7,9 +7,10 @@ Gem::Specification.new do |gem|
   gem.name          = "remedy"
   gem.version       = Remedy::VERSION
   gem.authors       = ["Anthony M. Cook"]
-  gem.email         = ["anthonymichaelcook@gmail.com"]
-  gem.description   = %q{Pure Ruby console interaction library in the vein of Curses with baked-in MVC support.}
-  gem.summary       = %q{MVC Console Interaction Library}
+  gem.email         = ["github@anthonymcook.com"]
+  gem.description   = %q{Pure Ruby console interaction library in the vein of Curses with MVC-style seperation of concerns.}
+  gem.summary       = %q{Pure Ruby Console Interaction Library}
+  gem.licenses      = ['MIT']
   gem.homepage      = "http://github.com/acook/remedy"
 
   gem.files         = `git ls-files`.split($/)

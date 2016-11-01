@@ -56,7 +56,7 @@ module Remedy
     end
 
     def sequence?
-      @sequence ||= raw.legnth > 1
+      @sequence ||= raw.length > 1
     end
 
     def to_s

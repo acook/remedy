@@ -119,7 +119,7 @@ module Remedy
         177.chr => :backspace
       }
       (?a..?z).each.with_index do |letter, index|
-        control_chars.merge({index.chr => "control_#{letter}".to_sym})
+        control_chars.merge!({(index + 1).chr => "control_#{letter}".to_sym})
       end
 
       control_chars

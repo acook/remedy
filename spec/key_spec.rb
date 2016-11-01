@@ -2,13 +2,13 @@ require_relative 'spec_helper'
 require 'remedy/key'
 
 describe Remedy::Key do
-  subject(:key){ described_class.new up }
+  subject(:key){ described_class.new keypress }
 
-  let(:up){ "\e[A" }
+  let(:keypress){ "\e[A" }
 
   describe '#raw' do
     it 'gives the same sequence it was initialized with' do
-      expect(key.raw).to equal(up)
+      expect(key.raw).to equal(keypress)
     end
   end
 
@@ -24,15 +24,23 @@ describe Remedy::Key do
     end
   end
 
-  describe '#special?' do
-    it 'indicates if the key is a special multibyte sequence' do
+  describe '#nonprintable?' do
+    it 'indicates that a keypress is a nonprintable character or sequence' do
       expect(key.nonprintable?).to be(true)
     end
   end
 
   describe '#sequence?' do
-    it 'indicates if the key is a multibyte sequence' do
+    it 'determines if a keypress is an escape sequence' do
       expect(key.sequence?).to be(true)
+    end
+  end
+
+  describe 'control characters' do
+    let(:keypress){ 3.chr }
+
+    it 'recognizes control c' do
+      expect(key.control_c?).to be(true)
     end
   end
 end

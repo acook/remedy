@@ -31,7 +31,7 @@ module Remedy
     end
 
     def whitespace
-      {
+      @whitespace ||= {
         ?\s => :space,
         ?\t => :tab,
         ?\r => :carriage_return,
@@ -40,7 +40,7 @@ module Remedy
     end
 
     def numeric
-      {
+      @numeric ||= {
         ?0 => :zero,
         ?1 => :one,
         ?2 => :two,
@@ -55,7 +55,7 @@ module Remedy
     end
 
     def punctuation
-      {
+      @punctuation ||= {
         '.' => :period,
         ',' => :comma,
         ':' => :colon,
@@ -92,7 +92,7 @@ module Remedy
     end
 
     def directional
-      {
+      @directional ||= {
         "\e[A" => :up,
         "\e[B" => :down,
         "\e[D" => :left,
@@ -101,7 +101,7 @@ module Remedy
     end
 
     def escape
-      {
+      @escape ||= {
         "\e" => :escape,
 
         "\e[3~" => :delete

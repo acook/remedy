@@ -8,6 +8,6 @@ describe Remedy::Viewport do
     joke << "A: Purple, because ice cream has no bones!"
 
     screen = ::Remedy::Viewport.new
-    screen.draw joke
+    screen.draw joke unless ENV['CI']
   end
 end

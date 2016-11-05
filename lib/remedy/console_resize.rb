@@ -1,5 +1,10 @@
+# Using this syntax instead of Remedy::Console::Resize
+# because this file doesn't actually rely on any other file
+# so it can be use completely in isolation
 module Remedy; module Console; module Resize
   module_function
+  include Contracts::Core
+  include Contracts::Builtin
 
   def resizing?
     @resize_count > 0
@@ -21,6 +26,7 @@ module Remedy; module Console; module Resize
     @resize_count == 1
   end
 
+  Contract Proc => Any
   def set_console_resized_hook!
     @resize_count = 0
 

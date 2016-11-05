@@ -1,9 +1,13 @@
+require 'contracts'
 require 'remedy/console'
 
 module Remedy
   module ANSI
     module_function
+    include Contracts::Core
+    include Contracts::Builtin
 
+    Contract Args[Or[String,ArrayOf[String]]] => Any
     def push *sequences
       Console.output << sequences.join('')
     end

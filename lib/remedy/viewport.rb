@@ -1,3 +1,4 @@
+require 'contracts'
 require 'remedy/view'
 require 'remedy/size'
 require 'remedy/content'
@@ -6,6 +7,9 @@ require 'remedy/ansi'
 
 module Remedy
   class Viewport
+    include Contracts::Core
+    include Contracts::Builtin
+
     def draw content, center = Size.new(0,0), header = [], footer = []
       range = range_find content, center, content_size(header,footer)
 
@@ -21,6 +25,7 @@ module Remedy
       Console.output << view
     end
 
+    Contract Partial, Size, Size => ArrayOf[Range]
     def range_find partial, center, heightwidth
       row_size, col_size = heightwidth
       row_limit, col_limit = partial.size

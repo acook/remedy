@@ -117,7 +117,6 @@ module Remedy
         up(lines) + to_column(0)
       end
 
-
       def home!
         pushesc code[:home]
       end
@@ -139,7 +138,7 @@ module Remedy
       end
 
       def beginning_of_line!
-        to_column! 0
+        to_column 0
       end
 
     end

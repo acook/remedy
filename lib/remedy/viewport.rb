@@ -1,6 +1,8 @@
 require 'remedy/view'
 require 'remedy/size'
 require 'remedy/content'
+require 'remedy/console'
+require 'remedy/ansi'
 
 module Remedy
   class Viewport
@@ -23,7 +25,7 @@ module Remedy
       row_size, col_size = heightwidth
       row_limit, col_limit = partial.size
 
-      center_row, center_col = center.coords
+      center_row, center_col = center
 
       row_range = center_range center_row, row_size, row_limit
       col_range = center_range center_col, col_size, col_limit

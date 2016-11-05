@@ -30,7 +30,7 @@ module Remedy
     end
 
     def width
-      @width ||= lines.max{|line| line.length }
+      @width ||= lines.max{|line| line.length }.length
     end
 
     def size

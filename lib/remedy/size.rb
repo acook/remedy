@@ -1,5 +1,11 @@
+require 'contracts'
+
 module Remedy
   class Size
+    include Contracts::Core
+    include Contracts::Builtin
+
+    Contract Args[Or[Num, ArrayOf[Num], Range, ArrayOf[Range]]] => Any
     def initialize *new_dimensions
       new_dimensions.flatten!
       if new_dimensions.first.is_a? Range then

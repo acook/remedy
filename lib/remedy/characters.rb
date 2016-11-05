@@ -66,7 +66,7 @@ module Remedy
         '`' => :back_quote,
 
         '[' => :left_bracket,
-        ']' => :right_bracked,
+        ']' => :right_bracket,
         '(' => :left_paren,
         ')' => :right_paren,
 

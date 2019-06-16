@@ -4,7 +4,14 @@ module Remedy
   module Console
     require 'io/console'
 
-    TIOCGWINSZ = 0x40087468
+    TIOCGWINSZ = case RbConfig::CONFIG['host_os']
+      when /darwin|mac os/
+        0x40087468
+      when /linux/
+        0x5413
+      else
+        0x00
+      end
 
     module_function
 

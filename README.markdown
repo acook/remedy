@@ -103,6 +103,17 @@ The most interesting function in my opinion is the callback that gets triggered 
   end
 ```
 
+Remedy in the Wild
+------------------
+
+Remedy was originaly written for my own console-based game which was sort of like Dwarf Fortress. Most of the project files were lost, but since Remedy was extracted from it and open-sourced it has lived on.
+
+Here are a couple of projects that use many of Remedy's features:
+- A multiplayer Yahtzee for web and console: [YahtzeeGame](https://github.com/ProgrammingPractice/YahtzeeGame)
+- Twitter/RSS/Facebook reader: [noizee](https://github.com/acook/noizee)
+
+Check them out for some full examples of usage!
+
 Contributing
 ------------
 

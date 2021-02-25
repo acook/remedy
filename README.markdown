@@ -6,7 +6,7 @@ Remedy is a console interaction framework along the lines of Curses written in p
 [![Gem Version](https://img.shields.io/gem/v/remedy.svg?style=for-the-badge)](https://rubygems.org/gems/remedy)
 [![Gem Downloads](https://img.shields.io/gem/dt/remedy.svg?style=for-the-badge)](https://rubygems.org/gems/remedy)
 [![Build Status](https://img.shields.io/travis/acook/remedy.svg?style=for-the-badge)](https://travis-ci.org/acook/remedy)
-[![Maintainability](https://api.codeclimate.com/v1/badges/f41c7d548131948c1e78/maintainability)](https://codeclimate.com/github/acook/remedy/maintainability)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/acook/remedy?style=for-the-badge)](https://codeclimate.com/github/acook/remedy/maintainability)
 
 
 If you have any suggestions or find any bugs, drop them in GitHub/issues so I can keep track of them. Thanks!

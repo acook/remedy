@@ -1,3 +1,5 @@
+require 'bundler'
+Bundler.require
 require 'remedy'
 
 include Remedy
@@ -36,7 +38,7 @@ screen.draw jokes, Size.new(0,0), title, disclaimer
 user_input.get_key
 
 ANSI.cursor.next_line!
-loop_demo = Interaction.new "press q to exit, or any other key to display it\n"
+loop_demo = Interaction.new "press q to exit, or any other key to display that key's name\n"
 loop_demo.loop do |key|
   ANSI.cursor.beginning_of_line!
   ANSI.command.clear_line!

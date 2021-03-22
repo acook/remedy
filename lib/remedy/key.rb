@@ -55,6 +55,10 @@ module Remedy
       !!Characters[seq]
     end
 
+    def unknown?
+      !Characters[seq]
+    end
+
     def single?
       raw.length == 1
     end

@@ -68,7 +68,7 @@ module Remedy
     end
 
     def to_s
-      @to_s ||= name.to_s
+      @to_s ||= known? ? name.to_s : enc
     end
 
     def value

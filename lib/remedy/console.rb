@@ -42,19 +42,19 @@ module Remedy
     end
 
     def columns
-      size.last
+      size.cols
     end
     alias_method :width, :columns
 
     def rows
-      size.first
+      size.rows
     end
     alias_method :height, :rows
 
     def size
       str = [0, 0, 0, 0].pack('SSSS')
       if input.ioctl(TIOCGWINSZ, str) >= 0 then
-        str.unpack('SSSS').first 2
+        Size.new str.unpack('SSSS').first 2
       else
         raise UnknownConsoleSize, "Unable to get console size"
       end

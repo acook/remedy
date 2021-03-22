@@ -39,12 +39,13 @@ module Remedy
     end
 
     def rows
-      dimensions.first
+      dimensions[0]
     end
 
     def cols
       dimensions[1]
     end
+    alias :columns :cols
 
     def [] index
       dimensions[index]

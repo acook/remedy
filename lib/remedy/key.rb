@@ -110,7 +110,7 @@ module Remedy
       elsif gremlin? then
         Characters.gremlins[name]
       else
-        known? ? name : ""
+        known? ? name : "\u25A1"
       end
     end
   end

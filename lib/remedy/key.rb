@@ -15,6 +15,10 @@ module Remedy
       seq
     end
 
+    def enc
+      seq.dump[1..-2]
+    end
+
     def name
       @name ||= Characters[seq] || :unknown
     end
@@ -49,6 +53,10 @@ module Remedy
 
     def recognized?
       @recognized ||= name != :unknown
+    end
+
+    def known?
+      !!Characters[seq]
     end
 
     def single?

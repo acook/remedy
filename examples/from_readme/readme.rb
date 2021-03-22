@@ -6,10 +6,11 @@ include Remedy
 
 screen = Viewport.new
 
-notice = Content.new
-notice << "You just resized your screen!\n\nBrilliant!"
+Console.set_console_resized_hook! do |size|
+  notice = Content.new
+  notice << "You just resized your screen!\n\nNew size:"
+  notice << size
 
-Console.set_console_resized_hook! do
   screen.draw notice
 end
 
@@ -38,11 +39,12 @@ screen.draw jokes, Size.new(0,0), title, disclaimer
 user_input.get_key
 
 ANSI.cursor.next_line!
+keys = Content.new
 loop_demo = Interaction.new "press q to exit, or any other key to display that key's name\n"
 loop_demo.loop do |key|
-  ANSI.cursor.beginning_of_line!
-  ANSI.command.clear_line!
-  puts key
+  keys << key
+
+  screen.draw keys
   break if key == ?q
 end
 

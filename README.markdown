@@ -1,7 +1,7 @@
 Remedy
 ======
 
-Remedy is a console interaction framework along the lines of Curses written in pure Ruby with an Object-Oriented approach and well-seperated concerns making it easy to use what you need and ignore the rest.
+Remedy is a console interaction framework along the lines of Curses written in pure Ruby. It is modular, making it easy to use what you need and ignore the rest.
 
 [![Gem Version](https://img.shields.io/gem/v/remedy.svg?style=for-the-badge)](https://rubygems.org/gems/remedy)
 [![Gem Downloads](https://img.shields.io/gem/dt/remedy.svg?style=for-the-badge)](https://rubygems.org/gems/remedy)
@@ -45,6 +45,8 @@ There are objects for input as well as output, including low level console keyst
 
 The `Interaction` object wraps raw keyboard reads and streamlines some aspects of accepting keyboard input.
 
+For instance to get a keypress from the terminal and display it:
+
 ```ruby
   include Remedy
   user_input = Interaction.new
@@ -70,7 +72,7 @@ The `Interaction` object wraps raw keyboard reads and streamlines some aspects o
 
 `Remedy::Partial` has the subclasses `Header`, `Footer`, and `Content`.
 
-You can use the above classes to divide your Views into 3 seperate pieces. Content will be truncated as needed to accomodate the header and footer and the dimensions of the console. You can also specify the cursor/scroll position of the content being drawn, and when specifying headers or footers, you must.
+You can use the above classes to divide your Views into 3 separate pieces. Content will be truncated as needed to accommodate the header and footer and the dimensions of the console. You can also specify the cursor/scroll position of the content being drawn, and when specifying headers or footers, you must.
 
 ```ruby
   include Remedy
@@ -98,10 +100,11 @@ The most interesting function in my opinion is the callback that gets triggered 
   include Remedy
 
   screen = Viewport.new
-  notice = Content.new
-  notice << "You just resized your screen!\n\nBrilliant!"
 
-  Console.set_console_resized_hook! do
+  Console.set_console_resized_hook! do |size|
+    notice = Content.new
+    notice << "You just resized your screen!\n\nNew size:"
+    notice << size
     screen.draw notice
   end
 ```
@@ -109,13 +112,18 @@ The most interesting function in my opinion is the callback that gets triggered 
 Remedy in the Wild
 ------------------
 
-Remedy was originaly written for my own console-based game which was sort of like Dwarf Fortress. Most of the project files were lost, but since Remedy was extracted from it and open-sourced it has lived on.
+Remedy was originally written for my own console-based game which was sort of like Dwarf Fortress. Most of the project files were lost, but since Remedy was extracted from it and open-sourced it has lived on.
 
 Here are a couple of projects that use many of Remedy's features:
 - A multiplayer Yahtzee for web and console: [YahtzeeGame](https://github.com/ProgrammingPractice/YahtzeeGame)
 - Twitter/RSS/Facebook reader: [noizee](https://github.com/acook/noizee)
 
-Check them out for some full examples of usage!
+Check them out!
+
+Examples
+--------
+
+The `examples` directory has a couple of running implementations to get you started!
 
 Contributing
 ------------

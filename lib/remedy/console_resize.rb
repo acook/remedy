@@ -1,6 +1,9 @@
 module Remedy; module Console; module Resize
   module_function
 
+  # this needs to be a global object since we can only trap SIGWINCH for 1 terminal per process AFAIK
+  # using module_function because there's not a lot of clear ways to implement this pattern in Ruby
+
   def resizing?
     @resize_count > 0
   end
@@ -21,7 +24,7 @@ module Remedy; module Console; module Resize
     @resize_count == 1
   end
 
-  def set_console_resized_hook!
+  def set_hook!
     @resize_count = 0
 
     Signal.trap 'SIGWINCH' do
@@ -41,7 +44,7 @@ module Remedy; module Console; module Resize
     end
   end
 
-  def default_console_resized_hook!
+  def unset_hook!
     Signal.trap 'SIGWINCH', 'DEFAULT'
   end
 end; end; end

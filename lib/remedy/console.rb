@@ -65,8 +65,8 @@ module Remedy
     end
 
     def set_console_resized_hook!
-      Console::Resize.set_console_resized_hook! do |*args|
-        yield *args
+      Console::Resize.set_hook! do |*args|
+        yield(*args)
       end
     end
 

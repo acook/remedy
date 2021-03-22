@@ -115,6 +115,7 @@ module Remedy
     end
   end
 
+  # use this to wrap keypresses that you get from outside of Remedy
   def Key object
     if object.is_a? Key then
       object

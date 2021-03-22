@@ -1,12 +1,23 @@
+require 'bundler'
+Bundler.require
 require 'remedy'
 
 class Menu
   include Remedy
 
+  def initialize
+    @viewport = Viewport.new
+  end
+
   # will do basic setup and then loop over user input
   def listen
+    # get the screen in a reliable state and clear it
+    ANSI.screen.safe_reset!
+    ANSI.cursor.home!
+    ANSI.command.clear_screen!
+
     # if the user resizes the screen we redraw it to fit the new dimensions
-    Console.set_console_resized_hook! do
+    Console.set_console_resized_hook! do |size|
       draw
     end
 
@@ -28,12 +39,15 @@ class Menu
 
   # this tells the Viewport to draw to the screen
   def draw
-    Viewport.new.draw content, Size([0,0]), header, footer
+    @viewport.draw content, Size([0,0]), header, footer
   end
 
   # this is the body of our menu, it will be squished if the terminal is too small
   def content
-    c = Partial.new
+    # this creates a new content every time we draw
+    # you may want to only create a new content/header/footer when they change
+    # or create your own Partial subclass
+    c = Content.new
     c << <<-CONTENT
 
     1. Do the thing
@@ -52,7 +66,7 @@ class Menu
 
   # footers are displayed the bottom of the viewport
   def footer
-    Footer.new << "You pressed: #{@last_key}"
+    Footer.new << "Screen size: #{Console.size} You pressed: #{@last_key}"
   end
 end
 

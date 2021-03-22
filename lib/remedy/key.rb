@@ -20,39 +20,39 @@ module Remedy
     end
 
     def name
-      @name ||= Characters[seq] || :unknown
+      Characters[seq] || :unknown
     end
 
     def glyph
-      @glyph ||= get_glyph
+      get_glyph
     end
 
     def printable?
-      @printable ||= !!Characters.printable[seq]
+      !!Characters.printable[seq]
     end
 
     def nonprintable?
-      @nonprintable ||= !!Characters.nonprintable[seq]
+      !!Characters.nonprintable[seq]
     end
 
     def control?
-      @control ||= !!Characters.control[seq]
+      !!Characters.control[seq]
     end
 
     def punctuation?
-      @control ||= !!Characters.punctuation[seq]
+      !!Characters.punctuation[seq]
     end
 
     def gremlin?
-      @gremlin ||= !!Characters.gremlins[name]
+      !!Characters.gremlins[name]
     end
 
     def control_c?
-      @control_c ||= seq == Characters.control.key(:control_c)
+      seq == Characters.control.key(:control_c)
     end
 
     def recognized?
-      @recognized ||= name != :unknown
+      name != :unknown
     end
 
     def known?
@@ -60,15 +60,15 @@ module Remedy
     end
 
     def single?
-      @single ||= raw.length == 1
+      raw.length == 1
     end
 
     def sequence?
-      @sequence ||= raw.length > 1
+      raw.length > 1
     end
 
     def to_s
-      @to_s ||= known? ? name.to_s : enc
+      known? ? name.to_s : enc
     end
 
     def value

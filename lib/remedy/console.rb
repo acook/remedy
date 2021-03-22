@@ -16,11 +16,11 @@ module Remedy
     module_function
 
     def input
-      @input ||= $stdin
+      $stdin
     end
 
     def output
-      @output ||= $stdout
+      $stdout
     end
 
     def raw

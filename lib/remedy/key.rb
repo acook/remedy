@@ -51,10 +51,6 @@ module Remedy
       seq == Characters.control.key(:control_c)
     end
 
-    def recognized?
-      name != :unknown
-    end
-
     def known?
       !!Characters[seq]
     end
@@ -110,7 +106,7 @@ module Remedy
       elsif gremlin? then
         Characters.gremlins[name]
       else
-        recognized? ? name : ''
+        known? ? name : ""
       end
     end
   end

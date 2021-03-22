@@ -27,25 +27,25 @@ module Remedy
 
       if raise_on_control_c? && key.control_c? then
         raise ControlC, "User pressed Control-C"
-      elsif key.recognized? then
+      elsif key.known? then
         key
-      elsif raise_on_unrecognized_key? then
-        raise UnrecognizedInput, %Q{Unknown key or byte sequence: "#{sequence}" : #{key.inspect}}
+      elsif raise_on_unknown_key? then
+        raise UnknownInput, %Q{Unknown key or byte sequence: "#{sequence}" : #{key.inspect}}
       else
         key
       end
     end
 
-    def raise_on_unrecognized_key?
-      @raise_on_unrecognized_key
+    def raise_on_unknown_key?
+      @raise_on_unknown_key
     end
 
-    def raise_on_unrecognized_key!
-      @raise_on_unrecognized_key = true
+    def raise_on_unknown_key!
+      @raise_on_unknown_key = true
     end
 
-    def dont_raise_on_unrecognized_key!
-      @raise_on_unrecognized_key = false
+    def dont_raise_on_unknown_key!
+      @raise_on_unknown_key = false
     end
 
     def raise_on_control_c?
@@ -61,6 +61,6 @@ module Remedy
     end
 
     class ControlC < Interrupt; end
-    class UnrecognizedInput < IOError; end
+    class UnknownInput < IOError; end
   end
 end

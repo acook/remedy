@@ -24,18 +24,21 @@ module Remedy; module Console; module Resize
   def set_console_resized_hook!
     @resize_count = 0
 
-    command = lambda { |x|
+    Signal.trap 'SIGWINCH' do
       resizing!
-      sleep 0.25
 
       if resized? then
-        yield
+        begin
+          yield Console.size
+        rescue Exception => ex
+          # Ruby will eat *any* errors inside a trap,
+          # so we need to expose them for debuggability
+          p ex
+        end
       end
 
       resized!
-    }
-
-    Signal.trap 'SIGWINCH', command
+    end
   end
 
   def default_console_resized_hook!

@@ -14,6 +14,7 @@ module Remedy
 
     def << line
       reset_width!
+      line = "#{line}" # opportunistically convert any object into a string
       @lines += clean line unless line.nil? || line.empty?
     end
 
@@ -64,7 +65,7 @@ module Remedy
     end
 
     def split line
-      line.split /\r\n|\n\r|\n|\r/
+      line.split(/\r\n|\n\r|\n|\r/)
     end
   end
 end

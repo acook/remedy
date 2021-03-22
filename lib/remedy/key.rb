@@ -104,13 +104,13 @@ module Remedy
 
     protected
 
-    def get_glyph
+    def get_glyph default = "\u25A1"
       if punctuation? then
         seq
       elsif gremlin? then
         Characters.gremlins[name]
       else
-        known? ? name : "\u25A1"
+        known? ? name : default
       end
     end
   end

@@ -2,8 +2,7 @@ require 'remedy/characters'
 
 module Remedy
   class Key
-
-    def initialize character_sequence
+    def initialize(character_sequence)
       @character_sequence = character_sequence
     end
 
@@ -80,22 +79,20 @@ module Remedy
       "<#{self.class} #{name.inspect} value:#{value} glyph:#{glyph}>"
     end
 
-    def == key
-      if key.respond_to? :raw then
-        key.raw == raw
+    def ==(other)
+      if other.respond_to? :raw
+        other.raw == raw
       else
-        "#{raw}" == "#{key}"
+        raw.to_s == other.to_s
       end
     end
 
-    def eql? key
-      if key.is_a? self.class then
-        self == key
-      end
+    def eql?(other)
+      self == other if other.is_a? self.class
     end
 
-    def === object
-      "#{object}" =~ /#{to_s}/i
+    def ===(object)
+      object.to_s =~ /#{self}/i
     end
 
     def hash
@@ -105,9 +102,9 @@ module Remedy
     protected
 
     def get_glyph
-      if punctuation? then
+      if punctuation?
         seq
-      elsif gremlin? then
+      elsif gremlin?
         Characters.gremlins[name]
       else
         recognized? ? name : ''
@@ -115,8 +112,8 @@ module Remedy
     end
   end
 
-  def Key object
-    if object.is_a? Key then
+  def Key(object)
+    if object.is_a? Key
       object
     else
       Key.new object

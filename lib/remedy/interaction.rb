@@ -3,18 +3,18 @@ require 'remedy/ansi'
 
 module Remedy
   class Interaction
-    def initialize message = nil
+    def initialize(message = nil)
       @message = message
     end
 
     attr_accessor :message
 
-    def confirm message = 'Confirm?'
+    def confirm(message = 'Confirm?')
       ANSI.cursor.home!
       ANSI.command.clear_line!
 
       print message, ' y/n '
-      if Keyboard.get === :y then
+      if Keyboard.get === :y
         yield if block_given?
         true
       else
@@ -28,7 +28,7 @@ module Remedy
         ANSI.command.clear_down!
         ANSI.cursor.show!
 
-        puts " -- Bye!"
+        puts ' -- Bye!'
         exit
       end
     end
@@ -38,7 +38,7 @@ module Remedy
       binding.pry
     end
 
-    def display key
+    def display(key)
       ANSI.command.clear_line!
       print " -- You pressed: #{key.inspect}"
     end
@@ -52,10 +52,10 @@ module Remedy
         ANSI.cursor.hide!
         key = Keyboard.get
 
-        if key == ?\C-q then
+        if key == ?\C-q
           display key
           quit!
-        elsif key == ?\C-d and defined? Pry then
+        elsif key == ?\C-d and defined? Pry
           display key
           debug!
         end

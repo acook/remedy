@@ -2,9 +2,9 @@ require_relative 'spec_helper'
 require 'remedy/key'
 
 describe Remedy::Key do
-  subject(:key){ described_class.new keypress }
+  subject(:key) { described_class.new keypress }
 
-  let(:keypress){ "\e[A" }
+  let(:keypress) { "\e[A" }
 
   describe '#raw' do
     it 'gives the same sequence it was initialized with' do
@@ -37,7 +37,7 @@ describe Remedy::Key do
   end
 
   describe 'control characters' do
-    let(:keypress){ 3.chr }
+    let(:keypress) { 3.chr }
 
     it 'recognizes control c' do
       expect(key.control_c?).to be(true)

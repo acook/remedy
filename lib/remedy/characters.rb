@@ -2,7 +2,7 @@ module Remedy
   module Characters
     module_function
 
-    def [] sequence_to_match
+    def [](sequence_to_match)
       all[sequence_to_match]
     end
 
@@ -32,25 +32,25 @@ module Remedy
 
     def whitespace
       @whitespace ||= {
-        ?\s => :space,
-        ?\t => :tab,
-        ?\r => :carriage_return,
-        ?\n => :line_feed
+        "\s" => :space,
+        "\t" => :tab,
+        "\r" => :carriage_return,
+        "\n" => :line_feed
       }
     end
 
     def numeric
       @numeric ||= {
-        ?0 => :zero,
-        ?1 => :one,
-        ?2 => :two,
-        ?3 => :three,
-        ?4 => :four,
-        ?5 => :five,
-        ?6 => :six,
-        ?7 => :seven,
-        ?8 => :eight,
-        ?9 => :nine
+        '0' => :zero,
+        '1' => :one,
+        '2' => :two,
+        '3' => :three,
+        '4' => :four,
+        '5' => :five,
+        '6' => :six,
+        '7' => :seven,
+        '8' => :eight,
+        '9' => :nine
       }
     end
 
@@ -78,11 +78,11 @@ module Remedy
         '!' => :bang,
         '?' => :query,
 
-        '|'       => :solid_pipe,
-        "\u00A6"  => :broken_pipe,
+        '|' => :solid_pipe,
+        "\u00A6" => :broken_pipe,
 
-        '/'  => :forward_slash,
-        "\\" => :back_slash
+        '/' => :forward_slash,
+        '\\' => :back_slash
       }
     end
 
@@ -118,8 +118,8 @@ module Remedy
         127.chr => :delete,
         177.chr => :backspace
       }
-      (?a..?z).each.with_index do |letter, index|
-        control_chars.merge!({(index + 1).chr => "control_#{letter}".to_sym})
+      ('a'..'z').each.with_index do |letter, index|
+        control_chars.merge!({ (index + 1).chr => "control_#{letter}".to_sym })
       end
 
       control_chars
@@ -129,10 +129,10 @@ module Remedy
 
     def gremlins
       {
-        space:           "\u2420",
-        tab:             "\u21B9",
+        space: "\u2420",
+        tab: "\u21B9",
         carriage_return: "\u23CE",
-        line_feed:       "\u240A",
+        line_feed: "\u240A",
 
         control_c: "\u2404",
         control_d: "\u2403",
@@ -141,11 +141,11 @@ module Remedy
         escape: "\u238B",
 
         backspace: "\u2408",
-        delete:    "\u232B",
+        delete: "\u232B",
 
-        up:    "\u2191",
-        down:  "\u2193",
-        left:  "\u2190",
+        up: "\u2191",
+        down: "\u2193",
+        left: "\u2190",
         right: "\u2192"
       }
     end
@@ -179,19 +179,18 @@ module Remedy
         control_y: :end_of_medium,
         control_z: :substitute,
 
-        control_left_square_bracket:  :escape,
-        control_backslash:            :file_separator,
+        control_left_square_bracket: :escape,
+        control_backslash: :file_separator,
         control_right_square_bracket: :group_separator,
-        control_caret:                :record_separator,
-        control_underscore:           :unit_separator
+        control_caret: :record_separator,
+        control_underscore: :unit_separator
       }
     end
 
     def get_alphabetics
       letters = ('a'..'z').to_a + ('A'..'Z').to_a
-      letters.inject(Hash.new) do |alphas, letter|
+      letters.each_with_object({}) do |letter, alphas|
         alphas[letter] = letter.to_sym
-        alphas
       end
     end
   end

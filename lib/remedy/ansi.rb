@@ -4,23 +4,23 @@ module Remedy
   module ANSI
     module_function
 
-    def push *sequences
+    def push(*sequences)
       Console.output << sequences.join('')
     end
 
-    def pushesc *sequences
-      push sequences.map{|sequence| esc sequence }
+    def pushesc(*sequences)
+      push sequences.map { |sequence| esc sequence }
     end
 
-    def pushe *sequences
-      push sequences.map{|sequence| e sequence }
+    def pushe(*sequences)
+      push sequences.map { |sequence| e sequence }
     end
 
-    def esc sequence = nil
+    def esc(sequence = nil)
       "\e[#{sequence}"
     end
 
-    def e sequence = nil
+    def e(sequence = nil)
       "\e#{sequence}"
     end
 
@@ -49,8 +49,8 @@ module Remedy
         {
           clear_line: 'K',
 
-          clear_down:   'J',
-          clear_up:     '1J',
+          clear_down: 'J',
+          clear_up: '1J',
           clear_screen: '2J'
         }
       end
@@ -95,25 +95,25 @@ module Remedy
         }
       end
 
-      def to_column column
-        esc code[:to_column] % {column: column}
+      def to_column(column)
+        esc format(code[:to_column], column:)
       end
 
-      def down lines = 1
-        esc code[:down] % {lines: lines}
+      def down(lines = 1)
+        esc format(code[:down], lines:)
       end
 
-      def up lines = 1
-        esc code[:up] % {lines: lines}
+      def up(lines = 1)
+        esc format(code[:up], lines:)
       end
 
-      def next_line lines = 1
-        #esc code[:next_line] % {lines: lines}
+      def next_line(lines = 1)
+        # esc code[:next_line] % {lines: lines}
         down(lines) + to_column(0)
       end
 
-      def prev_line lines = 1
-        #esc code[:prev_line] % {lines: lines}
+      def prev_line(lines = 1)
+        # esc code[:prev_line] % {lines: lines}
         up(lines) + to_column(0)
       end
 
@@ -129,18 +129,17 @@ module Remedy
         pushesc code[:show]
       end
 
-      def next_line! lines = 1
+      def next_line!(lines = 1)
         push next_line(lines)
       end
 
-      def prev_line! lines = 1
+      def prev_line!(lines = 1)
         push prev_line(lines)
       end
 
       def beginning_of_line!
         to_column 0
       end
-
     end
 
     module Screen
@@ -150,7 +149,7 @@ module Remedy
 
       def code
         {
-          up:   'M',
+          up: 'M',
           down: 'D'
         }
       end
@@ -170,11 +169,11 @@ module Remedy
         ANSI.command.clear_screen!
       end
 
-      def up! count = 1
+      def up!(count = 1)
         count.times { pushe code[:up] }
       end
 
-      def down!  count = 1
+      def down!(count = 1)
         count.times { pushe code[:down] }
       end
     end
@@ -190,11 +189,11 @@ module Remedy
         }
       end
 
-      def pushc *sequences
-        push sequences.map{|sequence| c sequence }
+      def pushc(*sequences)
+        push sequences.map { |sequence| c sequence }
       end
 
-      def c sequence
+      def c(sequence)
         "#{esc sequence}m"
       end
 

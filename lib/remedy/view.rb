@@ -1,16 +1,18 @@
 module Remedy
   class View
-    def initialize body, header = [], footer = []
-      @header, @body, @footer = header, body, footer
+    def initialize(body, header = [], footer = [])
+      @header = header
+      @body = body
+      @footer = footer
     end
     attr_accessor :body, :header, :footer, :length
 
-    def to_s force_recompile = false
-      unless @view.nil? || force_recompile then
-        @view
-      else
+    def to_s(force_recompile = false)
+      if @view.nil? || force_recompile
         reset_length!
         @view = compile!
+      else then
+        @view
       end
     end
 
@@ -31,7 +33,7 @@ module Remedy
       @header.to_a + @body.to_a + @footer.to_a
     end
 
-    def row line
+    def row(line)
       @length += 1
       "#{line}#{ANSI.cursor.next_line}"
     end

@@ -70,20 +70,18 @@ For instance to get a keypress from the terminal and display it:
   screen.draw joke
 ```
 
-`Remedy::Partial` has the subclasses `Header`, `Footer`, and `Content`.
-
-You can use the above classes to divide your Views into 3 separate pieces. Content will be truncated as needed to accommodate the header and footer and the dimensions of the console. You can also specify the cursor/scroll position of the content being drawn, and when specifying headers or footers, you must.
+Content in `Remedy::Partial`s will be truncated as needed to accommodate the header and footer and the dimensions of the console. You can also specify the cursor/scroll position of the content being drawn, and when specifying headers or footers, you must.
 
 ```ruby
   include Remedy
-  title = Header.new
+  title = Partial.new
   title << "Someone Said These Were Good"
 
   jokes = Content.new
   jokes << %q{1. A woman gets on a bus with her baby. The bus driver says: 'Ugh, that's the ugliest baby I've ever seen!' The woman walks to the rear of the bus and sits down, fuming. She says to a man next to her: 'The driver just insulted me!' The man says: 'You go up there and tell him off. Go on, I'll hold your monkey for you.'}
   jokes << %q{2. I went to the zoo the other day, there was only one dog in it, it was a shitzu.}
 
-  disclaimer = Footer.new
+  disclaimer = Partial.new
   disclaimer << "According to a survey they were funny. I didn't make them."
 
   screen = Viewport.new
@@ -102,7 +100,7 @@ The most interesting function in my opinion is the callback that gets triggered 
   screen = Viewport.new
 
   Console.set_console_resized_hook! do |size|
-    notice = Content.new
+    notice = Partial.new
     notice << "You just resized your screen!\n\nNew size:"
     notice << size
     screen.draw notice
@@ -133,4 +131,3 @@ Contributing
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-

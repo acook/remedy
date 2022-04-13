@@ -17,7 +17,7 @@ class Menu
     ANSI.command.clear_screen!
 
     # if the user resizes the screen we redraw it to fit the new dimensions
-    Console.set_console_resized_hook! do |size|
+    Console.set_console_resized_hook! do |_size|
       draw
     end
 
@@ -30,16 +30,14 @@ class Menu
     # loop over user input (individual keypresses)
     interaction.loop do |key|
       @last_key = key
-      if key == "q" then
-        interaction.quit!
-      end
+      interaction.quit! if key == 'q'
       draw
     end
   end
 
   # this tells the Viewport to draw to the screen
   def draw
-    @viewport.draw content, Size([0,0]), header, footer
+    @viewport.draw content, Size([0, 0]), header, footer
   end
 
   # this is the body of our menu, it will be squished if the terminal is too small

@@ -6,14 +6,14 @@ require 'remedy/ansi'
 
 module Remedy
   class Viewport
-    def draw content, center = Size.new(0,0), header = [], footer = []
-      range = range_find content, center, content_size(header,footer)
+    def draw(content, center = Size.new(0, 0), header = [], footer = [])
+      range = range_find content, center, content_size(header, footer)
 
-      if content.size.fits_into? range then
-        viewable_content = content
-      else
-        viewable_content = content.excerpt *range
-      end
+      viewable_content = if content.size.fits_into? range
+                           content
+                         else
+                           content.excerpt(*range)
+                         end
 
       view = View.new viewable_content, header, footer
 
@@ -21,7 +21,7 @@ module Remedy
       Console.output << view
     end
 
-    def range_find partial, center, heightwidth
+    def range_find(partial, center, heightwidth)
       row_size, col_size = heightwidth
       row_limit, col_limit = partial.size
 
@@ -32,7 +32,7 @@ module Remedy
       [row_range, col_range]
     end
 
-    def content_size header, footer
+    def content_size(header, footer)
       trim = Size [header.length + footer.length, 0]
       size - trim
     end
@@ -41,16 +41,12 @@ module Remedy
       Size Console.size
     end
 
-    def center_range center, width, limit
+    def center_range(center, width, limit)
       range_start = center - (width / 2)
 
-      if range_start + width > limit then
-        range_start = limit - width
-      end
+      range_start = limit - width if range_start + width > limit
 
-      if range_start < 0 then
-        range_start = 0
-      end
+      range_start = 0 if range_start < 0
 
       range_end = range_start + width
 

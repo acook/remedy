@@ -1,8 +1,8 @@
 module Remedy
   class Size
-    def initialize *new_dimensions
+    def initialize(*new_dimensions)
       new_dimensions.flatten!
-      if new_dimensions.first.is_a? Range then
+      if new_dimensions.first.is_a? Range
         new_dimensions.map! do |range|
           range.to_a.length
         end
@@ -11,26 +11,25 @@ module Remedy
     end
     attr_accessor :dimensions
 
-    def - other_size
-      if other_size.respond_to? :length then
-        self.class.new subtract(other_size)
+    def -(other)
+      if other.respond_to? :length
+        self.class.new subtract(other)
       else
-        self.class.new deduct(other_size)
+        self.class.new deduct(other)
       end
     end
 
-    def / value
+    def /(other)
       dimensions.map do |dimension|
-        dimension / value
+        dimension / other
       end
     end
 
-    def << value
-      self.dimensions << value
+    def <<(value)
+      dimensions << value
     end
 
-
-    def fits_into? size_to_fit_into
+    def fits_into?(size_to_fit_into)
       other_size = Size(size_to_fit_into)
       length.times.each do |index|
         return false if self[index] > other_size[index]
@@ -45,9 +44,9 @@ module Remedy
     def cols
       dimensions[1]
     end
-    alias :columns :cols
+    alias columns cols
 
-    def [] index
+    def [](index)
       dimensions[index]
     end
 
@@ -68,34 +67,34 @@ module Remedy
     end
 
     def inspect
-      "#<#{self.class}:#{to_s}>"
+      "#<#{self.class}:#{self}>"
     end
 
     protected
 
-    def deduct amount
+    def deduct(amount)
       dimensions.map do |dimension|
         dimension - amount
       end
     end
 
-    def subtract other_size
+    def subtract(other_size)
       sizesame? other_size
 
       length.times.inject Size.new do |difference, index|
-        difference << self[index] - other_size[index]
+        difference << (self[index] - other_size[index])
       end
     end
 
-    def sizesame? other_size
-      raise "Different numbers of dimensions!" unless length == other_size.length
+    def sizesame?(other_size)
+      raise 'Different numbers of dimensions!' unless length == other_size.length
     end
   end
 end
 
-def Size *sizeable
+def Size(*sizeable)
   sizeable.flatten!
-  if sizeable.first.is_a? Remedy::Size then
+  if sizeable.first.is_a? Remedy::Size
     sizeable
   else
     Remedy::Size.new sizeable

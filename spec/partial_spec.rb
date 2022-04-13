@@ -2,7 +2,13 @@ require_relative 'spec_helper'
 require 'remedy/partial'
 
 describe Remedy::Partial do
-  subject { described_class.new.tap{|p| p << "foo"; p << "bar"; p << "remedy" } }
+  subject do
+    described_class.new.tap do |p|
+      p << 'foo'
+      p << 'bar'
+      p << 'remedy'
+    end
+  end
 
   describe '#width' do
     it 'gives length of longest line' do

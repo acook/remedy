@@ -13,24 +13,32 @@ module Remedy
       Console.raw do
         input = STDIN.getc.chr
 
-        if input == "\e" then
-          input << STDIN.read_nonblock(3) rescue nil
-          input << STDIN.read_nonblock(2) rescue nil
+        if input == "\e"
+          begin
+            input << STDIN.read_nonblock(3)
+          rescue StandardError
+            nil
+          end
+          begin
+            input << STDIN.read_nonblock(2)
+          rescue StandardError
+            nil
+          end
         end
 
         input
       end
     end
 
-    def parse sequence
+    def parse(sequence)
       key = Key.new sequence
 
-      if raise_on_control_c? && key.control_c? then
-        raise ControlC, "User pressed Control-C"
-      elsif key.recognized? then
+      if raise_on_control_c? && key.control_c?
+        raise ControlC, 'User pressed Control-C'
+      elsif key.recognized?
         key
-      elsif raise_on_unrecognized_key? then
-        raise UnrecognizedInput, %Q{Unknown key or byte sequence: "#{sequence}" : #{key.inspect}}
+      elsif raise_on_unrecognized_key?
+        raise UnrecognizedInput, %(Unknown key or byte sequence: "#{sequence}" : #{key.inspect})
       else
         key
       end

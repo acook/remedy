@@ -47,7 +47,7 @@ class Menu
     # this creates a new content every time we draw
     # you may want to only create a new content/header/footer when they change
     # or create your own Partial subclass
-    c = Content.new
+    c = Partial.new
     c << <<-CONTENT
 
     1. Do the thing
@@ -61,12 +61,12 @@ class Menu
 
   # headers are displayed the top of the viewport
   def header
-    Header.new << "The time is: #{Time.now}"
+    Partial.new << "The time is: #{Time.now}"
   end
 
   # footers are displayed the bottom of the viewport
   def footer
-    Footer.new << "Screen size: #{Console.size} You pressed: #{@last_key}"
+    Partial.new << "Screen size: #{Console.size} You pressed: #{@last_key}"
   end
 end
 

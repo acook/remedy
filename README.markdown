@@ -112,7 +112,10 @@ Remedy in the Wild
 
 Remedy was originally written for my own console-based game which was sort of like Dwarf Fortress. Most of the project files were lost, but since Remedy was extracted from it and open-sourced it has lived on.
 
-Here are a couple of projects that use many of Remedy's features:
+Here are some projects that use Remedy:
+
+- A screenreader-friendly code editor for blind and visually impaired programmers: [Viper](https://github.com/edhowland/viper)
+- [The Official ElasticSearch Ruby Connector](https://github.com/elastic/connectors-ruby)
 - A multiplayer Yahtzee for web and console: [YahtzeeGame](https://github.com/ProgrammingPractice/YahtzeeGame)
 - Twitter/RSS/Facebook reader: [noizee](https://github.com/acook/noizee)
 

@@ -19,10 +19,10 @@ class Menu
     # create an interaction object to handle user input
     interaction = Interaction.new
 
-    # call draw here because interaction blocks until it gets input
+    # call draw here because the interaction loop blocks until it gets input
     draw
 
-    # loop over user input (individual keypresses)
+    # loop over individual keypresses or ANSI codes from the terminal
     interaction.loop do |key|
       @last_key = key
       if key == "q" then

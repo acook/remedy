@@ -5,7 +5,7 @@ require 'remedy/ansi'
 
 module Remedy
   class Viewport
-    def draw content, center = Size.new(0,0), header = [], footer = []
+    def draw content, center = Size.new(0,0), header = Partial.new, footer = Partial.new
       range = range_find content, center, content_size(header,footer)
 
       if content.size.fits_into? range then

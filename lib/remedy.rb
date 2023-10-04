@@ -3,7 +3,7 @@ module Remedy
 
   def libs
     %w{
-      version ansi characters console console_resize content header footer
+      version ansi characters console console_resize
       interaction key keyboard partial view viewport
     }
   end

@@ -16,6 +16,7 @@ module Remedy
       reset_width!
       line = "#{line}" # opportunistically convert any object into a string
       @lines += clean line unless line.nil? || line.empty?
+      self
     end
 
     def first

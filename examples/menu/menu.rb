@@ -11,11 +11,6 @@ class Menu
 
   # will do basic setup and then loop over user input
   def listen
-    # get the screen in a reliable state and clear it
-    ANSI.screen.safe_reset!
-    ANSI.cursor.home!
-    ANSI.command.clear_screen!
-
     # if the user resizes the screen we redraw it to fit the new dimensions
     Console.set_console_resized_hook! do |size|
       draw

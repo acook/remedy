@@ -34,7 +34,7 @@ class Menu
 
   # this tells the Viewport to draw to the screen
   def draw
-    @viewport.draw content, Size.zero, header, footer
+    @viewport.draw content, Tuple.zero, header, footer
   end
 
   # this is the body of our menu, it will be squished if the terminal is too small

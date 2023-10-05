@@ -85,7 +85,7 @@ Content in `Remedy::Partial`s will be truncated as needed to accommodate the hea
   disclaimer << "According to a survey they were funny. I didn't make them."
 
   screen = Viewport.new
-  screen.draw jokes, Size.new(0,0), title, disclaimer
+  screen.draw jokes, Tuple.zero, title, disclaimer
 ```
 
 ### Console

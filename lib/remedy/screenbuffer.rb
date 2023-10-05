@@ -25,6 +25,21 @@ module Remedy
     end
     attr_accessor :fill, :nl, :ellipsis, :charwidth
 
+    # Get the contents of the buffer at a given coordinate.
+    #
+    # @overload [] coords
+    #   @param coords [Remedy::Tuple] the coordinates to read from
+    #
+    # @overload [] row, col
+    #   @param row [Numeric] the row to read from, 0 indexed
+    #   @param col [Numeric] the column to read from, 0 indexed
+    #
+    # @todo get more than single characters
+    def [] *params
+      coords = Tuple params.flatten
+      buf[coords.row][coords.col]
+    end
+
     # Replace the contents of the buffer at a given coordinate.
     #
     # @overload []= coords, value
@@ -57,6 +72,17 @@ module Remedy
     # @return [Array] the raw screenbuffer array
     def buf
       @buf ||= new_buf
+    end
+
+    # Replace the contents of the internal buffer.
+    #
+    # Primarily useful for testing.
+    # Could also be used for double/triple buffering implementation.
+    #
+    # @param override_buf [Array<String>] the new replacement buffer contents
+    def buf= override_buf
+      self.size = Tuple override_buf.length, (override_buf.map{|l|l.length}.max || 0)
+      @buf = override_buf
     end
 
     # @return [Remedy::Tuple] the size of the buffer in rows and columns

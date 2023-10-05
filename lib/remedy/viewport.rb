@@ -36,7 +36,7 @@ module Remedy
     end
 
     def size
-      Size Console.size
+      Console.size
     end
 
     def get_range offset, actual, available

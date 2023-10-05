@@ -25,6 +25,7 @@ module Remedy
     attr_accessor :buffer
 
     # Draw the buffer to the console using raw output.
+    # @return [void]
     def draw
       ANSI.screen.safe_reset!
       Console.output << buffer.to_ansi
@@ -44,7 +45,8 @@ module Remedy
     # end
     # ```
     #
-    # @param [Remedy::Tuple] the new size of the terminal
+    # @param new_size [Remedy::Tuple] the new size of the terminal
+    # @return [void]
     def resized new_size
       buffer.size = new_size
       draw

@@ -5,14 +5,10 @@ require 'remedy/ansi'
 
 module Remedy
   class Viewport
-    def draw content, center = Size.new(0,0), header = Partial.new, footer = Partial.new
-      range = range_find content, center, content_size(header,footer)
+    def draw content, scroll = Size.zero, header = Partial.new, footer = Partial.new
+      range = range_find content, scroll, available_space(header,footer)
 
-      if content.size.fits_into? range then
-        viewable_content = content
-      else
-        viewable_content = content.excerpt *range
-      end
+      viewable_content = content.excerpt *range
 
       view = View.new viewable_content, header, footer
 
@@ -20,19 +16,22 @@ module Remedy
       Console.output << view
     end
 
-    def range_find partial, center, heightwidth
-      row_size, col_size = heightwidth
-      row_limit, col_limit = partial.size
+    def range_find partial, scroll, available_heightwidth
+      avail_height, avail_width = available_heightwidth
+      partial_height, partial_width = partial.size
 
-      center_row, center_col = center
+      center_row, center_col = scroll
 
-      row_range = center_range center_row, row_size, row_limit
-      col_range = center_range center_col, col_size, col_limit
+      row_range = get_range center_row, partial_height, avail_height
+      col_range = get_range center_col, partial_width, avail_width
+
       [row_range, col_range]
     end
 
-    def content_size header, footer
-      trim = Size [header.length + footer.length, 0]
+    # This determines the maximum amount of room left available for Content
+    # after taking into consideration the height of the Header and Footer
+    def available_space header, footer
+      trim = Size [header.height + footer.height, 0]
       size - trim
     end
 
@@ -40,20 +39,26 @@ module Remedy
       Size Console.size
     end
 
-    def center_range center, width, limit
-      range_start = center - (width / 2)
+    def get_range offset, actual, available
+      # if the actual content can fit into the available space, then we're done
+      return (0...actual) if actual <= available
 
-      if range_start + width > limit then
-        range_start = limit - width
-      end
+      # otherwise start looking at the scrolling offset, if any
 
-      if range_start < 0 then
+      # clamp the offset within the possible range of the actual content
+      if offset < 0 then
         range_start = 0
+      elsif offset > actual then
+        range_start = actual
+      else
+        range_start = offset
       end
 
-      range_end = range_start + width
+      # determine the subset of content that can be displayed
+      range_end = range_start + (available - offset)
 
       (range_start...range_end)
     end
+
   end
 end

@@ -6,7 +6,9 @@ module Remedy
   class Tuple
     def initialize *new_dimensions
       dims = new_dimensions.flatten
-      if dims.first.is_a? Range then
+      if dims.first.is_a? self.class then
+        dims = dims.first.dimensions.dup
+      elsif dims.first.is_a? Range then
         dims.map! do |range|
           range.end
         end

@@ -45,5 +45,17 @@ describe Remedy::Screenbuffer do
       actual = sb.to_s
       expect(actual).to eq expected
     end
+
+    context "larger size" do
+      let(:size){ Tuple 4, 4 }
+
+      it "handles embedded newlines gracefully for multiple lines" do
+        value = ["a\nb", "c"]
+        expected = "....\n...a\n...b\n...c"
+        sb[1,3] = value
+        actual = sb.to_s
+        expect(actual).to eq expected
+      end
+    end
   end
 end

@@ -17,15 +17,7 @@ module Remedy
       value = params.pop
       coords = Tuple params.flatten
 
-      if value.respond_to? :each
-        lines = value
-      else
-        lines = split value
-      end
-
-      lines.each.with_index do |line, index|
-        replace_inline(coords + Tuple(index,0), line)
-      end
+      replace_perline coords, value
     end
 
     def buf
@@ -44,12 +36,22 @@ module Remedy
 
     private
 
+    def replace_perline coords, value
+      lines = Array(value).map do |line|
+        split line
+      end.flatten
+
+      lines.each.with_index do |line, index|
+        replace_inline(coords + Tuple(index,0), line)
+      end
+    end
+
     def replace_inline coords, value
       buf[coords.row][coords.col,value.length] = value
     end
 
     def split line
-      Array line.split(/\r\n|\n\r|\n|\r/)
+      line.split(/\r\n|\n\r|\n|\r/)
     end
   end
 end

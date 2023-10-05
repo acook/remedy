@@ -29,5 +29,13 @@ describe Remedy::Screenbuffer do
       actual = sb.to_s
       expect(actual).to eq expected
     end
+
+    it "sets the value at a particular location for multiple lines" do
+      value = %w{a b}
+      expected = "a.\nb."
+      sb[0,0] = value
+      actual = sb.to_s
+      expect(actual).to eq expected
+    end
   end
 end

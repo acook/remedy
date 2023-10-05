@@ -34,7 +34,7 @@ jokes << %q{2. I went to the zoo the other day, there was only one dog in it, it
 disclaimer = Partial.new
 disclaimer << "According to a survey they were funny. I didn't make them."
 
-screen.draw jokes, Size.new(0,0), title, disclaimer
+screen.draw jokes, Tuple.zero, title, disclaimer
 
 user_input.get_key
 

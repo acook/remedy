@@ -1,5 +1,5 @@
 module Remedy
-  class Size
+  class Tuple
     def initialize *new_dimensions
       new_dimensions.flatten!
       if new_dimensions.first.is_a? Range then
@@ -15,11 +15,11 @@ module Remedy
       self.new([0,0])
     end
 
-    def - other_size
-      if other_size.respond_to? :length then
-        self.class.new subtract(other_size)
+    def - other_tuple
+      if other_tuple.respond_to? :length then
+        self.class.new subtract(other_tuple)
       else
-        self.class.new deduct(other_size)
+        self.class.new deduct(other_tuple)
       end
     end
 
@@ -34,10 +34,10 @@ module Remedy
     end
 
 
-    def fits_into? size_to_fit_into
-      other_size = Size(size_to_fit_into)
+    def fits_into? tuple_to_fit_into
+      other_tuple = Tuple(tuple_to_fit_into)
       length.times.each do |index|
-        return false if self[index] > other_size[index]
+        return false if self[index] > other_tuple[index]
       end
       true
     end
@@ -85,25 +85,25 @@ module Remedy
       end
     end
 
-    def subtract other_size
-      sizesame? other_size
+    def subtract other_tuple
+      tuplesame? other_tuple
 
-      length.times.inject Size.new do |difference, index|
-        difference << self[index] - other_size[index]
+      length.times.inject Tuple.new do |difference, index|
+        difference << self[index] - other_tuple[index]
       end
     end
 
-    def sizesame? other_size
-      raise "Different numbers of dimensions!" unless length == other_size.length
+    def tuplesame? other_tuple
+      raise "Different numbers of dimensions!" unless length == other_tuple.length
     end
   end
 end
 
-def Size *sizeable
-  sizeable.flatten!
-  if sizeable.first.is_a? Remedy::Size then
-    sizeable
+def Tuple *tupleable
+  tupleable.flatten!
+  if tupleable.first.is_a? Remedy::Tuple then
+    tupleable
   else
-    Remedy::Size.new sizeable
+    Remedy::Tuple.new tupleable
   end
 end

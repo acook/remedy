@@ -5,7 +5,7 @@ require 'remedy/ansi'
 
 module Remedy
   class Viewport
-    def draw content, scroll = Size.zero, header = Partial.new, footer = Partial.new
+    def draw content, scroll = Tuple.zero, header = Partial.new, footer = Partial.new
       range = range_find content, scroll, available_space(header,footer)
 
       viewable_content = content.excerpt(*range)
@@ -31,7 +31,7 @@ module Remedy
     # This determines the maximum amount of room left available for Content
     # after taking into consideration the height of the Header and Footer
     def available_space header, footer
-      trim = Size [header.height + footer.height, 0]
+      trim = Tuple [header.height + footer.height, 0]
       size - trim
     end
 

@@ -10,40 +10,43 @@ module Remedy
     # Create a new screenbuffer.
     #
     # @param size [Remedy::Tuple] the number of rows and columns to allocate
-    # @param fill: [String] a character to pre-fill the buffer with
-    # @param nl: [String] the sequence used to separate lines when converted to a string
-    # @param elipsis: [String] the character used to indicate truncated lines,
+    # @param fill [String] a character to pre-fill the buffer with
+    # @param nl [String] the sequence used to separate lines when converted to a string
+    # @param ellipsis [String] the character used to indicate truncated lines,
     #   if set to `nil` then content will extend to the edge of the screen
-    def initialize size, fill: " ", nl: ?\n, ellipsis: "…"
-      @charwidth = 1 # in case we need to support multiple widths in the future
+    # @param charwidth [Numeric] in case we are able to support multiple character widths in the future
+    def initialize size, fill: " ", nl: ?\n, ellipsis: "…", charwidth: 1
+      @charwidth = charwidth
       @size = size
       @fill = fill[0, charwidth]
       @nl = nl
       @ellipsis = ellipsis
       @buf = new_buf
     end
-    attr_accessor :size, :fill, :nl, :buf, :ellipsis, :charwidth
+    attr_accessor :fill, :nl, :ellipsis, :charwidth
 
-    # Replace the contents of the buffer at a given coordinate (from top left).
+    # Replace the contents of the buffer at a given coordinate.
     #
-    # Usage with scalar coordinates and simple string:
-    # ```ruby
-    # row = 1
-    # col = 2
-    # screenbuffer[row, col] = "foo"
-    # ```
-    # Usage with Tuple coordinates and line array:
-    # ```ruby
-    # coords = Tuple 3, 4
-    # lines = ["foo\nbar", "baz"]
-    # screenbuffer[coords] = lines
-    # ```
+    # @overload []= coords, value
+    #   @param coords [Remedy::Tuple] the coordinates to begin replacing from
+    #   @param value [String, Enumerable] the content to place into the screenbuffer
+    #   Usage with Tuple coordinates and line array:
+    #   ```ruby
+    #   coords = Tuple 3, 4
+    #   lines = ["foo\nbar", "baz"]
+    #   screenbuffer[coords] = lines
+    #   ```
+    # @overload []= row, col, value
+    #   @param row [Numeric] the row to start replacing from, 0 indexed
+    #   @param col [Numeric] the column to start replacing from, 0 indexed
+    #   @param value [String, Enumerable] the content to place into the screenbuffer
     #
-    # @param coords [Remedy::Tuple] the coordinates to begin replacing from
-    # @param row [Numeric] the row to start replacing from, 0 indexed
-    # @param col [Numeric] the column to start replacing from, 0 indexed
-    # @param value [String or Enumerable] the content to place into the screenbuffer
-    #   (always the last argument)
+    #   Usage with scalar coordinates and simple string:
+    #   ```ruby
+    #   row = 1
+    #   col = 2
+    #   screenbuffer[row, col] = "foo"
+    #   ```
     def []= *params
       value = params.pop
       coords = Tuple params.flatten
@@ -51,11 +54,23 @@ module Remedy
       replace_perline coords, value
     end
 
-    # The raw screenbuffer array itself.
+    # @return [Array] the raw screenbuffer array
     def buf
       @buf ||= new_buf
     end
 
+    # @return [Remedy::Tuple] the size of the buffer in rows and columns
+    def size
+      @size
+    end
+
+    # Set a new size for the screenbuffer.
+    # @note This will destroy the contents of the current buffer!
+    #
+    # @param new_size [Remedy::Tuple] the new size,
+    #   as typically received from `Console.size` or
+    #   `Console.set_console_resized_hook!`
+    # @raise [ArgumentError] if passed anything other than a Remedy::Tuple
     def size= new_size
       raise ArgumentError unless new_size.is_a? Tuple
 

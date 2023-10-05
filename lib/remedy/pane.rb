@@ -23,18 +23,6 @@ module Remedy
       @viewport.draw viewable_content
     end
 
-    def range_find partial, scroll, available_heightwidth
-      avail_height, avail_width = available_heightwidth
-      partial_height, partial_width = partial.size
-
-      center_row, center_col = scroll
-
-      row_range = visible_range center_row, partial_height, avail_height
-      col_range = visible_range center_col, partial_width, avail_width
-
-      [row_range, col_range]
-    end
-
     # This is the target size of this pane, but may still be truncated if there is not enough room
     def size
       Tuple(height, width)
@@ -54,6 +42,20 @@ module Remedy
       else
         content_width
       end
+    end
+
+    protected
+
+    def range_find partial, scroll, available_heightwidth
+      avail_height, avail_width = available_heightwidth
+      partial_height, partial_width = partial.size
+
+      center_row, center_col = scroll
+
+      row_range = visible_range center_row, partial_height, avail_height
+      col_range = visible_range center_col, partial_width, avail_width
+
+      [row_range, col_range]
     end
 
     def visible_range offset, actual, available

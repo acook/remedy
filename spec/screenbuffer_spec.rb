@@ -21,5 +21,13 @@ describe Remedy::Screenbuffer do
       actual = sb.to_s
       expect(actual).to eq expected
     end
+
+    it "sets the value at a particular location for sequential characters" do
+      value = "xy"
+      expected = "..\n#{value}"
+      sb[1,0] = value
+      actual = sb.to_s
+      expect(actual).to eq expected
+    end
   end
 end

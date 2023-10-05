@@ -13,6 +13,20 @@ describe Remedy::Screenbuffer do
     end
   end
 
+  describe "#[]" do
+    it "returns the character at a particular location" do
+      expected = "x"
+      coords = ::Remedy::Tuple.tuplify 1, 1
+      sb.buf = [
+        "ab",
+        "yx"
+      ]
+
+      actual = sb[coords]
+      expect(actual).to eq expected
+    end
+  end
+
   describe "#[]=" do
     it "accepts Tuples as coordinates" do
       value = "x"

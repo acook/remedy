@@ -17,8 +17,20 @@ module Remedy
     end
     attr_accessor :dimensions
 
-    def self.zero
-      self.new([0,0])
+    class << self
+      def zero
+        self.new(0,0)
+      end
+
+      def tuplify *tupleable
+        klass = self
+        tupleable.flatten!
+        if tupleable.first.is_a? klass then
+          tupleable
+        else
+          klass.new tupleable
+        end
+      end
     end
 
     # OPERATIONS
@@ -139,17 +151,11 @@ module Remedy
         sum << self[index] + other_tuple[index]
       end
 
-      Tuple result
+      self.class.tuplify result
     end
   end
 end
 
 def Tuple *tupleable
-  klass = ::Remedy::Tuple
-  tupleable.flatten!
-  if tupleable.first.is_a? klass then
-    tupleable
-  else
-    klass.new tupleable
-  end
+  ::Remedy::Tuple.tuplify tupleable
 end

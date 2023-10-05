@@ -45,11 +45,13 @@ module Remedy
     def rows
       dimensions[0]
     end
+    alias_method :height, :rows
 
     def cols
       dimensions[1]
     end
-    alias :columns :cols
+    alias_method :columns, :cols
+    alias_method :width, :cols
 
     def [] index
       dimensions[index]

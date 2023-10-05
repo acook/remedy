@@ -27,16 +27,17 @@ module Remedy
       lines.last
     end
 
-    def length
+    def height
       lines.length
     end
+    alias_method :length, :height
 
     def width
-      @width ||= lines.max{|line| line.length }.length
+      lines.map{|line| line.length }.max
     end
 
     def size
-      Size.new length, width
+      Size.new height, width
     end
 
     def to_a

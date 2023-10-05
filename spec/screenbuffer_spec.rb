@@ -14,6 +14,15 @@ describe Remedy::Screenbuffer do
   end
 
   describe "#[]=" do
+    it "accepts Tuples as coordinates" do
+      value = "x"
+      expected = "..\n.#{value}"
+      coords = ::Remedy::Tuple.tuplify 1, 1
+      sb[coords] = value
+      actual = sb.to_s
+      expect(actual).to eq expected
+    end
+
     it "sets the value at a particular location for a single character" do
       value = "x"
       expected = "..\n.#{value}"

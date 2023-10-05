@@ -37,17 +37,17 @@ module Remedy
 
     def + other_tuple
       if other_tuple.respond_to? :[] then
-        combine other_tuple
+        matrix_addition other_tuple
       elsif other_tuple.respond_to? :+ then
-        add other_tuple
+        scalar_addition other_tuple
       end
     end
 
     def - other_tuple
       if other_tuple.respond_to? :length then
-        self.class.new subtract(other_tuple)
+        matrix_subtract other_tuple
       else
-        self.class.new deduct(other_tuple)
+        scalar_subtract other_tuple
       end
     end
 
@@ -124,27 +124,37 @@ module Remedy
 
     protected
 
-    def deduct amount
+    def scalar_subtract! amount
       dimensions.map do |dimension|
         dimension - amount
       end
     end
 
-    def subtract other_tuple
-      raise "Different numbers of dimensions!" unless bijective? other_tuple
-
-      cardinality.times.inject self.class.new do |difference, index|
-        difference << self[index] - other_tuple[index]
-      end
+    def scalar_subtract amount
+      dup scalar_subtract! amount
     end
 
-    def add amount
+    def matrix_subtract other_tuple
+      raise "Different numbers of dimensions!" unless bijective? other_tuple
+
+      result = cardinality.times.inject self.class.new do |difference, index|
+        difference << self[index] - other_tuple[index]
+      end
+
+      self.class.tuplify result
+    end
+
+    def scalar_addition! amount
       dimensions.map do |dimension|
         dimension + amount
       end
     end
 
-    def combine other_tuple
+    def scalar_addition amount
+      dup.add! amount
+    end
+
+    def matrix_addition other_tuple
       raise "Different numbers of dimensions!" unless bijective? other_tuple
 
       result = cardinality.times.inject self.class.new do |sum, index|

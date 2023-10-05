@@ -5,13 +5,13 @@ module Remedy
     # Used primarily to contain dimensional numeric values such as the sizes of screen areas,
     #   offsets in two or more dimensions, etc
     def initialize *new_dimensions
-      new_dimensions.flatten!
-      if new_dimensions.first.is_a? Range then
-        new_dimensions.map! do |range|
-          range.to_a.length
+      dims = new_dimensions.flatten
+      if dims.first.is_a? Range then
+        dims.map! do |range|
+          range.end
         end
       end
-      @dimensions = new_dimensions
+      @dimensions = dims
     end
     attr_accessor :dimensions
 

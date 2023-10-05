@@ -75,7 +75,9 @@ module Remedy
       end.flatten
 
       lines.each.with_index do |line, index|
-        replace_inline(coords + Tuple(index,0), line)
+        new_coords = coords + Tuple(index,0)
+        return if new_coords.height >= size.height
+        replace_inline(new_coords, line)
       end
     end
 

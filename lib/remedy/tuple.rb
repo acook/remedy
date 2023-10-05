@@ -1,5 +1,9 @@
 module Remedy
   class Tuple
+    # Formerly known as "Remedy::Size", with related concepts in my other projects
+    #   called things like "Coordinate", "Pair", or similar
+    # Used primarily to contain dimensional numeric values such as the sizes of screen areas,
+    #   offsets in two or more dimensions, etc
     def initialize *new_dimensions
       new_dimensions.flatten!
       if new_dimensions.first.is_a? Range then
@@ -14,6 +18,8 @@ module Remedy
     def self.zero
       self.new([0,0])
     end
+
+    # OPERATIONS
 
     def - other_tuple
       if other_tuple.respond_to? :length then
@@ -33,6 +39,11 @@ module Remedy
       self.dimensions << value
     end
 
+    # COMPARISON
+
+    def bijective? other_tuple
+      length == other_tuple.length
+    end
 
     def fits_into? tuple_to_fit_into
       other_tuple = Tuple(tuple_to_fit_into)
@@ -42,24 +53,33 @@ module Remedy
       true
     end
 
-    def rows
+    # ACCESSORS
+
+    def x
       dimensions[0]
     end
-    alias_method :height, :rows
+    alias_method :height, :x
 
-    def cols
+    def y
       dimensions[1]
     end
-    alias_method :columns, :cols
-    alias_method :width, :cols
+    alias_method :width, :y
+
+    def z
+      dimensions[2]
+    end
+    alias_method :depth, :z
 
     def [] index
       dimensions[index]
     end
 
-    def length
+    def cardinality
       dimensions.length
     end
+    alias_method :length, :cardinality
+
+    # CONVERSIONS
 
     def to_a
       dimensions.dup
@@ -86,24 +106,21 @@ module Remedy
     end
 
     def subtract other_tuple
-      tuplesame? other_tuple
+      raise "Different numbers of dimensions!" unless bijective? other_tuple
 
       length.times.inject Tuple.new do |difference, index|
         difference << self[index] - other_tuple[index]
       end
     end
-
-    def tuplesame? other_tuple
-      raise "Different numbers of dimensions!" unless length == other_tuple.length
-    end
   end
 end
 
 def Tuple *tupleable
+  klass = ::Remedy::Tuple
   tupleable.flatten!
-  if tupleable.first.is_a? Remedy::Tuple then
+  if tupleable.first.is_a? klass then
     tupleable
   else
-    Remedy::Tuple.new tupleable
+    klass.new tupleable
   end
 end

@@ -51,12 +51,6 @@ module Remedy
       @buf ||= new_buf
     end
 
-    def new_buf
-      Array.new(size.height) do
-        fill * size.width
-      end
-    end
-
     # Convert screenbuffer to single string.
     # Concatenates the contents of the buffer with the `nl` attribute.
     def to_s
@@ -64,6 +58,12 @@ module Remedy
     end
 
     private
+
+    def new_buf
+      Array.new(size.height) do
+        fill * size.width
+      end
+    end
 
     def replace_perline coords, value
       lines = Array(value).map do |line|

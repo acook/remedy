@@ -13,10 +13,11 @@ module Remedy
     end
     attr_accessor :content, :header, :footer
 
-    def draw
-      range = range_find @content, Tuple.zero, available_space(@header, @footer)
+    def draw override = nil
+      body = override || @content
+      range = range_find body, Tuple.zero, available_space(@header, @footer)
 
-      viewable_content = @content.excerpt(*range)
+      viewable_content = body.excerpt(*range)
 
       view = View.new viewable_content, @header, @footer
 

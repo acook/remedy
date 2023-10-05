@@ -33,7 +33,7 @@ module Remedy
     alias_method :length, :height
 
     def width
-      lines.map{|line| line.length }.max
+      lines.map{|line| line.length }.max || 0
     end
 
     def size

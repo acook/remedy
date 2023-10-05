@@ -1,9 +1,9 @@
 require 'remedy/tuple'
 
 module Remedy
-  # A screenbuffer is an in-memory representation of the terminal display
-  # Even most modern terminals do not allow direct access to the character display array
-  # So we create our own, like a DOM, to do our work on before rendering it to the screen
+  # A screenbuffer is an in-memory representation of the terminal display.
+  # Even most modern terminals do not allow direct access to the character display array.
+  # So we create our own, like a DOM, to do our work on before rendering it to the screen.
   class Screenbuffer
     def initialize size, fill: " ", nl: ?\n
       @size = size
@@ -24,7 +24,7 @@ module Remedy
       row = coords[0]
       col = coords[1]
 
-      buf[row][col] = value
+      buf[row][col,value.length] = value
     end
 
     def buf

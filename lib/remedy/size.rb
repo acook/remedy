@@ -11,6 +11,10 @@ module Remedy
     end
     attr_accessor :dimensions
 
+    def self.zero
+      self.new([0,0])
+    end
+
     def - other_size
       if other_size.respond_to? :length then
         self.class.new subtract(other_size)

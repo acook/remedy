@@ -23,6 +23,14 @@ module Remedy
 
     # OPERATIONS
 
+    def + other_tuple
+      if other_tuple.respond_to? :[] then
+        combine other_tuple
+      elsif other_tuple.respond_to? :+ then
+        add other_tuple
+      end
+    end
+
     def - other_tuple
       if other_tuple.respond_to? :length then
         self.class.new subtract(other_tuple)
@@ -116,6 +124,22 @@ module Remedy
       cardinality.times.inject self.class.new do |difference, index|
         difference << self[index] - other_tuple[index]
       end
+    end
+
+    def add amount
+      dimensions.map do |dimension|
+        dimension + amount
+      end
+    end
+
+    def combine other_tuple
+      raise "Different numbers of dimensions!" unless bijective? other_tuple
+
+      result = cardinality.times.inject self.class.new do |sum, index|
+        sum << self[index] + other_tuple[index]
+      end
+
+      Tuple result
     end
   end
 end

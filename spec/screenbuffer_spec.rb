@@ -37,5 +37,13 @@ describe Remedy::Screenbuffer do
       actual = sb.to_s
       expect(actual).to eq expected
     end
+
+    it "handles embedded newlines gracefully" do
+      value = "a\nb"
+      expected = ".a\n.b"
+      sb[0,1] = value
+      actual = sb.to_s
+      expect(actual).to eq expected
+    end
   end
 end

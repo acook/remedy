@@ -3,7 +3,7 @@ require "remedy/viewport"
 
 describe Remedy::Viewport do
   let(:console){ ::Remedy::Console }
-  let(:size_override){ Size 20, 40 }
+  let(:size_override){ Tuple 20, 40 }
   let(:stringio){ StringIO.new }
 
   before(:each) do

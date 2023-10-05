@@ -4,12 +4,22 @@ require 'remedy'
 
 include Remedy
 
+def cleanup
+  Console.cooked!
+  ANSI.cursor.show!
+end
+
+trap "SIGINT" do
+  cleanup
+  exit 130
+end
+
 screen = Viewport.new
 
 Console.set_console_resized_hook! do |size|
   notice = Partial.new
-  notice << "You just resized your screen!\n\nNew size:"
-  notice << size
+  notice << "You just resized your screen!"
+  notice << "New size: #{size}"
 
   screen.draw notice
 end
@@ -25,7 +35,7 @@ screen.draw joke
 user_input.get_key
 
 title = Partial.new
-title << "Someone Said These Were Good"
+title << "Two Longer Jokes"
 
 jokes = Partial.new
 jokes << %q{1. A woman gets on a bus with her baby. The bus driver says: 'Ugh, that's the ugliest baby I've ever seen!' The woman walks to the rear of the bus and sits down, fuming. She says to a man next to her: 'The driver just insulted me!' The man says: 'You go up there and tell him off. Go on, I'll hold your monkey for you.'}
@@ -34,9 +44,14 @@ jokes << %q{2. I went to the zoo the other day, there was only one dog in it, it
 disclaimer = Partial.new
 disclaimer << "According to a survey they were funny. I didn't make them."
 
-screen.draw jokes, Tuple.zero, title, disclaimer
+screen.header = title
+screen.footer = disclaimer
+screen.draw jokes
 
 user_input.get_key
+
+screen.header = Partial.new %w{Monitoring\ Keypresses...}
+screen.footer = Partial.new
 
 ANSI.cursor.next_line!
 keys = Partial.new
@@ -48,5 +63,4 @@ loop_demo.loop do |key|
   break if key == ?q
 end
 
-Console.cooked!
-ANSI.cursor.show!
+cleanup

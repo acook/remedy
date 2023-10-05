@@ -85,5 +85,18 @@ describe Remedy::Screenbuffer do
         expect(actual).to eq expected
       end
     end
+
+    it "can be resized" do
+      expected = ".....\n....."
+      sb.size = Tuple 2, 5
+      actual = sb.to_s
+      expect(actual).to eq expected
+    end
+
+    it "generates terminal safe output strings" do
+      expected = "..\e[1B\e[0G.."
+      actual = sb.to_ansi
+      expect(actual).to eq expected
+    end
   end
 end

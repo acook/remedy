@@ -1,4 +1,5 @@
-require 'remedy/tuple'
+require "remedy/tuple"
+require "remedy/ansi"
 
 module Remedy
   # A screenbuffer is an in-memory representation of the terminal display.
@@ -55,10 +56,25 @@ module Remedy
       @buf ||= new_buf
     end
 
+    def size= new_size
+      raise ArgumentError unless new_size.is_a? Tuple
+
+      if size != new_size then
+        @size = new_size
+        @buf = new_buf
+      end
+    end
+
     # Convert screenbuffer to single string.
     # Concatenates the contents of the buffer with the `nl` attribute.
     def to_s
       buf.join nl
+    end
+
+    # Convert screenbuffer to single string for output to a display using ANSI line motions.
+    # Standard newlines at screen edges cause many terminals to display extraneous empty lines.
+    def to_ansi
+      buf.join ANSI.cursor.next_line
     end
 
     private

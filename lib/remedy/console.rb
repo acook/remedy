@@ -23,6 +23,14 @@ module Remedy
       @output ||= $stdout
     end
 
+    def input= new_input
+      @input = new_input
+    end
+
+    def output= new_output
+      @output = new_output
+    end
+
     def raw
       raw!
       result = yield
@@ -52,12 +60,18 @@ module Remedy
     alias_method :height, :rows
 
     def size
+      return @size_override if @size_override
+
       str = [0, 0, 0, 0].pack('SSSS')
-      if input.ioctl(TIOCGWINSZ, str) >= 0 then
+      if input.respond_to?(:ioctl) && input.ioctl(TIOCGWINSZ, str) >= 0 then
         Size.new str.unpack('SSSS').first 2
       else
         raise UnknownConsoleSize, "Unable to get console size"
       end
+    end
+
+    def size_override= new_size
+      @size_override = new_size
     end
 
     def interactive?

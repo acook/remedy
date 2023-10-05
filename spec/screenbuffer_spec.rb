@@ -57,5 +57,25 @@ describe Remedy::Screenbuffer do
         expect(actual).to eq expected
       end
     end
+
+    it "truncates horizontal overflows" do
+      value = "1234"
+      expected = "1…\n.."
+      sb[0,0] = value
+      actual = sb.to_s
+      expect(actual).to eq expected
+    end
+
+    context "without ellipsis" do
+      subject(:sb){ described_class.new size, fill: ".", ellipsis: nil }
+
+      it "truncates horizontal overflows" do
+        value = "1234"
+        expected = "12\n.."
+        sb[0,0] = value
+        actual = sb.to_s
+        expect(actual).to eq expected
+      end
+    end
   end
 end

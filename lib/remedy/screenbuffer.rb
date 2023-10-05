@@ -11,13 +11,17 @@ module Remedy
     # @param size [Remedy::Tuple] the number of rows and columns to allocate
     # @param fill: [String] a character to pre-fill the buffer with
     # @param nl: [String] the sequence used to separate lines when converted to a string
-    def initialize size, fill: " ", nl: ?\n
+    # @param elipsis: [String] the character used to indicate truncated lines,
+    #   if set to `nil` then content will extend to the edge of the screen
+    def initialize size, fill: " ", nl: ?\n, ellipsis: "…"
+      @charwidth = 1 # in case we need to support multiple widths in the future
       @size = size
-      @fill = fill[0]
+      @fill = fill[0, charwidth]
       @nl = nl
+      @ellipsis = ellipsis
       @buf = new_buf
     end
-    attr_accessor :size, :fill, :nl, :buf
+    attr_accessor :size, :fill, :nl, :buf, :ellipsis, :charwidth
 
     # Replace the contents of the buffer at a given coordinate (from top left).
     #
@@ -61,7 +65,7 @@ module Remedy
 
     def new_buf
       Array.new(size.height) do
-        fill * size.width
+        fill * size.width * charwidth
       end
     end
 
@@ -76,7 +80,9 @@ module Remedy
     end
 
     def replace_inline coords, value
-      buf[coords.row][coords.col,value.length] = value
+      fit = value[0,size.width - coords.col]
+      fit[-1] = ellipsis[0,charwidth] if ellipsis && fit.length < value.length
+      buf[coords.row][coords.col,fit.length] = fit
     end
 
     def split line

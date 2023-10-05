@@ -23,15 +23,17 @@ describe Remedy::Screen do
   end
 
   describe "#draw" do
-    let(:size){ Tuple 2, 2 }
+    context "tiny screen" do
+      let(:size){ Tuple 2, 2 }
 
-    it "writes the buffer to the output" do
-      expected = "\e[H\e[J..\e[1B\e[0G..\e[H\e[J..\e[1B\e[0G..".inspect[1..-2]
+      it "writes the buffer to the output" do
+        expected = "\e[H\e[J..\e[1B\e[0G..\e[H\e[J..\e[1B\e[0G..".inspect[1..-2]
 
-      s.draw
+        s.draw
 
-      actual = stringio.string.inspect[1..-2]
-      expect(actual).to eq expected
+        actual = stringio.string.inspect[1..-2]
+        expect(actual).to eq expected
+      end
     end
   end
 end

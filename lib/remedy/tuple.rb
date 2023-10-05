@@ -1,9 +1,9 @@
 module Remedy
-  class Tuple
     # Formerly known as "Remedy::Size", with related concepts in my other projects
     #   called things like "Coordinate", "Pair", or similar
     # Used primarily to contain dimensional numeric values such as the sizes of screen areas,
     #   offsets in two or more dimensions, etc
+  class Tuple
     def initialize *new_dimensions
       dims = new_dimensions.flatten
       if dims.first.is_a? Range then
@@ -41,20 +41,20 @@ module Remedy
 
     # COMPARISON
 
-    # Determines if the two tuples have the same number of dimensions
-    # uses `length` on the other object so it can be used in comparison with more types
-    def bijective? other_tuple
-      cardinality == other_tuple.length
-    end
-    alias_method :sizesame?, :bijective?
-
-    def fits_into? tuple_to_fit_into
-      other_tuple = Tuple(tuple_to_fit_into)
+    def fits_into? size_to_fit_into
+      other_tuple = Tuple(size_to_fit_into)
       cardinality.times.each do |index|
         return false if self[index] > other_tuple[index]
       end
       true
     end
+
+        # Determines if the two tuples have the same number of dimensions
+    # uses `length` on the other object so it can be used in comparison with more types
+    def bijective? other_tuple
+      cardinality == other_tuple.length
+    end
+    alias_method :sizesame?, :bijective?
 
     # ACCESSORS
 
@@ -111,7 +111,7 @@ module Remedy
     def subtract other_tuple
       raise "Different numbers of dimensions!" unless bijective? other_tuple
 
-      cardinality.times.inject Tuple.new do |difference, index|
+      cardinality.times.inject self.class.new do |difference, index|
         difference << self[index] - other_tuple[index]
       end
     end

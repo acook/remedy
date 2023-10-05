@@ -1,5 +1,5 @@
 require 'remedy/view'
-require 'remedy/size'
+require 'remedy/tuple'
 require 'remedy/console'
 require 'remedy/ansi'
 

@@ -15,16 +15,9 @@ module Remedy
 
     def []= *params
       value = params.pop
-      coords = params.flatten
+      coords = Tuple params.flatten
 
-      if coords.first.is_a? ::Remedy::Tuple then
-        coords = coords.first
-      end
-
-      row = coords[0]
-      col = coords[1]
-
-      buf[row][col,value.length] = value
+      replace_inline coords, value
     end
 
     def buf
@@ -39,6 +32,12 @@ module Remedy
 
     def to_s
       buf.join nl
+    end
+
+    private
+
+    def replace_inline coords, value
+      buf[coords.row][coords.col,value.length] = value
     end
   end
 end

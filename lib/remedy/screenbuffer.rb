@@ -47,5 +47,9 @@ module Remedy
     def replace_inline coords, value
       buf[coords.row][coords.col,value.length] = value
     end
+
+    def split line
+      Array line.split(/\r\n|\n\r|\n|\r/)
+    end
   end
 end

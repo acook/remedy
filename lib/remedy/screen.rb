@@ -2,6 +2,7 @@ require "remedy/tuple"
 require "remedy/console"
 require "remedy/ansi"
 require "remedy/screenbuffer"
+require "remedy/align"
 
 module Remedy
   class Screen
@@ -26,7 +27,10 @@ module Remedy
 
     # Draw the buffer to the console using raw output.
     # @return [void]
-    def draw
+    def draw override = nil
+      if override then
+        Align.buffer_center override, buffer
+      end
       ANSI.screen.safe_reset!
       Console.output << buffer.to_ansi
     end

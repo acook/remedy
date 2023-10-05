@@ -41,13 +41,16 @@ module Remedy
 
     # COMPARISON
 
+    # Determines if the two tuples have the same number of dimensions
+    # uses `length` on the other object so it can be used in comparison with more types
     def bijective? other_tuple
-      length == other_tuple.length
+      cardinality == other_tuple.length
     end
+    alias_method :sizesame?, :bijective?
 
     def fits_into? tuple_to_fit_into
       other_tuple = Tuple(tuple_to_fit_into)
-      length.times.each do |index|
+      cardinality.times.each do |index|
         return false if self[index] > other_tuple[index]
       end
       true
@@ -108,7 +111,7 @@ module Remedy
     def subtract other_tuple
       raise "Different numbers of dimensions!" unless bijective? other_tuple
 
-      length.times.inject Tuple.new do |difference, index|
+      cardinality.times.inject Tuple.new do |difference, index|
         difference << self[index] - other_tuple[index]
       end
     end

@@ -84,16 +84,26 @@ module Remedy
       dimensions[0]
     end
     alias_method :height, :x
+    alias_method :row, :x
+    alias_method :first, :x
 
     def y
       dimensions[1]
     end
     alias_method :width, :y
+    alias_method :col, :y
+    alias_method :second, :y
 
     def z
       dimensions[2]
     end
     alias_method :depth, :z
+    alias_method :layer, :z
+    alias_method :third, :z
+
+    def last
+      dimensions.last
+    end
 
     def [] index
       dimensions[index]

@@ -68,12 +68,11 @@ module Remedy
 
     def compile_contents size = available_size
       contents.map{|c| Array c}.flatten.map do |line|
-        space = size.width - line.length
-        if max_size == :fill && halign == :left && space > 0 then
+        if max_size == :fill && halign == :left then
           Align.left_p line, size, fill: fill
-        elsif max_size == :fill && halign == :right && space > 0 then
+        elsif max_size == :fill && halign == :right then
           Align.right_p line, size, fill: fill
-        elsif max_size == :fill && halign == :center && space > 0 then
+        elsif max_size == :fill && halign == :center then
           Align.h_center_p line, size, fill: fill
         else
           line

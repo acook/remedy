@@ -63,6 +63,16 @@ module Remedy
 
     # COMPARISON
 
+    def == other_tuple
+      return false unless bijective? other_tuple
+
+      self.dimensions.each.with_index do |d, i|
+        return false unless d == other_tuple[i]
+      end
+
+      true
+    end
+
     def fits_into? size_to_fit_into
       other_tuple = Tuple(size_to_fit_into)
       cardinality.times.each do |index|

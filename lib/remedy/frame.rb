@@ -67,18 +67,24 @@ module Remedy
       compile_contents.join ANSI.cursor.next_line
     end
 
-    def compile_contents
-      flat_contents = contents.map{|c| Array c}.flatten
+    def content_size
+      sizeof merge_contents
+    end
 
-      flat_contents.map do |line|
+    def merge_contents
+      contents.map{|c| Array c}.flatten
+    end
+
+    def compile_contents
+      merged = merge_contents
+
+      merged.map do |line|
         if max_size == :none then
           next line
         elsif max_size == :fill then
           size = available_size
         elsif max_size == :auto then
-          rows = flat_contents.length
-          cols = flat_contents.map(&:length).max || 0
-          size = Tuple(rows, cols)
+          size = sizeof merged
         elsif Tuple === max_size then
           size = max_size
         else
@@ -95,6 +101,12 @@ module Remedy
           raise "Unknown halign:#{halign}"
         end
       end
+    end
+
+    def sizeof content
+      height = content.length
+      width = content.map(&:length).max || 0
+      Tuple height, width
     end
   end
 end

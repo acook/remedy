@@ -7,9 +7,13 @@ module Remedy
   # Frames can be nested within other Frames or Panes
   class Frame
     def initialize
-      # origin is where the frame will be attached to
-      # :left, :right, :top, :bottom, :center
-      @origin = :center
+      # vorigin is where the frame will be attached vertically
+      # :top, :bottom, :center
+      @vorigin = :top
+
+      # horigin is where the frame will be attached horizontally
+      # :left, :right, :center
+      @horigin = :left
 
       # offset is what the offset from that origin the frame should be placed
       @offset = Tuple.zero
@@ -55,7 +59,7 @@ module Remedy
       # newline character
       @nl = ?\n
     end
-    attr_accessor :contents, :nl, :fill, :available_size, :size, :halign, :valign, :origin
+    attr_accessor :contents, :nl, :fill, :available_size, :size, :halign, :valign, :horigin, :vorigin
 
     def to_a
       compile_contents
@@ -77,17 +81,21 @@ module Remedy
       contents.map{|c| Array c}.flatten
     end
 
+    def compiled_size
+      sizeof compile_contents
+    end
+
     def compile_contents
       merged = merge_contents
 
       if size == :none then
         return merged
       elsif size == :fill then
-        compiled_size = available_size
+        compile_size = available_size
       elsif size == :auto then
-        compiled_size = sizeof merged
+        compile_size = sizeof merged
       elsif Tuple === size then
-        compiled_size = size
+        compile_size = size
       else
         raise "Unknown max_size:#{size}"
       end
@@ -95,24 +103,24 @@ module Remedy
       # TODO: this could probably be replaced with direct buffer insertions
       haligned = merged.map do |line|
         if halign == :left then
-          Align.left_p line, compiled_size, fill: fill
+          Align.left_p line, compile_size, fill: fill
         elsif halign == :right then
-          Align.right_p line, compiled_size, fill: fill
+          Align.right_p line, compile_size, fill: fill
         elsif halign == :center then
-          Align.h_center_p line, compiled_size, fill: fill
+          Align.h_center_p line, compile_size, fill: fill
         else
           raise "Unknown halign:#{halign}"
         end
       end
 
-      buf = Screenbuffer.new compiled_size, fill: fill, nl: nl
+      buf = Screenbuffer.new compile_size, fill: fill, nl: nl
       case valign
       when :top
         voffset = 0
       when :bottom
-        voffset = compiled_size.height - merged.length
+        voffset = compile_size.height - merged.length
       when :center
-        voffset = Align.mido merged.length, compiled_size.height
+        voffset = Align.mido merged.length, compile_size.height
       else
         raise "Unknown valign:#{valign}"
       end
@@ -122,9 +130,17 @@ module Remedy
     end
 
     def sizeof content
-      height = content.length
-      width = content.map(&:length).max || 0
+      lines = Array(content).map do |line|
+        split line
+      end.flatten
+
+      height = lines.length
+      width = lines.map(&:length).max || 0
       Tuple height, width
+    end
+
+    def split line
+      line.split(/\r\n|\n\r|\n|\r/)
     end
   end
 end

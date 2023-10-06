@@ -70,11 +70,11 @@ module Remedy
       contents.map{|c| Array c}.flatten.map do |line|
         space = size.width - line.length
         if max_size == :fill && halign == :left && space > 0 then
-          line + (fill * space)
+          Align.left_p line, size, fill: fill
         elsif max_size == :fill && halign == :right && space > 0 then
-          (fill * space) + line
+          Align.right_p line, size, fill: fill
         elsif max_size == :fill && halign == :center && space > 0 then
-          Align.h_center_pad line, size
+          Align.h_center_p line, size, fill: fill
         else
           line
         end

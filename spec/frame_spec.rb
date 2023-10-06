@@ -58,9 +58,9 @@ describe Remedy::Frame do
       expect(actual).to eq expected
     end
 
-    context "max_size = Tuple" do
+    context "size = Tuple" do
       before do
-        f.max_size = Tuple 5, 5
+        f.size = Tuple 5, 5
         f.available_size = Tuple 7, 7
 
         f.contents << "foo"
@@ -82,9 +82,9 @@ describe Remedy::Frame do
       end
     end
 
-    context "max_size = :fill" do
+    context "size = :fill" do
       before do
-        f.max_size = :fill
+        f.size = :fill
         f.available_size = Tuple 6, 6
 
         f.contents << "foo"
@@ -132,9 +132,9 @@ describe Remedy::Frame do
       end
     end
 
-    context "max_size = :auto" do
+    context "size = :auto" do
       before do
-        f.max_size = :auto
+        f.size = :auto
         f.available_size = Tuple 6, 6
 
         f.contents << "foo"

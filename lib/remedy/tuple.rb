@@ -151,11 +151,11 @@ module Remedy
     end
 
     def scalar_subtract amount
-      dup scalar_subtract! amount
+      dup.scalar_subtract! amount
     end
 
     def matrix_subtract other_tuple
-      raise "Different numbers of dimensions!" unless bijective? other_tuple
+      raise "Different numbers of dimensions! (#{cardinality} vs #{other_tuple.cardinality})" unless bijective? other_tuple
 
       result = cardinality.times.inject self.class.new do |difference, index|
         difference << self[index] - other_tuple[index]
@@ -175,7 +175,7 @@ module Remedy
     end
 
     def matrix_addition other_tuple
-      raise "Different numbers of dimensions!" unless bijective? other_tuple
+      raise "Different numbers of dimensions! (#{cardinality} vs #{other_tuple.cardinality})" unless bijective? other_tuple
 
       result = cardinality.times.inject self.class.new do |sum, index|
         sum << self[index] + other_tuple[index]

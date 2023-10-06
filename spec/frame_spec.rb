@@ -182,4 +182,29 @@ describe Remedy::Frame do
       end
     end
   end
+
+  describe "modal dialog style" do
+    before do
+      f.origin = :center
+      f.halign = :center
+      f.valign = :center
+      f.size = Tuple(5,7)
+      f.available_size = Tuple(11,11)
+
+      f.contents << "lol"
+    end
+
+    it "content appears centered" do
+      expected = [
+        "       ",
+        "       ",
+        "  lol  ",
+        "       ",
+        "       "
+      ].join ?\n
+
+      actual = f.to_s
+      expect(actual).to eq expected
+    end
+  end
 end

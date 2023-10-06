@@ -90,6 +90,7 @@ module Remedy
         raise "Unknown max_size:#{size}"
       end
 
+      # TODO: this could probably be replaced with direct buffer insertions
       haligned = merged.map do |line|
         if halign == :left then
           Align.left_p line, compiled_size, fill: fill
@@ -103,7 +104,18 @@ module Remedy
       end
 
       buf = Screenbuffer.new compiled_size, fill: fill, nl: nl
-      buf[0,0] = haligned
+      case valign
+      when :top
+        voffset = 0
+      when :bottom
+        voffset = compiled_size - merged.length
+      when :center
+        voffset = Align.mido merged.length, compiled_size.height
+      else
+        raise "Unknown valign:#{valign}"
+      end
+
+      buf[voffset,0] = haligned
       buf.to_a
     end
 

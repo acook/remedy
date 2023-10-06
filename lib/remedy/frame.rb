@@ -33,11 +33,12 @@ module Remedy
       @spacing = :none
 
       # the maximum size that this frame wants to be, the actual size may be smaller
-      # :auto - the frame has no size of its own, it conforms to the size of its content
+      # :none - frame has no size, contents are not aligned
+      # :auto - frame conforms to the size of its largest content and alignts to it
       # :fill - the frame tries to fill as much space as possible
       # Tuple - specify a Tuple to constrain it to a specific size
       # Tuple.zero is same as :auto
-      @max_size = :auto
+      @max_size = :none
 
       # this size is used when max_size is set to :fill
       # typically set by a screen object after resize
@@ -68,7 +69,7 @@ module Remedy
 
     def compile_contents size = available_size
       contents.map{|c| Array c}.flatten.map do |line|
-        if max_size == :auto then
+        if max_size == :none then
           line
         elsif max_size == :fill && halign == :left then
           Align.left_p line, size, fill: fill

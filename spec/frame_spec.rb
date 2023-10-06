@@ -74,7 +74,7 @@ describe Remedy::Frame do
         end
 
         it "fills and aligns contents to the left" do
-          expected = "foo  \nbar  \nbaz  "
+          expected = "foo  \nbar  \nbaz  \n     \n     "
 
           actual = f.to_s
           expect(actual).to eq expected
@@ -98,7 +98,7 @@ describe Remedy::Frame do
         end
 
         it "fills and aligns contents to the left" do
-          expected = "foo   \nbar   \nbaz   "
+          expected = "foo   \nbar   \nbaz   \n      \n      \n      "
 
           actual = f.to_s
           expect(actual).to eq expected
@@ -111,7 +111,7 @@ describe Remedy::Frame do
         end
 
         it "fills and aligns contents to the right" do
-          expected = "   foo\n   bar\n   baz"
+          expected = "   foo\n   bar\n   baz\n      \n      \n      "
 
           actual = f.to_s
           expect(actual).to eq expected
@@ -124,7 +124,7 @@ describe Remedy::Frame do
         end
 
         it "fills and aligns contents to the center" do
-          expected = " foo  \n bar  \n baz  "
+          expected = " foo  \n bar  \n baz  \n      \n      \n      "
 
           actual = f.to_s
           expect(actual).to eq expected

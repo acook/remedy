@@ -101,6 +101,10 @@ module Remedy
           raise "Unknown halign:#{halign}"
         end
       end
+
+      buf = Screenbuffer.new compiled_size, fill: fill, nl: nl
+      buf[0,0] = haligned
+      buf.to_a
     end
 
     def sizeof content

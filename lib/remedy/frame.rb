@@ -110,7 +110,7 @@ module Remedy
       when :top
         voffset = 0
       when :bottom
-        voffset = compiled_size - merged.length
+        voffset = compiled_size.height - merged.length
       when :center
         voffset = Align.mido merged.length, compiled_size.height
       else

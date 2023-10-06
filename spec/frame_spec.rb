@@ -206,4 +206,28 @@ describe Remedy::Frame do
       expect(actual).to eq expected
     end
   end
+
+  describe "bottom alignment" do
+    before do
+      f.halign = :center
+      f.valign = :bottom
+      f.size = Tuple(5,7)
+      f.available_size = Tuple(11,11)
+
+      f.contents << "lol"
+    end
+
+    it "content appears centered in the bottom" do
+      expected = [
+        "       ",
+        "       ",
+        "       ",
+        "       ",
+        "  lol  "
+      ].join ?\n
+
+      actual = f.to_s
+      expect(actual).to eq expected
+    end
+  end
 end

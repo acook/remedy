@@ -69,6 +69,22 @@ describe Remedy::Screenbuffer do
       expect(actual).to eq expected
     end
 
+    it "accepts partials" do
+      value = Remedy::Partial.new ["a\nb"]
+      expected = ".a\n.b"
+      sb[0,1] = value
+      actual = sb.to_s
+      expect(actual).to eq expected
+    end
+
+    it "accepts views" do
+      value = Remedy::View.new Remedy::Partial.new ["a\nb"]
+      expected = ".a\n.b"
+      sb[0,1] = value
+      actual = sb.to_s
+      expect(actual).to eq expected
+    end
+
     context "larger size" do
       let(:size){ Tuple 4, 4 }
 

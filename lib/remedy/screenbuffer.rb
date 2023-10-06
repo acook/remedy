@@ -127,6 +127,7 @@ module Remedy
     end
 
     def replace_perline coords, value
+      # Array() checks for `.to_a` on whatever is passed to it
       lines = Array(value).map do |line|
         split line
       end.flatten

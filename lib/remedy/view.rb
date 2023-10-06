@@ -14,6 +14,10 @@ module Remedy
       end
     end
 
+    def to_a
+      merged
+    end
+
     protected
 
     def compile!

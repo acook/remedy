@@ -78,19 +78,19 @@ module Remedy
     def compile_contents
       merged = merge_contents
 
-      merged.map do |line|
-        if size == :none then
-          next line
-        elsif size == :fill then
-          compiled_size = available_size
-        elsif size == :auto then
-          compiled_size = sizeof merged
-        elsif Tuple === size then
-          compiled_size = size
-        else
-          raise "Unknown max_size:#{size}"
-        end
+      if size == :none then
+        return merged
+      elsif size == :fill then
+        compiled_size = available_size
+      elsif size == :auto then
+        compiled_size = sizeof merged
+      elsif Tuple === size then
+        compiled_size = size
+      else
+        raise "Unknown max_size:#{size}"
+      end
 
+      haligned = merged.map do |line|
         if halign == :left then
           Align.left_p line, compiled_size, fill: fill
         elsif halign == :right then

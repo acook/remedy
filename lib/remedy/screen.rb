@@ -84,6 +84,7 @@ module Remedy
 
     def populate_buffer
       frames.sort(&:depth).each do |frame|
+        frame.available_size = buffer.size
         buffer[0,0] = frame
       end
     end

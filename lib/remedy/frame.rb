@@ -67,15 +67,25 @@ module Remedy
       compile_contents.join ANSI.cursor.next_line
     end
 
-    def compile_contents size = available_size
-      contents.map{|c| Array c}.flatten.map do |line|
+    def compile_contents
+      flat_contents = contents.map{|c| Array c}.flatten
+
+      flat_contents.map do |line|
         if max_size == :none then
-          line
-        elsif max_size == :fill && halign == :left then
+          next line
+        elsif max_size == :fill then
+          size = available_size
+        elsif max_size == :auto then
+          rows = flat_contents.length
+          cols = flat_contents.map(&:length).max || 0
+          size = Tuple(rows, cols)
+        end
+
+        if halign == :left then
           Align.left_p line, size, fill: fill
-        elsif max_size == :fill && halign == :right then
+        elsif halign == :right then
           Align.right_p line, size, fill: fill
-        elsif max_size == :fill && halign == :center then
+        elsif halign == :center then
           Align.h_center_p line, size, fill: fill
         else
           raise "Unknown alignment - halign:#{} max_size:#{max_size}"

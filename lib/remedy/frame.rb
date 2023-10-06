@@ -53,7 +53,7 @@ module Remedy
       # newline character
       @nl = ?\n
     end
-    attr_accessor :contents, :nl, :fill, :available_size, :max_size, :halign
+    attr_accessor :contents, :nl, :fill, :available_size, :max_size, :halign, :valign, :origin
 
     def to_a
       compile_contents
@@ -79,6 +79,10 @@ module Remedy
           rows = flat_contents.length
           cols = flat_contents.map(&:length).max || 0
           size = Tuple(rows, cols)
+        elsif Tuple === max_size then
+          size = max_size
+        else
+          raise "Unknown max_size:#{max_size}"
         end
 
         if halign == :left then
@@ -88,7 +92,7 @@ module Remedy
         elsif halign == :center then
           Align.h_center_p line, size, fill: fill
         else
-          raise "Unknown alignment - halign:#{} max_size:#{max_size}"
+          raise "Unknown halign:#{halign}"
         end
       end
     end

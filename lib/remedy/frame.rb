@@ -73,6 +73,8 @@ module Remedy
           line + (fill * space)
         elsif max_size == :fill && halign == :right && space > 0 then
           (fill * space) + line
+        elsif max_size == :fill && halign == :center && space > 0 then
+          Align.h_center_pad line, size
         else
           line
         end

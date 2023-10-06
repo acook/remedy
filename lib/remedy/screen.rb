@@ -85,7 +85,31 @@ module Remedy
     def populate_buffer
       frames.sort(&:depth).each do |frame|
         frame.available_size = buffer.size
-        buffer[0,0] = frame
+        fsize = frame.compiled_size
+
+        case frame.vorigin
+        when :top
+          voffset = 0
+        when :center
+          voffset = Align.mido fsize.height, buffer.size.height
+        when :bottom
+          voffset = buffer.size.height - compiled_size.height
+        else
+          raise "Unknown vorigin:#{frame.vorigin}"
+        end
+
+        case frame.horigin
+        when :left
+          hoffset = 0
+        when :center
+          hoffset = Align.mido fsize.width, buffer.size.width
+        when :right
+          hoffset = buffer.size.width - compiled_size.width
+        else
+          raise "Unknown horigin:#{frame.horigin}"
+        end
+
+        buffer[voffset,hoffset] = frame
       end
     end
   end

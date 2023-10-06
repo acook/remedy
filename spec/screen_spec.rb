@@ -88,4 +88,34 @@ describe Remedy::Screen do
       expect(actual).to eq expected
     end
   end
+
+  describe "#to_s" do
+    let(:size_override){ Tuple 5, 11 }
+
+    let(:frame) do
+      f = ::Remedy::Frame.new
+      f.contents << "foo"
+      f.contents << "bar\nbaz"
+      f.vorigin = :center
+      f.horigin = :center
+      f.size = :none
+      f
+    end
+
+    it "attaches frames where they specify" do
+      expected = [
+        "           ",
+        "    foo    ",
+        "    bar    ",
+        "    baz    ",
+        "           "
+      ].join ?\n
+
+      s.buffer.fill = " "
+      s.frames << frame
+      actual = s.to_s
+
+      expect(actual).to eq expected
+    end
+  end
 end

@@ -7,9 +7,24 @@ module Remedy
     #
     # @param content [String] the line to be centered
     # @param size [Remedy::Tuple] a Tuple with a width - it controls the centering
-    def h_center_pad content, size
+    # @param fill [String] the string to fill the space with
+    def h_center_p content, size, fill: " "
       head, tail = middle_spacing content.length, size.width
-      (" " * head) + content + (" " * tail)
+      (fill * head) + content + (fill * tail)
+    end
+
+    # Left align by padding the right side to fill out the total width.
+    def left_p content, size, fill: " "
+      space = size.width - content.length
+      return content if space < 0
+      content + (fill * space)
+    end
+
+    # Right align by padding the left side to fill out the total width.
+    def right_p content, size, fill: " "
+      space = size.width - content.length
+      return content if space < 0
+      (fill * space) + content
     end
 
     # Center content in the middle of a buffer, both vertically and horizontally.

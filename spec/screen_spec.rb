@@ -47,7 +47,7 @@ describe Remedy::Screen do
         let(:size){ Tuple 3, 20 }
 
         it "can display single objects with the override parameter" do
-          expected = "\\e[H\\e[J....................\\e[1B\\e[0G....hello, world!...\\e[1B\\e[0G...................."
+          expected = "\\e[H\\e[J....................\\e[1B\\e[0G...hello, world!....\\e[1B\\e[0G...................."
           value = "hello, world!"
 
           s.draw ::Remedy::Partial.new [value]

@@ -82,6 +82,19 @@ describe Remedy::Frame do
           expect(actual).to eq expected
         end
       end
+
+      context "halign = :center" do
+        before do
+          f.halign = :center
+        end
+
+        it "fills and aligns contents to the right when max_size = :fill and halign = :right" do
+          expected = " foo  \n bar  \n baz  "
+
+          actual = f.to_s
+          expect(actual).to eq expected
+        end
+      end
     end
   end
 end

@@ -138,4 +138,18 @@ describe Remedy::Screenbuffer do
       expect(actual).to eq expected
     end
   end
+
+  describe "#reset" do
+    it "resets the contents of the buffer" do
+      expected = "..\n.."
+
+      sb[0,0] = ["ab", "cd"]
+      expect(sb.to_s).to eq "ab\ncd"
+
+      sb.reset
+      actual = sb.to_s
+
+      expect(actual).to eq expected
+    end
+  end
 end

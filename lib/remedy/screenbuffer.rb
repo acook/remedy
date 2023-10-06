@@ -118,6 +118,11 @@ module Remedy
       buf.join ANSI.cursor.next_line
     end
 
+    # Reset contents of buffer to the empty state using the @fill character.
+    def reset
+      @buf = new_buf
+    end
+
     private
 
     def new_buf

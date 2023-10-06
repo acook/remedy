@@ -18,7 +18,7 @@ module Remedy
 
       # vertical alignment of contents
       # :top, :bottom, :center
-      @halign = :top
+      @valign = :top
 
       # depth is the z index or layer, higher numbers cover lower numbers
       # if two frames have the same layer but would overlap, then the one added most recently should come out on top

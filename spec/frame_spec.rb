@@ -46,5 +46,42 @@ describe Remedy::Frame do
       actual = f.to_s
       expect(actual).to eq expected
     end
+
+    context "max_size = :fill" do
+      before do
+        f.max_size = :fill
+        f.available_size = Tuple 6, 6
+
+        f.contents << "foo"
+        f.contents << "bar"
+        f.contents << "baz"
+      end
+
+      context "halign = :left" do
+        before do
+          f.halign = :left
+        end
+
+        it "fills available space" do
+          expected = "foo   \nbar   \nbaz   "
+
+          actual = f.to_s
+          expect(actual).to eq expected
+        end
+      end
+
+      context "halign = :right" do
+        before do
+          f.halign = :right
+        end
+
+        it "fills and aligns contents to the right when max_size = :fill and halign = :right" do
+          expected = "   foo\n   bar\n   baz"
+
+          actual = f.to_s
+          expect(actual).to eq expected
+        end
+      end
+    end
   end
 end

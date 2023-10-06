@@ -5,18 +5,18 @@ module Remedy
   # Frames can be nested within other Frames or Panes
   class Frame
     def initialize
-      # origin is where the inner pane will be attached to
+      # origin is where the frame will be attached to
       # :left, :right, :top, :bottom, :center
       @origin = :center
 
-      # offset is what the offset from that origin the pane should be placed
+      # offset is what the offset from that origin the frame should be placed
       @offset = Tuple.zero
 
       # depth is the z index or layer, higher numbers cover lower numbers
-      # if two panes have the same layer but would overlap, then the one added most recently should come out on top
+      # if two frames have the same layer but would overlap, then the one added most recently should come out on top
       @depth = 0
 
-      # arrangement, if this frame contains multiple panes, then they will be arranged according to this
+      # arrangement, if this frame contains multiple content items, then they will be arranged according to this
       # :stacked, :columnar, :tabbed(?)
       @arragement = :stacked
 
@@ -24,8 +24,8 @@ module Remedy
       # zero means fill
       @max_size = Tuple.zero
 
-      # empty list of panes
-      @panes = Array.new
+      # empty list of contents
+      @contents = Array.new
 
       # background fill
       @fill = " "
@@ -33,22 +33,22 @@ module Remedy
       # newline character
       @nl = ?\n
     end
-    attr_accessor :panes, :nl, :fill
+    attr_accessor :contents, :nl, :fill
 
     def to_a
-      compile_panes
+      compile_contents
     end
 
     def to_s
-      compile_panes.join nl
+      compile_contents.join nl
     end
 
     def to_ansi
-      compile_panes.join ANSI.cursor.next_line
+      compile_contents.join ANSI.cursor.next_line
     end
 
-    def compile_panes
-      panes
+    def compile_contents
+      contents.map{|c| Array c}.flatten
     end
   end
 end

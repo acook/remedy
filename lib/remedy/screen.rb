@@ -29,7 +29,7 @@ module Remedy
     # @return [void]
     def draw override = nil
       if override then
-        Align.buffer_center override, buffer
+        Align.hv_center override, buffer
       else
         refresh_buffer
       end

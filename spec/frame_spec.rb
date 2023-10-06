@@ -183,9 +183,8 @@ describe Remedy::Frame do
     end
   end
 
-  describe "modal dialog style" do
+  describe "centered alignment" do
     before do
-      f.origin = :center
       f.halign = :center
       f.valign = :center
       f.size = Tuple(5,7)

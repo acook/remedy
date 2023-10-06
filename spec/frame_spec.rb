@@ -5,6 +5,17 @@ require "remedy/partial"
 describe Remedy::Frame do
   subject(:f){ described_class.new }
 
+  describe "#content_size" do
+    it "returns a Tuple of the contents dimensions" do
+      expected = Tuple 2, 4
+      f.contents << "1234"
+      f.contents << "567"
+
+      actual = f.content_size
+      expect(actual).to eq expected
+    end
+  end
+
   describe "#to_s" do
     it "returns a string" do
       expected = String

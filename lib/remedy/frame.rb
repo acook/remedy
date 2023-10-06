@@ -37,8 +37,8 @@ module Remedy
       # :auto - frame conforms to the size of its largest content and alignts to it
       # :fill - the frame tries to fill as much space as possible
       # Tuple - specify a Tuple to constrain it to a specific size
-      # Tuple.zero is same as :auto
-      @max_size = :none
+      # Tuple.zero is same as :none
+      @size = :none
 
       # this size is used when max_size is set to :fill
       # typically set by a screen object after resize
@@ -53,7 +53,7 @@ module Remedy
       # newline character
       @nl = ?\n
     end
-    attr_accessor :contents, :nl, :fill, :available_size, :max_size, :halign, :valign, :origin
+    attr_accessor :contents, :nl, :fill, :available_size, :size, :halign, :valign, :origin
 
     def to_a
       compile_contents
@@ -79,24 +79,24 @@ module Remedy
       merged = merge_contents
 
       merged.map do |line|
-        if max_size == :none then
+        if size == :none then
           next line
-        elsif max_size == :fill then
-          size = available_size
-        elsif max_size == :auto then
-          size = sizeof merged
-        elsif Tuple === max_size then
-          size = max_size
+        elsif size == :fill then
+          compiled_size = available_size
+        elsif size == :auto then
+          compiled_size = sizeof merged
+        elsif Tuple === size then
+          compiled_size = size
         else
-          raise "Unknown max_size:#{max_size}"
+          raise "Unknown max_size:#{size}"
         end
 
         if halign == :left then
-          Align.left_p line, size, fill: fill
+          Align.left_p line, compiled_size, fill: fill
         elsif halign == :right then
-          Align.right_p line, size, fill: fill
+          Align.right_p line, compiled_size, fill: fill
         elsif halign == :center then
-          Align.h_center_p line, size, fill: fill
+          Align.h_center_p line, compiled_size, fill: fill
         else
           raise "Unknown halign:#{halign}"
         end

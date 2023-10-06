@@ -30,9 +30,15 @@ module Remedy
     def draw override = nil
       if override then
         Align.buffer_center override, buffer
+      else
+        refresh_buffer
       end
       ANSI.screen.safe_reset!
       Console.output << buffer.to_ansi
+    end
+
+    def frames
+      @frames ||= Array.new
     end
 
     # This sets the new screen size and rebuilds the buffer before redrawing it.
@@ -54,6 +60,32 @@ module Remedy
     def resized new_size
       buffer.size = new_size
       draw
+    end
+
+    def to_a
+      refresh_buffer
+      buffer.to_a
+    end
+
+    def to_s
+      refresh_buffer
+      buffer.to_s
+    end
+
+    def to_ansi
+      refresh_buffer
+      buffer.to_ansi
+    end
+
+    def refresh_buffer
+      buffer.reset
+      populate_buffer
+    end
+
+    def populate_buffer
+      frames.sort(&:depth).each do |frame|
+        buffer[0,0] = frame
+      end
     end
   end
 end

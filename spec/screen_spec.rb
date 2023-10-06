@@ -1,5 +1,6 @@
 require_relative "spec_helper"
 require "remedy/screen"
+require "remedy/frame"
 require "stringio"
 
 describe Remedy::Screen do
@@ -57,6 +58,34 @@ describe Remedy::Screen do
           expect(actual).to eq expected
         end
       end
+    end
+  end
+
+  describe "#frames" do
+    let(:size){ Tuple 3, 5 }
+    let(:size_override){ size }
+
+    let(:frame) do
+      f = ::Remedy::Frame.new
+      f.contents << "foo"
+      f.contents << "bar\nbaz"
+      f
+    end
+
+    it "gets the list of frames" do
+      expected = [frame]
+
+      s.frames << frame
+
+      actual = s.frames
+      expect(actual).to eq expected
+    end
+
+    it "can add a single frame to the screen" do
+      expected = "foo..\nbar..\nbaz.."
+      s.frames << frame
+      actual = s.to_s
+      expect(actual).to eq expected
     end
   end
 end

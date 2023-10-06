@@ -1,4 +1,6 @@
 require "remedy/tuple"
+require "remedy/align"
+require "remedy/screenbuffer"
 
 module Remedy
   # Frames contain Panes and Panes contain Partials

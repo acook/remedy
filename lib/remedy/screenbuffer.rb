@@ -106,7 +106,12 @@ module Remedy
       end
     end
 
-    # Convert screenbuffer to single string.
+    # @return [Array<String>] the contents of the buffer as an array of strings
+    def to_a
+      buf
+    end
+
+    # Convert screenbuffer to single String.
     # Concatenates the contents of the buffer with the `nl` attribute.
     def to_s
       buf.join nl

@@ -31,10 +31,10 @@ module Remedy
     #
     # @param content [Remedy::Partial] any object that responds to `height`, `width`, and a `to_a` that returns an array of strings
     # @return [content] whatever was passed in as the `content` param will be returned
-    def buffer_center content, screenbuffer
-      voffset = middle content.height, screenbuffer.size.height
-      hoffset = middle content.width, screenbuffer.size.width
-      screenbuffer[voffset,hoffset] = content
+    def hv_center content, buffer
+      voffset = mido content.height, buffer.size.height
+      hoffset = mido content.width, buffer.size.width
+      buffer[voffset,hoffset] = content
     end
 
     # Given the actual space something takes up,
@@ -43,7 +43,7 @@ module Remedy
     # @param actual [Numeric] the space already taken
     # @param available [Numeric] the available space
     # @return [Integer] the offset from the end of the availabe space to center the actual content
-    def middle actual, available
+    def mido actual, available
       return 0 unless actual < available
 
       offset = ((available - actual) / 2.0).floor
@@ -60,7 +60,7 @@ module Remedy
     def middle_spacing actual, available
       return [0,0] unless actual < available
 
-      head = middle actual, available
+      head = mido actual, available
       tail = available - (head + actual)
 
       [head, tail]

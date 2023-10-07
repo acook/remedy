@@ -273,5 +273,48 @@ describe Remedy::Frame do
         expect(actual).to eq expected
       end
     end
+
+    describe "fractional width size" do
+      before do
+        f.halign = :center
+        f.valign = :bottom
+        f.size = Tuple(0,0.5)
+        f.available_size = Tuple(3,11)
+
+        f.contents << "lol"
+      end
+
+      it "stretches to half the horizontal bounds of the container" do
+        expected = [
+          "     ",
+          "     ",
+          " lol "
+        ].join ?\n
+
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+
+    describe "fractional height size" do
+      before do
+        f.halign = :center
+        f.valign = :bottom
+        f.size = Tuple(0.5,0)
+        f.available_size = Tuple(4,11)
+
+        f.contents << "lol"
+      end
+
+      it "stretches to half the vertical bounds of the container" do
+        expected = [
+          "           ",
+          "    lol    "
+        ].join ?\n
+
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
   end
 end

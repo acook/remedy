@@ -93,7 +93,7 @@ module Remedy
         when :center
           voffset = Align.mido fsize.height, buffer.size.height
         when :bottom
-          voffset = buffer.size.height - compiled_size.height
+          voffset = buffer.size.height - fsize.height
         else
           raise "Unknown vorigin:#{frame.vorigin}"
         end
@@ -104,7 +104,7 @@ module Remedy
         when :center
           hoffset = Align.mido fsize.width, buffer.size.width
         when :right
-          hoffset = buffer.size.width - compiled_size.width
+          hoffset = buffer.size.width - fsize.width
         else
           raise "Unknown horigin:#{frame.horigin}"
         end

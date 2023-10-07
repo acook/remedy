@@ -232,5 +232,46 @@ describe Remedy::Frame do
         expect(actual).to eq expected
       end
     end
+
+    describe "0 height Tuple" do
+      before do
+        f.halign = :center
+        f.valign = :bottom
+        f.size = Tuple(0,7)
+        f.available_size = Tuple(3,11)
+
+        f.contents << "lol"
+      end
+      it "stretches to the vertical bounds of the container" do
+        expected = [
+          "       ",
+          "       ",
+          "  lol  "
+        ].join ?\n
+
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+
+    describe "0 width tuple" do
+      before do
+        f.halign = :center
+        f.valign = :bottom
+        f.size = Tuple(1,0)
+        f.available_size = Tuple(3,11)
+
+        f.contents << "lol"
+      end
+
+      it "stretches to the horizontal bounds of the container" do
+        expected = [
+          "    lol    "
+        ].join ?\n
+
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
   end
 end

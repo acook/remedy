@@ -1,6 +1,7 @@
 require_relative "spec_helper"
 require "remedy/screen"
 require "remedy/frame"
+require "remedy/partial"
 require "stringio"
 
 describe Remedy::Screen do

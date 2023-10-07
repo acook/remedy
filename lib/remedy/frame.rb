@@ -59,7 +59,7 @@ module Remedy
       # newline character
       @nl = ?\n
     end
-    attr_accessor :contents, :nl, :fill, :available_size, :size, :halign, :valign, :horigin, :vorigin
+    attr_accessor :contents, :nl, :fill, :available_size, :size, :halign, :valign, :horigin, :vorigin, :depth
 
     def to_a
       compile_contents

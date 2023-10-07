@@ -96,11 +96,17 @@ module Remedy
         compile_size = sizeof merged
       elsif Tuple === size then
         compile_size = size.dup
+
         if size.height == 0 then
           compile_size[0] = available_size.height
+        elsif size.height < 1 then
+          compile_size[0] = (available_size.height * size.height).floor
         end
+
         if size.width == 0 then
           compile_size[1] = available_size.width
+        elsif size.width < 1 then
+          compile_size[1] = (available_size.width * size.width).floor
         end
       else
         raise "Unknown max_size:#{size}"

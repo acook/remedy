@@ -119,6 +119,10 @@ module Remedy
       dimensions[index]
     end
 
+    def []= index, value
+      dimensions[index] = value
+    end
+
     def cardinality
       dimensions.length
     end

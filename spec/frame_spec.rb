@@ -57,6 +57,9 @@ describe Remedy::Frame do
       actual = f.to_s
       expect(actual).to eq expected
     end
+  end
+
+  describe "size and alignment" do
 
     context "size = Tuple" do
       before do
@@ -181,53 +184,53 @@ describe Remedy::Frame do
         end
       end
     end
-  end
 
-  describe "centered alignment" do
-    before do
-      f.halign = :center
-      f.valign = :center
-      f.size = Tuple(5,7)
-      f.available_size = Tuple(11,11)
+    describe "centered alignment" do
+      before do
+        f.halign = :center
+        f.valign = :center
+        f.size = Tuple(5,7)
+        f.available_size = Tuple(11,11)
 
-      f.contents << "lol"
+        f.contents << "lol"
+      end
+
+      it "content appears centered" do
+        expected = [
+          "       ",
+          "       ",
+          "  lol  ",
+          "       ",
+          "       "
+        ].join ?\n
+
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
     end
 
-    it "content appears centered" do
-      expected = [
-        "       ",
-        "       ",
-        "  lol  ",
-        "       ",
-        "       "
-      ].join ?\n
+    describe "bottom alignment" do
+      before do
+        f.halign = :center
+        f.valign = :bottom
+        f.size = Tuple(5,7)
+        f.available_size = Tuple(11,11)
 
-      actual = f.to_s
-      expect(actual).to eq expected
-    end
-  end
+        f.contents << "lol"
+      end
 
-  describe "bottom alignment" do
-    before do
-      f.halign = :center
-      f.valign = :bottom
-      f.size = Tuple(5,7)
-      f.available_size = Tuple(11,11)
+      it "content appears centered in the bottom" do
+        expected = [
+          "       ",
+          "       ",
+          "       ",
+          "       ",
+          "  lol  "
+        ].join ?\n
 
-      f.contents << "lol"
-    end
-
-    it "content appears centered in the bottom" do
-      expected = [
-        "       ",
-        "       ",
-        "       ",
-        "       ",
-        "  lol  "
-      ].join ?\n
-
-      actual = f.to_s
-      expect(actual).to eq expected
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
     end
   end
 end

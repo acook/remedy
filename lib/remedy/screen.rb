@@ -57,9 +57,9 @@ module Remedy
     #
     # @param new_size [Remedy::Tuple] the new size of the terminal
     # @return [void]
-    def resized new_size
+    def resized new_size, redraw: true
       buffer.size = new_size
-      draw
+      draw if redraw
     end
 
     def to_a

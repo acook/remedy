@@ -9,6 +9,17 @@ describe Remedy::Screen do
   let(:console){ ::Remedy::Console }
   let(:size){ Tuple 20, 40 }
   let(:size_override){ Tuple 20, 40 }
+  let(:frame) do
+    f = ::Remedy::Frame.new
+    f.contents << "foo"
+    f.contents << "bar\nbaz"
+    f.vorigin = :center
+    f.horigin = :center
+    f.valign = :center
+    f.halign = :center
+    f.size = :none
+    f
+  end
 
   before(:each) do
     console.size_override = size_override
@@ -90,30 +101,28 @@ describe Remedy::Screen do
     end
   end
 
-  describe "#to_s" do
-    let(:size_override){ Tuple 5, 11 }
+  describe "#resized" do
+    let(:new_size_override){ Tuple 5, 9 }
 
-    let(:frame) do
-      f = ::Remedy::Frame.new
-      f.contents << "foo"
-      f.contents << "bar\nbaz"
-      f.vorigin = :center
-      f.horigin = :center
-      f.size = :none
-      f
+    before do
+      frame.size = Tuple(0, 0.5)
+      frame.fill = "."
     end
 
-    it "attaches frames where they specify" do
+    it "resizes internal frames" do
+      # This is a very surface level test which did not detect a bug caused by
+      #   Tuple#dup, but still demonstrates the basics
       expected = [
-        "           ",
-        "    foo    ",
-        "    bar    ",
-        "    baz    ",
-        "           "
+        "  ....   ",
+        "  foo.   ",
+        "  bar.   ",
+        "  baz.   ",
+        "  ....   "
       ].join ?\n
 
       s.buffer.fill = " "
       s.frames << frame
+      s.resized new_size_override, redraw: false
       actual = s.to_s
 
       expect(actual).to eq expected

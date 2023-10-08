@@ -7,10 +7,11 @@ require "stringio"
 describe Remedy::Screen do
   subject(:s){ described_class.new auto_resize: false }
   let(:console){ ::Remedy::Console }
+  let(:fclass) { ::Remedy::Frame }
   let(:size){ Tuple 20, 40 }
   let(:size_override){ Tuple 20, 40 }
   let(:frame) do
-    f = ::Remedy::Frame.new
+    f = fclass.new
     f.contents << "foo"
     f.contents << "bar\nbaz"
     f.vorigin = :center
@@ -78,7 +79,7 @@ describe Remedy::Screen do
     let(:size_override){ size }
 
     let(:frame) do
-      f = ::Remedy::Frame.new
+      f = fclass.new
       f.contents << "foo"
       f.contents << "bar\nbaz"
       f
@@ -130,7 +131,7 @@ describe Remedy::Screen do
   end
 
   describe "offset frames" do
-    let(:new_size_override){ Tuple 5, 9 }
+    let(:size_override){ Tuple 5, 9 }
 
     before do
       frame.vorigin = :bottom
@@ -154,7 +155,6 @@ describe Remedy::Screen do
 
       s.buffer.fill = " "
       s.frames << frame
-      s.resized new_size_override, redraw: false
       actual = s.to_s
 
       expect(actual).to eq expected

@@ -30,6 +30,7 @@ module Remedy
     # Center content in the middle of a buffer, both vertically and horizontally.
     #
     # @param content [Remedy::Partial] any object that responds to `height`, `width`, and a `to_a` that returns an array of strings
+    # @param buffer [Remedy::Screenbuffer] a screenbuffer to write to
     # @return [content] whatever was passed in as the `content` param will be returned
     def hv_center content, buffer
       voffset = mido content.height, buffer.size.height

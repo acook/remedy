@@ -113,6 +113,17 @@ describe Remedy::Screenbuffer do
       expect(actual).to eq expected
     end
 
+    it "truncates content when passed a negative index" do
+      # this enabled resizing the terminal smaller than fixed content sizes
+      # and moving windows partially off screen
+
+      value = %w(1 2 3)
+      expected = "2.\n3."
+      sb[-1,0] = value
+      actual = sb.to_s
+      expect(actual).to eq expected
+    end
+
     context "without ellipsis" do
       subject(:sb){ described_class.new size, fill: ".", ellipsis: nil }
 

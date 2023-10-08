@@ -109,6 +109,9 @@ module Remedy
           raise "Unknown horigin:#{frame.horigin}"
         end
 
+        voffset += frame.offset.height
+        hoffset += frame.offset.width
+
         buffer[voffset,hoffset] = frame
       end
     end

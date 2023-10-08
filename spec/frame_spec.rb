@@ -3,7 +3,7 @@ require "remedy/frame"
 require "remedy/partial"
 
 describe Remedy::Frame do
-  subject(:f){ described_class.new }
+  subject(:f){ described_class.new name: "subject" }
 
   describe "#content_size" do
     it "returns a Tuple of the contents dimensions" do
@@ -378,17 +378,17 @@ describe Remedy::Frame do
 
   context "with nested frames" do
     let(:f1) do
-      f1 = described_class.new
+      f1 = described_class.new name: "f1"
       f1.contents << "a"
       f1
     end
     let(:f2) do
-      f2 = described_class.new
+      f2 = described_class.new name: "f2"
       f2.contents << "b"
       f2
     end
     let(:f3) do
-      f3 = described_class.new
+      f3 = described_class.new name: "f3"
       f3.contents << "c"
       f3.size = Tuple 3, 3
       f3.valign = :center

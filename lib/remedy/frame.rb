@@ -113,27 +113,7 @@ module Remedy
       end.flatten
       end
 
-      case arrangement
-      when :stacked
-        # TODO: insert padding?
-        merged.flatten
-      when :columnar
-        msize = sizeof merged.flatten
-        result = Array.new
-        msize.width.times do |index|
-          fullline = ""
-          merged.each do |content|
-            line = content[index]
-            if line then
-              fullline << line
-            end
-          end
-          result << fullline
-        end
-        result.flatten
-      else
-        raise "unknown arrangement: #{arrangement}"
-      end
+      arrange_contents merged
     end
 
     def compiled_size
@@ -143,10 +123,24 @@ module Remedy
     def compile_contents
       merged = merge_contents
       merged_size = sizeof merged
-      compile_size = nil # will be overwritten lower down
+      compile_size = compute_actual_size(merged_size) or return merged
 
+      buf = Screenbuffer.new compile_size, fill: fill, nl: nl
+
+      hoffset = compute_horizontal_offset merged_size, compile_size
+      voffset = compute_vertical_offset merged_size, compile_size
+
+      align_contents! merged, merged_size
+
+      buf[voffset,hoffset] = merged
+      buf.to_a
+    end
+
+    def compute_actual_size merged_size
       if size == :none then
-        return merged
+        # size none indicates that no further formatting should take place
+        # when we return nil from here, it will just return the merged array of content
+        return nil
       elsif size == :fill then
         compile_size = available_size
       elsif size == :auto then
@@ -169,38 +163,79 @@ module Remedy
         raise "Unknown max_size:#{size}"
       end
 
-      buf = Screenbuffer.new compile_size, fill: fill, nl: nl
+      compile_size
+    end
 
+    def compute_horizontal_offset original_size, actual_size
       case halign
       when :left
         hoffset = 0
       when :right
-        hoffset = compile_size.width - merged_size.width
-        merged.map! do |line|
-          line = Align.right_p line, merged_size, fill: fill
-        end
+        hoffset = actual_size.width - original_size.width
       when :center
-        hoffset = Align.mido merged_size.width, compile_size.width
-        merged.map! do |line|
-          line = Align.h_center_p line, merged_size, fill: fill
-        end
+        hoffset = Align.mido original_size.width, actual_size.width
       else
         raise "Unknown halign:#{halign}"
       end
 
+      hoffset
+    end
+
+    def compute_vertical_offset original_size, actual_size
       case valign
       when :top
         voffset = 0
       when :bottom
-        voffset = compile_size.height - merged_size.height
+        voffset = actual_size.height - original_size.height
       when :center
-        voffset = Align.mido merged_size.height, compile_size.height
+        voffset = Align.mido original_size.height, actual_size.height
       else
         raise "Unknown valign:#{valign}"
       end
 
-      buf[voffset,hoffset] = merged
-      buf.to_a
+      voffset
+    end
+
+    def arrange_contents content_to_arrange
+      case arrangement
+      when :stacked
+        # TODO: insert padding?
+        content_to_arrange.flatten
+      when :columnar
+        msize = sizeof content_to_arrange.flatten
+        result = Array.new
+        msize.width.times do |index|
+          fullline = ""
+          content_to_arrange.each do |content|
+            line = content[index]
+            if line then
+              fullline << line
+            end
+          end
+          result << fullline
+        end
+        result.flatten
+      else
+        raise "unknown arrangement: #{arrangement}"
+      end
+    end
+
+    def align_contents! content_to_align, original_size
+      case halign
+      when :left
+        # noop
+      when :right
+        content_to_align.map! do |line|
+          line = Align.right_p line, original_size, fill: fill
+        end
+      when :center
+        content_to_align.map! do |line|
+          line = Align.h_center_p line, original_size, fill: fill
+        end
+      else
+        raise "Unknown halign:#{halign}"
+      end
+      content_to_align
     end
   end
 end

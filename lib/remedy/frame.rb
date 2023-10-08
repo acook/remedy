@@ -89,6 +89,21 @@ module Remedy
       sizeof merge_contents
     end
 
+    def sizeof content
+      lines = Array(content).map do |line|
+        split line
+      end.flatten
+
+      height = lines.length
+      width = lines.map(&:length).max || 0
+      Tuple height, width
+    end
+
+    # @todo move this to a helper module or something
+    def split line
+      line.to_s.split(/\r\n|\n\r|\n|\r/)
+    end
+
     def merge_contents
       merged = contents.map do |c|
         content = Array c
@@ -186,20 +201,6 @@ module Remedy
 
       buf[voffset,hoffset] = merged
       buf.to_a
-    end
-
-    def sizeof content
-      lines = Array(content).map do |line|
-        split line
-      end.flatten
-
-      height = lines.length
-      width = lines.map(&:length).max || 0
-      Tuple height, width
-    end
-
-    def split line
-      line.to_s.split(/\r\n|\n\r|\n|\r/)
     end
   end
 end

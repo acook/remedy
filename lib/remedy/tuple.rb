@@ -146,6 +146,12 @@ module Remedy
       "#<#{self.class}:#{to_s}>"
     end
 
+    def dup
+      new_tuple = super
+      new_tuple.dimensions = dimensions.dup
+      new_tuple
+    end
+
     protected
 
     def scalar_subtract! amount

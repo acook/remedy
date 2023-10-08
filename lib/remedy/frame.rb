@@ -1,12 +1,14 @@
 require "remedy/tuple"
 require "remedy/align"
 require "remedy/screenbuffer"
+require "remedy"
+require "pry"
 
 module Remedy
   # Frames contain Panes and Panes contain Partials
   # Frames can be nested within other Frames or Panes
   class Frame
-    def initialize name: self.object_id
+    def initialize name: self.object_id, content: nil
       @name = name
 
       # vorigin is where the frame will be attached vertically
@@ -33,10 +35,11 @@ module Remedy
       @depth = 0
 
       # arrangement, if this frame contains multiple content items, then they will be arranged according to this
-      # :stacked, :columnar, :tabbed(?)
+      # :stacked, :columnar, :arbitrary, :tabbed(?)
       @arrangement = :stacked
 
-      # spacing as to how multiple content items should be spaced
+      # spacing as to how multiple content items should be spaced in an arrangement
+      # has no effect when `arrangement = :arbitrary`
       # :none, :evenly
       @spacing = :none
 
@@ -54,6 +57,9 @@ module Remedy
 
       # empty list of contents
       @contents = Array.new
+      if content then
+        @contents << content
+      end
 
       # background fill
       @fill = " "
@@ -65,7 +71,18 @@ module Remedy
     attr_accessor :vorigin, :horigin, :depth
     attr_accessor :name, :size, :available_size
     attr_accessor :nl, :fill, :halign, :valign
-    attr_accessor :contents, :arrangement
+    attr_accessor :contents
+
+    # Determines how contents are arranged when compiling.
+    #
+    # Possible values are:
+    #
+    # - `:stacked`
+    # - `:columnar`
+    # - `:arbitrary`
+    #
+    # @return [Symbol] one of the preset arragements
+    attr_accessor :arrangement
 
     # Sets the offset from the origin point.
     # @note Positive offsets always move the frame right and down,
@@ -101,7 +118,7 @@ module Remedy
 
     def sizeof content
       lines = Array(content).map do |line|
-        split line
+        nlsplit line
       end.flatten
 
       height = lines.length
@@ -110,20 +127,27 @@ module Remedy
     end
 
     # @todo move this to a helper module or something
-    def split line
-      line.to_s.split(/\r\n|\n\r|\n|\r/)
+    def nlsplit line
+      line.split(/\r\n|\n\r|\n|\r/)
+    end
     end
 
     def merge_contents
-      merged = contents.map do |c|
-        content = Array c
+      if arrangement == :arbitrary then
+        contents_to_arrange = contents.map do |c|
+          c.available_size = available_size
+          c.to_s
+        end
+      else
+        contents_to_arrange = contents.map do |c|
+          content = Array c
+          content.map! do |line|
+            nlsplit line
+          end.flatten
+        end
 
-        content.map! do |line|
-        split line
-      end.flatten
+        arrange_contents contents_to_arrange
       end
-
-      arrange_contents merged
     end
 
     def compiled_size
@@ -218,7 +242,7 @@ module Remedy
       when :columnar
         msize = sizeof content_to_arrange.flatten
         result = Array.new
-        msize.width.times do |index|
+        msize.col.times do |index|
           fullline = ""
           content_to_arrange.each do |content|
             line = content[index]
@@ -229,8 +253,56 @@ module Remedy
           result << fullline
         end
         result.flatten
+      when :arbitrary
+        arrange_arbitrary content_to_arrange
       else
         raise "unknown arrangement: #{arrangement}"
+      end
+    end
+
+    def arrange_arbitrary content_to_arrange
+      arrange_buffer = Screenbuffer.new available_size, fill: fill
+
+      # wrap all items in a Frame
+      # this has the side effect of setting all arbitrary content to layer 0
+      arranger_content = content_to_arrange.map do |frame|
+        frame = Frame.new(content: frame) unless frame.is_a? Frame
+        frame
+      end
+
+      arranger_content.sort_by(&:depth).each do |frame|
+        frame.available_size = arrange_buffer.size
+        content = frame.compile_contents
+        fsize = frame.computed_size
+
+        p size, fsize
+
+        case frame.vorigin
+        when :top
+          voffset = 0
+        when :center
+          voffset = Align.mido fsize.height, arrange_buffer.size.height
+        when :bottom
+          voffset = arrange_buffer.size.height - fsize.height
+        else
+          raise "Unknown vorigin:#{frame.vorigin}"
+        end
+
+        case frame.horigin
+        when :left
+          hoffset = 0
+        when :center
+          hoffset = Align.mido fsize.width, arrange_buffer.size.width
+        when :right
+          hoffset = arrange_buffer.size.width - fsize.width
+        else
+          raise "Unknown horigin:#{frame.horigin}"
+        end
+
+        voffset += frame.offset.height
+        hoffset += frame.offset.width
+
+        arrange_buffer[voffset,hoffset] = content
       end
     end
 

@@ -397,6 +397,7 @@ describe Remedy::Frame do
     end
 
     before do
+      f.contents.clear
       f.contents << f1
       f.contents << f2
       f.contents << f3
@@ -424,6 +425,118 @@ describe Remedy::Frame do
         actual = f.to_s
         expect(actual).to eq expected
       end
+    end
+
+    context "arrangement = arbitrary" do
+      before do
+        f.arrangement = :arbitrary
+        f1.depth = 3
+        f1.fill = ":"
+        f1.size = Tuple 1,2
+        f2.fill = "*"
+        f2.size = Tuple 2,1
+        f3.fill = "#"
+      end
+
+      it "contents are not relative to others" do
+        # f1e = "a:"
+        # f2e = "b\n*" # completely covered
+        # f3e = "###\n#c#\n###"
+
+        expected = "a:#\n#c#\n###"
+
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+
+    context "vorigin = :bottom" do
+      let(:f1) do
+        f1 = described_class.new
+        f1.contents << "a"
+        f1.size = Tuple 3, 3
+        f1.fill = "."
+        f1
+      end
+
+      before do
+        f.size = Tuple 5, 5
+        f.contents = []
+        f.contents << f1
+      end
+
+      it "puts the nested frame in the correct location" do
+        expected = "     \n     \n ... \n .a. \n ... "
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+  end
+
+  describe "layering" do
+    let(:size_override){ Tuple 7, 7 }
+    let(:f1) do
+      f1 = described_class.new
+      f1.contents << "a"
+      f1.size = Tuple 3, 3
+      f1.fill = ":"
+      f1.valign = :center
+      f1.halign = :center
+      f1
+    end
+    let(:f2) do
+      f2 = described_class.new
+      f2.contents << "b"
+      f2.size = Tuple 3, 3
+      f2.offset = Tuple 2, 2
+      f2.fill = "*"
+      f2.valign = :center
+      f2.halign = :center
+      f2.depth = 1
+      f2
+    end
+    let(:f3) do
+      f3 = described_class.new
+      f3.contents << "c"
+      f3.size = Tuple 3, 3
+      f3.offset = Tuple 4, 4
+      f3.fill = "#"
+      f3.valign = :center
+      f3.halign = :center
+      f3.depth = 2
+      f3
+    end
+
+    before do
+      f.contents.clear
+      f.contents << f1
+      f.contents << f2
+      f.contents << f3
+
+      f.available_size = size_override
+      f.size = :fill
+      f.arrangement = :arbitrary
+      f.fill = "."
+    end
+
+    it "places frames on top of each other according to their depth and order" do
+      expected = [
+        ":::....",
+        ":a:....",
+        "::***..",
+        "..*b*..",
+        "..**###",
+        "....#c#",
+        "....###"
+      ].join ?\n
+
+      actual = f.to_s
+      expect(actual).to eq expected
+    end
+
+    xit "treats plain strings as layer 0" do
+      actual = f.to_s
+      expect(actual).to eq expected
     end
   end
 end

@@ -34,7 +34,7 @@ module Remedy
 
       # arrangement, if this frame contains multiple content items, then they will be arranged according to this
       # :stacked, :columnar, :tabbed(?)
-      @arragement = :stacked
+      @arrangement = :stacked
 
       # spacing as to how multiple content items should be spaced
       # :none, :evenly
@@ -61,7 +61,7 @@ module Remedy
       # newline character
       @nl = ?\n
     end
-    attr_accessor :name, :contents, :nl, :fill, :available_size, :size, :halign, :valign, :horigin, :vorigin, :depth
+    attr_accessor :name, :contents, :nl, :fill, :available_size, :size, :halign, :valign, :horigin, :vorigin, :depth, :arrangement
 
     def to_a
       compile_contents
@@ -80,9 +80,35 @@ module Remedy
     end
 
     def merge_contents
-      contents.map{|c| Array c}.flatten.map do |line|
+      merged = contents.map do |c|
+        content = Array c
+
+        content.map! do |line|
         split line
       end.flatten
+      end
+
+      case arrangement
+      when :stacked
+        # TODO: insert padding?
+        merged.flatten
+      when :columnar
+        msize = sizeof merged.flatten
+        result = Array.new
+        msize.width.times do |index|
+          fullline = ""
+          merged.each do |content|
+            line = content[index]
+            if line then
+              fullline << line
+            end
+          end
+          result << fullline
+        end
+        result.flatten
+      else
+        raise "unknown arrangement: #{arrangement}"
+      end
     end
 
     def compiled_size

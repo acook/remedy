@@ -128,4 +128,36 @@ describe Remedy::Screen do
       expect(actual).to eq expected
     end
   end
+
+  describe "offset frames" do
+    let(:new_size_override){ Tuple 5, 9 }
+
+    before do
+      frame.vorigin = :bottom
+      frame.horigin = :right
+      frame.halign  = :center
+      frame.valign  = :center
+      frame.offset = Tuple -1, -2
+      frame.size = Tuple(4, 0.5)
+      frame.fill = "."
+    end
+
+    it "moves the frame away from the point of origin" do
+
+      expected = [
+        "   foo.  ",
+        "   bar.  ",
+        "   baz.  ",
+        "   ....  ",
+        "         "
+      ].join ?\n
+
+      s.buffer.fill = " "
+      s.frames << frame
+      s.resized new_size_override, redraw: false
+      actual = s.to_s
+
+      expect(actual).to eq expected
+    end
+  end
 end

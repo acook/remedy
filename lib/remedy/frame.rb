@@ -62,10 +62,16 @@ module Remedy
       @nl = ?\n
     end
 
-    attr_accessor :vorigin, :horigin, :offset, :depth
+    attr_accessor :vorigin, :horigin, :depth
     attr_accessor :name, :size, :available_size
     attr_accessor :nl, :fill, :halign, :valign
     attr_accessor :contents, :arrangement
+
+    # Sets the offset from the origin point.
+    # @note Positive offsets always move the frame right and down,
+    #   so negative values are more useful when `horigin = :right` and/or `vorigin = :bottom`.
+    # @return [Remedy::Tuple] the vertical and horizontal offset to apply
+    attr_accessor :offset
 
     def to_a
       compile_contents

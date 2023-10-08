@@ -123,12 +123,12 @@ module Remedy
     def compile_contents
       merged = merge_contents
       merged_size = sizeof merged
-      compile_size = compute_actual_size(merged_size) or return merged
+      computed_size = compute_actual_size(merged_size) or return merged
 
-      buf = Screenbuffer.new compile_size, fill: fill, nl: nl
+      buf = Screenbuffer.new computed_size, fill: fill, nl: nl
 
-      hoffset = compute_horizontal_offset merged_size, compile_size
-      voffset = compute_vertical_offset merged_size, compile_size
+      hoffset = compute_horizontal_offset merged_size, computed_size
+      voffset = compute_vertical_offset merged_size, computed_size
 
       align_contents! merged, merged_size
 

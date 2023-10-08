@@ -80,7 +80,9 @@ module Remedy
     end
 
     def merge_contents
-      contents.map{|c| Array c}.flatten
+      contents.map{|c| Array c}.flatten.map do |line|
+        split line
+      end.flatten
     end
 
     def compiled_size
@@ -89,13 +91,15 @@ module Remedy
 
     def compile_contents
       merged = merge_contents
+      merged_size = sizeof merged
+      compile_size = nil # will be overwritten lower down
 
       if size == :none then
         return merged
       elsif size == :fill then
         compile_size = available_size
       elsif size == :auto then
-        compile_size = sizeof merged
+        compile_size = merged_size
       elsif Tuple === size then
         compile_size = size.dup
 
@@ -114,32 +118,37 @@ module Remedy
         raise "Unknown max_size:#{size}"
       end
 
-      # TODO: this could probably be replaced with direct buffer insertions
-      haligned = merged.map do |line|
-        if halign == :left then
-          Align.left_p line, compile_size, fill: fill
-        elsif halign == :right then
-          Align.right_p line, compile_size, fill: fill
-        elsif halign == :center then
-          Align.h_center_p line, compile_size, fill: fill
-        else
-          raise "Unknown halign:#{halign}"
+      buf = Screenbuffer.new compile_size, fill: fill, nl: nl
+
+      case halign
+      when :left
+        hoffset = 0
+      when :right
+        hoffset = compile_size.width - merged_size.width
+        merged.map! do |line|
+          line = Align.right_p line, merged_size, fill: fill
         end
+      when :center
+        hoffset = Align.mido merged_size.width, compile_size.width
+        merged.map! do |line|
+          line = Align.h_center_p line, merged_size, fill: fill
+        end
+      else
+        raise "Unknown halign:#{halign}"
       end
 
-      buf = Screenbuffer.new compile_size, fill: fill, nl: nl
       case valign
       when :top
         voffset = 0
       when :bottom
-        voffset = compile_size.height - merged.length
+        voffset = compile_size.height - merged_size.height
       when :center
-        voffset = Align.mido merged.length, compile_size.height
+        voffset = Align.mido merged_size.height, compile_size.height
       else
         raise "Unknown valign:#{valign}"
       end
 
-      buf[voffset,0] = haligned
+      buf[voffset,hoffset] = merged
       buf.to_a
     end
 

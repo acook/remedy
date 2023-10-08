@@ -160,4 +160,82 @@ describe Remedy::Screen do
       expect(actual).to eq expected
     end
   end
+
+  describe "layering" do
+    let(:size_override){ Tuple 7, 7 }
+    let(:f1) do
+      f1 = fclass.new
+      f1.valign = :center
+      f1.halign = :center
+      f1.contents << "a"
+      f1.size = Tuple 3, 3
+      f1.fill = ":"
+      f1
+    end
+    let(:f2) do
+      f2 = fclass.new
+      f2.valign = :center
+      f2.halign = :center
+      f2.contents << "b"
+      f2.size = Tuple 3, 3
+      f2.offset = Tuple 2, 2
+      f2.fill = "*"
+      f2.depth = 1
+      f2
+    end
+    let(:f3) do
+      f3 = fclass.new
+      f3.valign = :center
+      f3.halign = :center
+      f3.contents << "c"
+      f3.size = Tuple 3, 3
+      f3.offset = Tuple 4, 4
+      f3.fill = "#"
+      f3.depth = 2
+      f3
+    end
+
+    before do
+      s.frames.clear
+      s.frames << f1
+      s.frames << f2
+      s.frames << f3
+    end
+
+    it "places frames on top of each other according to their depth and order" do
+      expected = [
+        ":::....",
+        ":a:....",
+        "::***..",
+        "..*b*..",
+        "..**###",
+        "....#c#",
+        "....###"
+      ].join ?\n
+
+      actual = s.to_s
+      expect(actual).to eq expected
+    end
+
+    context "f2.depth = 3" do
+      before do
+        f2.depth = 3
+      end
+
+      it "places frames on top of each other according to their depth and order" do
+        expected = [
+          ":::....",
+          ":a:....",
+          "::***..",
+          "..*b*..",
+          "..***##",
+          "....#c#",
+          "....###"
+        ].join ?\n
+
+        actual = s.to_s
+        expect(actual).to eq expected
+      end
+    end
+  end
 end

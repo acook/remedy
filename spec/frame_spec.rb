@@ -341,4 +341,89 @@ describe Remedy::Frame do
       end
     end
   end
+
+  describe "arrangement" do
+
+    context "with strings"
+    before do
+      f.contents << "a"
+      f.contents << "b"
+      f.contents << "c"
+    end
+
+    context "arrangement = stacked" do
+      before do
+        f.arrangement = :stacked
+      end
+
+      it "arranges contents on top of each other" do
+        expected = "a\nb\nc"
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+
+    context "arrangement = columnar" do
+      before do
+        f.arrangement = :columnar
+      end
+
+      it "arranges contents next to each other" do
+        expected = "abc"
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+  end
+
+  context "with nested frames" do
+    let(:f1) do
+      f1 = described_class.new
+      f1.contents << "a"
+      f1
+    end
+    let(:f2) do
+      f2 = described_class.new
+      f2.contents << "b"
+      f2
+    end
+    let(:f3) do
+      f3 = described_class.new
+      f3.contents << "c"
+      f3.size = Tuple 3, 3
+      f3.valign = :center
+      f3.halign = :center
+      f3
+    end
+
+    before do
+      f.contents << f1
+      f.contents << f2
+      f.contents << f3
+    end
+
+    context "arrangement = stacked" do
+      before do
+        f.arrangement = :stacked
+      end
+
+      it "arranges contents on top of each other" do
+        expected = "a\nb\n   \n c \n   "
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+
+    context "arrangement = columnar" do
+      before do
+        f.arrangement = :columnar
+      end
+
+      it "arranges contents next to each other" do
+        expected = "ab   \n c \n   "
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+  end
 end

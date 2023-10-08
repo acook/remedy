@@ -37,4 +37,14 @@ describe Remedy::Tuple do
       end
     end
   end
+
+  describe "#dup" do
+    let(:other){ t.dup }
+
+    it "creates a new dimension array" do
+      expect(other[1] == t[1]).to be true
+      t[1] = 88
+      expect(other[1] == t[1]).to be false
+    end
+  end
 end

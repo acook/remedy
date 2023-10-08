@@ -124,7 +124,7 @@ module Remedy
     end
 
     # Reset contents of buffer to the empty state using the @fill character.
-    def reset
+    def reset!
       @buf = new_buf
     end
 

@@ -157,7 +157,7 @@ describe Remedy::Screenbuffer do
       sb[0,0] = ["ab", "cd"]
       expect(sb.to_s).to eq "ab\ncd"
 
-      sb.reset
+      sb.reset!
       actual = sb.to_s
 
       expect(actual).to eq expected

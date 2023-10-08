@@ -73,6 +73,16 @@ module Remedy
     # @return [Remedy::Tuple] the vertical and horizontal offset to apply
     attr_accessor :offset
 
+    # The computed size is the actual size of the Frame after taking into account all of the different factors.
+    # @note This value is invalid until after the contents have been compiled.
+    # @return [Remedy::Tuple,nil] the size Tuple or `nil` if the Frame has not yet been compiled
+    attr_reader :computed_size
+
+    # The cached Frame buffer from the last compilation.
+    # @note This value is invalid until after the contents have been compiled.
+    # @return [Remedy::Screenbuffer,nil] the buffer or `nil` if the Frame has not yet been compiled
+    attr_accessor :buffer
+
     def to_a
       compile_contents
     end
@@ -123,17 +133,21 @@ module Remedy
     def compile_contents
       merged = merge_contents
       merged_size = sizeof merged
-      computed_size = compute_actual_size(merged_size) or return merged
+      @computed_size = compute_actual_size(merged_size) or return merged
 
-      buf = Screenbuffer.new computed_size, fill: fill, nl: nl
+      if buffer then
+        buffer.reset!
+      else
+        @buffer = Screenbuffer.new computed_size, fill: fill, nl: nl
+      end
 
       hoffset = compute_horizontal_offset merged_size, computed_size
       voffset = compute_vertical_offset merged_size, computed_size
 
       align_contents! merged, merged_size
 
-      buf[voffset,hoffset] = merged
-      buf.to_a
+      buffer[voffset,hoffset] = merged
+      buffer.to_a
     end
 
     def compute_actual_size merged_size

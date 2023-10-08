@@ -85,7 +85,8 @@ module Remedy
     def populate_buffer
       frames.sort_by(&:depth).each do |frame|
         frame.available_size = buffer.size
-        fsize = frame.compiled_size
+        content = frame.compile_contents
+        fsize = frame.computed_size
 
         case frame.vorigin
         when :top
@@ -112,7 +113,7 @@ module Remedy
         voffset += frame.offset.height
         hoffset += frame.offset.width
 
-        buffer[voffset,hoffset] = frame
+        buffer[voffset,hoffset] = content
       end
     end
   end

@@ -193,7 +193,7 @@ module Remedy
     end
 
     def split line
-      line.split(/\r\n|\n\r|\n|\r/)
+      line.to_s.split(/\r\n|\n\r|\n|\r/)
     end
   end
 end

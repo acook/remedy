@@ -185,7 +185,7 @@ describe Remedy::Frame do
       end
     end
 
-    describe "centered alignment" do
+    context "size = Tuple halign = :center" do
       before do
         f.halign = :center
         f.valign = :center
@@ -203,6 +203,30 @@ describe Remedy::Frame do
           "       ",
           "       "
         ].join ?\n
+
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+
+      it "maintains centering when there are newlines in contents" do
+        # I was getting this weird output:
+        # ......
+        # ...a..
+        # ...b..
+        # ..c...
+        # d.....
+        # This was due to the starting calculations being based on
+        #   the length of unsplit lines.
+
+        expected = [
+          "   a   ",
+          "   b   ",
+          "   c   ",
+          "   d   ",
+          "       "
+        ].join ?\n
+
+        f.contents = ["a", "b", "c\nd"]
 
         actual = f.to_s
         expect(actual).to eq expected

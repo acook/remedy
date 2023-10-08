@@ -78,7 +78,7 @@ module Remedy
     end
 
     def refresh_buffer
-      buffer.reset
+      buffer.reset!
       populate_buffer
     end
 

@@ -459,16 +459,22 @@ describe Remedy::Frame do
         f1 << "a"
         f1.size = Tuple 3, 3
         f1.fill = "."
+        f1.valign = :center
+        f1.halign = :center
+        f1.horigin = :center
+        f1.vorigin = :bottom
         f1
       end
 
       before do
         f.size = Tuple 5, 5
+        f.available_size = Tuple 5, 5
+        f.arrangement = :arbitrary
         f.reset!
         f << f1
       end
 
-      it "puts the nested frame in the correct location" do
+      it "puts the nested frame at the bottom" do
         expected = "     \n     \n ... \n .a. \n ... "
         actual = f.to_s
         expect(actual).to eq expected

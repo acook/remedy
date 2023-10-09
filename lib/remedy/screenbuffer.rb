@@ -133,8 +133,12 @@ module Remedy
 
     def new_buf
       Array.new(size.height) do
-        fill * size.width * charwidth
+        new_buf_line
       end
+    end
+
+    def new_buf_line
+      fill * size.width * charwidth
     end
 
     def replace_perline coords, value

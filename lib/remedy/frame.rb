@@ -110,6 +110,12 @@ module Remedy
       @contents << conformed_content
     end
 
+    def [] *index
+      # Can't decide if this should seek into the contents array or into the rendered output
+      #@contents[*index]
+      to_a[*index]
+    end
+
     def reset!
       @contents.clear
     end
@@ -134,6 +140,16 @@ module Remedy
       sizeof arrange_contents
     end
 
+    def maxsizeof content_list
+      content_sizes = content_list.map do |content|
+        sizeof content
+      end
+
+      height = content_sizes.map(&:height).max || 0
+      width = content_sizes.map(&:width).max || 0
+      Tuple height, width
+    end
+
     def sizeof content
       lines = TextUtil.nlclean(content, self).flatten(1)
 
@@ -154,6 +170,8 @@ module Remedy
     end
 
     def compile_contents
+      # TODO: insert dirty check and then skip the rest of this if no changes detected,
+      #   also a param which overrides this
       c = arrange_contents
       csize = sizeof c
       @computed_size = compute_actual_size(csize) or return c
@@ -241,17 +259,17 @@ module Remedy
         # TODO: insert padding?
         content_to_arrange.flatten
       when :columnar
-        msize = sizeof content_to_arrange.flatten
+        rows = maxsizeof(content_to_arrange).row
         result = Array.new
-        msize.col.times do |index|
-          fullline = ""
+        rows.times do |row|
+          arranged_line = ""
           content_to_arrange.each do |content|
-            line = content[index]
+            line = content[row]
             if line then
-              fullline << line
+              arranged_line << line
             end
           end
-          result << fullline
+          result << arranged_line
         end
         result.flatten
       when :arbitrary

@@ -314,7 +314,9 @@ module Remedy
         voffset += frame.offset.height
         hoffset += frame.offset.width
 
-        arrange_buffer[voffset,hoffset] = content
+        offset = Tuple voffset, hoffset
+
+        arrange_buffer[offset] = content
       end
 
       arrange_buffer.to_a

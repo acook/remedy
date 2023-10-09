@@ -91,22 +91,6 @@ module Remedy
       @size
     end
 
-    # Set a new size for the screenbuffer.
-    # @note This will destroy the contents of the current buffer!
-    #
-    # @param new_size [Remedy::Tuple] the new size,
-    #   as typically received from `Console.size` or
-    #   `Console.set_console_resized_hook!`
-    # @raise [ArgumentError] if passed anything other than a Remedy::Tuple
-    def size= new_size
-      raise ArgumentError unless new_size.is_a? Tuple
-
-      if size != new_size then
-        @size = new_size
-        @buf = new_buf
-      end
-    end
-
     # @return [Array<String>] the contents of the buffer as an array of strings
     def to_a
       buf
@@ -128,6 +112,39 @@ module Remedy
     def reset!
       @buf = new_buf
     end
+
+    # Set a new size for the screenbuffer.
+    # @todo The buffer is not shrank or otherwise truncated when the size changes.
+    #
+    # @param new_size [Remedy::Tuple] the new size,
+    #   as typically received from `Console.size` or
+    #   `Console.set_console_resized_hook!`
+    # @raise [ArgumentError] if passed anything other than a Remedy::Tuple
+    def resize new_size
+      raise ArgumentError unless new_size.is_a? Tuple
+      # FIXME: @size is getting reset to old versions somehow.
+      #   But if we determine the actual size and use that instead,
+      #   then we work around that behavior.
+      actual_size = compute_actual_size
+
+      if new_size.height > actual_size.height then
+        grow_by = new_size.height - actual_size.height
+        grow_by.times do
+          @buf << new_buf_line
+        end
+      end
+      if new_size.width > actual_size.width then
+        grow_by = new_size.width - actual_size.width
+        @buf.each do |l|
+          # TODO: handle char width?
+          l << fill * grow_by
+        end
+      end
+
+      Remedy.log.debug "size", size, "actual_size", actual_size, "new_size", new_size, (new_size.height - size.height), "buf", @buf
+      @size = new_size.dup
+    end
+    alias_method :size=, :resize
 
     def compute_actual_size array2d = buf
       Tuple array2d.length, (array2d.map{|l|l.length}.max || 0)

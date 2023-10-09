@@ -16,15 +16,16 @@ module Remedy
     # @param ellipsis [String] the character used to indicate truncated lines,
     #   if set to `nil` then content will extend to the edge of the screen
     # @param charwidth [Numeric] in case we are able to support multiple character widths in the future
-    def initialize size, fill: " ", nl: ?\n, ellipsis: "…", charwidth: 1
+    def initialize size, fill: " ", nl: ?\n, ellipsis: "…", charwidth: 1, fit: false
       @charwidth = charwidth
       @size = size
       @fill = fill[0, charwidth]
       @nl = nl
       @ellipsis = ellipsis
       @buf = new_buf
+      @fit = fit
     end
-    attr_accessor :fill, :nl, :ellipsis, :charwidth
+    attr_accessor :fill, :nl, :ellipsis, :charwidth, :fit
 
     # Get the contents of the buffer at a given coordinate.
     #
@@ -170,15 +171,32 @@ module Remedy
 
       lines.each.with_index do |line, index|
         new_coords = coords + Tuple(index,0)
-        return if new_coords.height >= size.height
+        if new_coords.height >= size.height then
+          if fit then
+            grow_size = Tuple (new_coords.height + 1), size.width
+            resize(grow_size)
+            size.height = new_coords.height
+          else
+            return
+          end
+        end
         replace_inline(new_coords, line)
       end
+
+      self
     end
 
     def replace_inline coords, value
-      fit = value[0,size.width - coords.col]
-      fit[-1] = ellipsis[0,charwidth] if ellipsis && fit.length < value.length
-      buf[coords.row][coords.col,fit.length] = fit
+      if fit then
+        grow_size = Tuple size.height, value.length
+        resize(grow_size)
+        truncated_value = value # not truncated
+      else
+        truncated_value = value[0,size.width - coords.col]
+        truncated_value[-1] = ellipsis[0,charwidth] if ellipsis && truncated_value.length < value.length
+      end
+
+      buf[coords.row][coords.col,truncated_value.length] = truncated_value
     end
   end
 end

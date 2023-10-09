@@ -163,4 +163,14 @@ describe Remedy::Screenbuffer do
       expect(actual).to eq expected
     end
   end
+
+  describe "#resize" do
+    xit "extends the buffer without destroying the contents"
+    xit "updates the size field properly"
+    xit "outputs constrained array after shrinking"
+  end
+
+  describe "option fit = true" do
+    xit "automatically grows the buffer when content does not fit"
+  end
 end

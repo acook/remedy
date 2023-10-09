@@ -82,7 +82,7 @@ module Remedy
     #
     # @param override_buf [Array<String>] the new replacement buffer contents
     def buf= override_buf
-      self.size = Tuple override_buf.length, (override_buf.map{|l|l.length}.max || 0)
+      self.size = compute_actual_size override_buf
       @buf = override_buf
     end
 
@@ -127,6 +127,10 @@ module Remedy
     # Reset contents of buffer to the empty state using the @fill character.
     def reset!
       @buf = new_buf
+    end
+
+    def compute_actual_size array2d = buf
+      Tuple array2d.length, (array2d.map{|l|l.length}.max || 0)
     end
 
     private

@@ -47,4 +47,13 @@ describe Remedy::Tuple do
       expect(other[1] == t[1]).to be false
     end
   end
+
+  describe "#zero?" do
+    it "returns true when all dimensions are zero" do
+      z = described_class.new 0, 0
+      expected = true
+      actual = z.zero?
+      expect(actual).to eq expected
+    end
+  end
 end

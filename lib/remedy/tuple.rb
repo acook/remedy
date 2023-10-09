@@ -128,6 +128,12 @@ module Remedy
     end
     alias_method :length, :cardinality
 
+    def zero?
+      dimensions.all? do |d|
+        d == 0
+      end
+    end
+
     # CONVERSIONS
 
     def to_a

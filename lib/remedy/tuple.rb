@@ -111,6 +111,27 @@ module Remedy
     alias_method :layer, :z
     alias_method :third, :z
 
+    def x= new_value
+      dimensions[0] = new_value
+    end
+    alias_method :height=, :x=
+    alias_method :row=, :x=
+    alias_method :first=, :x=
+
+    def y= new_value
+      dimensions[1] = new_value
+    end
+    alias_method :width=, :y=
+    alias_method :col=, :y=
+    alias_method :second=, :y=
+
+    def z= new_value
+      dimensions[2] = new_value
+    end
+    alias_method :depth=, :z=
+    alias_method :layer=, :z=
+    alias_method :third=, :z=
+
     def last
       dimensions.last
     end

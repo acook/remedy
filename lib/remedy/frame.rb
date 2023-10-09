@@ -59,7 +59,7 @@ module Remedy
       # empty list of contents
       @contents = Array.new
       if content then
-        @contents << content
+        self << content
       end
 
       # background fill

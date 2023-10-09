@@ -3,7 +3,41 @@ require "remedy/frame"
 require "remedy/partial"
 
 describe Remedy::Frame do
-  subject(:f){ described_class.new name: "subject" }
+  let(:sizeclass) { ::Remedy::Tuple }
+  let(:console_size) { sizeclass.new 20, 40 }
+  subject(:f) do
+    f0 = described_class.new name: "subject"
+    f0.available_size = console_size
+    f0
+  end
+
+  let(:f1) do
+    f1 = described_class.new name: "f1"
+    f1 << "a"
+    f1.size = Tuple 3, 3
+    f1.fill = ":"
+    f1.valign = :center
+    f1.halign = :center
+    f1
+  end
+  let(:f2) do
+    f2 = described_class.new name: "f2"
+    f2 << "b"
+    f2.size = Tuple 3, 3
+    f2.fill = "*"
+    f2.valign = :center
+    f2.halign = :center
+    f2
+  end
+  let(:f3) do
+    f3 = described_class.new name: "f3"
+    f3 << "c"
+    f3.size = Tuple 3, 3
+    f3.fill = "#"
+    f3.valign = :center
+    f3.halign = :center
+    f3
+  end
 
   describe "#content_size" do
     it "returns a Tuple of the contents dimensions" do
@@ -380,30 +414,14 @@ describe Remedy::Frame do
   end
 
   context "with nested frames" do
-    let(:f1) do
-      f1 = described_class.new name: "f1"
-      f1 << "a"
-      f1
-    end
-    let(:f2) do
-      f2 = described_class.new name: "f2"
-      f2 << "b"
-      f2
-    end
-    let(:f3) do
-      f3 = described_class.new name: "f3"
-      f3 << "c"
-      f3.size = Tuple 3, 3
-      f3.valign = :center
-      f3.halign = :center
-      f3
-    end
-
     before do
       f.reset!
       f << f1
       f << f2
       f << f3
+
+      f1.size = :none
+      f2.size = :none
     end
 
     context "arrangement = stacked" do
@@ -412,7 +430,7 @@ describe Remedy::Frame do
       end
 
       it "arranges contents on top of each other" do
-        expected = "a\nb\n   \n c \n   "
+        expected = "a\nb\n###\n#c#\n###"
         actual = f.to_s
         expect(actual).to eq expected
       end
@@ -424,7 +442,7 @@ describe Remedy::Frame do
       end
 
       it "arranges contents next to each other" do
-        expected = "ab   \n c \n   "
+        expected = "ab###\n #c#\n ###"
         actual = f.to_s
         expect(actual).to eq expected
       end
@@ -433,6 +451,7 @@ describe Remedy::Frame do
     context "arrangement = arbitrary" do
       before do
         f.arrangement = :arbitrary
+        f.available_size = sizeclass.zero
         f1.depth = 3 # no longer respected??
         f1.fill = ":"
         f1.size = Tuple 1,2
@@ -454,23 +473,20 @@ describe Remedy::Frame do
     end
 
     context "vorigin = :bottom" do
-      let(:f1) do
-        f1 = described_class.new
-        f1 << "a"
-        f1.size = Tuple 3, 3
-        f1.fill = "."
-        f1.valign = :center
-        f1.halign = :center
-        f1.horigin = :center
-        f1.vorigin = :bottom
-        f1
-      end
-
       before do
         f.size = Tuple 5, 5
         f.available_size = Tuple 5, 5
         f.arrangement = :arbitrary
         f.reset!
+
+
+        f1.size = Tuple 3, 3
+        f1.fill = "."
+        f1.valign = :center
+        f1.halign = :center
+
+        f1.horigin = :center
+        f1.vorigin = :bottom
         f << f1
       end
 
@@ -483,38 +499,7 @@ describe Remedy::Frame do
   end
 
   describe "layering" do
-    let(:size_override){ Tuple 7, 7 }
-    let(:f1) do
-      f1 = described_class.new
-      f1 << "a"
-      f1.size = Tuple 3, 3
-      f1.fill = ":"
-      f1.valign = :center
-      f1.halign = :center
-      f1
-    end
-    let(:f2) do
-      f2 = described_class.new
-      f2 << "b"
-      f2.size = Tuple 3, 3
-      f2.offset = Tuple 2, 2
-      f2.fill = "*"
-      f2.valign = :center
-      f2.halign = :center
-      f2.depth = 1
-      f2
-    end
-    let(:f3) do
-      f3 = described_class.new
-      f3 << "c"
-      f3.size = Tuple 3, 3
-      f3.offset = Tuple 4, 4
-      f3.fill = "#"
-      f3.valign = :center
-      f3.halign = :center
-      f3.depth = 2
-      f3
-    end
+    let(:console_size){ Tuple 7, 7 }
 
     before do
       f.reset!
@@ -522,7 +507,11 @@ describe Remedy::Frame do
       f << f2
       f << f3
 
-      f.available_size = size_override
+      f2.depth = 1
+      f2.offset = Tuple 2, 2
+      f3.depth = 2
+      f3.offset = Tuple 4, 4
+
       f.size = :fill
       f.arrangement = :arbitrary
       f.fill = "."

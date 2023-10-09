@@ -138,24 +138,6 @@ module Remedy
       sizeof arrange_contents
     end
 
-    def maxsizeof content_list
-      content_sizes = content_list.map do |content|
-        sizeof content
-      end
-
-      height = content_sizes.map(&:height).max || 0
-      width = content_sizes.map(&:width).max || 0
-      Tuple height, width
-    end
-
-    def sizeof content
-      lines = TextUtil.nlclean(content, self).flatten(1)
-
-      height = lines.length
-      width = lines.map(&:length).max || 0
-      Tuple height, width
-    end
-
     def length
       if size == :none then
         content_size.width
@@ -354,8 +336,28 @@ module Remedy
       content_to_align
     end
 
-    def depth_sort list_of_content
-      list_of_content.sort do |a,b|
+    protected
+
+    def maxsizeof content_list
+      content_sizes = content_list.map do |content|
+        sizeof content
+      end
+
+      height = content_sizes.map(&:height).max || 0
+      width = content_sizes.map(&:width).max || 0
+      Tuple height, width
+    end
+
+    def sizeof content
+      lines = TextUtil.nlclean(content, self).flatten(1)
+
+      height = lines.length
+      width = lines.map(&:length).max || 0
+      Tuple height, width
+    end
+
+    def depth_sort content_list = contents
+      content_list.sort do |a,b|
         depthof(a) <=> depthof(b)
       end
     end

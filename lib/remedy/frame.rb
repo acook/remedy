@@ -1,6 +1,7 @@
 require "remedy/tuple"
 require "remedy/align"
 require "remedy/screenbuffer"
+require "remedy/text_util"
 require "remedy"
 require "pry"
 
@@ -71,7 +72,7 @@ module Remedy
     attr_accessor :vorigin, :horigin, :depth
     attr_accessor :name, :size, :available_size
     attr_accessor :nl, :fill, :halign, :valign
-    attr_accessor :contents
+
 
     # Determines how contents are arranged when compiling.
     #
@@ -100,6 +101,19 @@ module Remedy
     # @return [Remedy::Screenbuffer,nil] the buffer or `nil` if the Frame has not yet been compiled
     attr_accessor :buffer
 
+    def << new_content
+      if new_content.is_a? String or new_content.is_a? Array then
+        conformed_content = TextUtil.nlclean(new_content)
+      else
+        conformed_content = new_content
+      end
+      @contents << conformed_content
+    end
+
+    def reset!
+      @contents.clear
+    end
+
     def to_a
       compile_contents
     end
@@ -108,56 +122,41 @@ module Remedy
       compile_contents.join nl
     end
 
+    def to_str
+      to_s
+    end
+
     def to_ansi
       compile_contents.join ANSI.cursor.next_line
     end
 
     def content_size
-      sizeof merge_contents
+      sizeof arrange_contents
     end
 
     def sizeof content
-      lines = Array(content).map do |line|
-        nlsplit line
-      end.flatten
+      lines = TextUtil.nlclean(content, self).flatten(1)
 
       height = lines.length
       width = lines.map(&:length).max || 0
       Tuple height, width
     end
 
-    # @todo move this to a helper module or something
-    def nlsplit line
-      line.split(/\r\n|\n\r|\n|\r/)
-    end
-    end
-
-    def merge_contents
-      if arrangement == :arbitrary then
-        contents_to_arrange = contents.map do |c|
-          c.available_size = available_size
-          c.to_s
-        end
+    def length
+      if size == :none then
+        content_size.width
+      elsif computed_size then
+        computed_size.width
       else
-        contents_to_arrange = contents.map do |c|
-          content = Array c
-          content.map! do |line|
-            nlsplit line
-          end.flatten
-        end
-
-        arrange_contents contents_to_arrange
+        compile_contents
+        computed_size.width
       end
     end
 
-    def compiled_size
-      sizeof compile_contents
-    end
-
     def compile_contents
-      merged = merge_contents
-      merged_size = sizeof merged
-      @computed_size = compute_actual_size(merged_size) or return merged
+      c = arrange_contents
+      csize = sizeof c
+      @computed_size = compute_actual_size(csize) or return c
 
       if buffer then
         buffer.reset!
@@ -165,12 +164,12 @@ module Remedy
         @buffer = Screenbuffer.new computed_size, fill: fill, nl: nl
       end
 
-      hoffset = compute_horizontal_offset merged_size, computed_size
-      voffset = compute_vertical_offset merged_size, computed_size
+      hoffset = compute_horizontal_offset csize, computed_size
+      voffset = compute_vertical_offset csize, computed_size
 
-      align_contents! merged, merged_size
+      align_contents! c, csize
 
-      buffer[voffset,hoffset] = merged
+      buffer[voffset,hoffset] = c
       buffer.to_a
     end
 
@@ -234,7 +233,9 @@ module Remedy
       voffset
     end
 
-    def arrange_contents content_to_arrange
+    def arrange_contents
+      content_to_arrange = @contents
+
       case arrangement
       when :stacked
         # TODO: insert padding?
@@ -263,19 +264,12 @@ module Remedy
     def arrange_arbitrary content_to_arrange
       arrange_buffer = Screenbuffer.new available_size, fill: fill
 
-      # wrap all items in a Frame
-      # this has the side effect of setting all arbitrary content to layer 0
-      arranger_content = content_to_arrange.map do |frame|
-        frame = Frame.new(content: frame) unless frame.is_a? Frame
-        frame
-      end
-
-      arranger_content.sort_by(&:depth).each do |frame|
+      result = content_to_arrange.sort_by(&:depth).each do |frame|
         frame.available_size = arrange_buffer.size
         content = frame.compile_contents
-        fsize = frame.computed_size
+        fsize = frame.computed_size || frame.content_size
 
-        p size, fsize
+        Remedy.log.debug "sizes", size, fsize
 
         case frame.vorigin
         when :top
@@ -304,6 +298,8 @@ module Remedy
 
         arrange_buffer[voffset,hoffset] = content
       end
+
+      arrange_buffer.to_a
     end
 
     def align_contents! content_to_align, original_size

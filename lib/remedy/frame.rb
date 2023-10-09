@@ -175,32 +175,46 @@ module Remedy
       buffer.to_a
     end
 
-    def compute_actual_size merged_size
-      if size == :none then
-        frame.content_size
-      elsif size == :fill then
-        compile_size = available_size
-      elsif size == :auto then
-        compile_size = merged_size
-      elsif Tuple === size then
-        compile_size = size.dup
+    # Determine what the actual output size would be based on the size option and contents.
+    #
+    # Most of the time the output size can be determined statically based on the available
+    #   size information and the one parameter.
+    #
+    # In practice `:none` and `:auto` output the same maximum height and width - despite rendering differences.
+    #   Technically, `:none` will always result in `content_size`,
+    #   while `:auto` could in theory be further modified by the alignment and later processing.
+    #
+    # @parram arranged_size [Remedy::Tuple] an externally determined size after preprocessing
+    # @return [Remedy::Tuple] output size in rows/height and columns/width
+    def compute_actual_size arranged_size = content_size
+      case size
+      when :none
+        # generally identical to `arranged_size`
+        # if needed, using that here could save processing
+        content_size
+      when :fill
+        available_size
+      when :auto
+        arranged_size
+      when Tuple
+        actual_size = size.dup
 
         if size.height == 0 then
-          compile_size[0] = available_size.height
+          actual_size[0] = available_size.height
         elsif size.height < 1 then
-          compile_size[0] = (available_size.height * size.height).floor
+          actual_size[0] = (available_size.height * size.height).floor
         end
 
         if size.width == 0 then
-          compile_size[1] = available_size.width
+          actual_size[1] = available_size.width
         elsif size.width < 1 then
-          compile_size[1] = (available_size.width * size.width).floor
+          actual_size[1] = (available_size.width * size.width).floor
         end
+
+        actual_size
       else
         raise "Unknown max_size:#{size}"
       end
-
-      compile_size
     end
 
     def compute_horizontal_offset original_size, actual_size

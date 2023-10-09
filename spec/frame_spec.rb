@@ -452,12 +452,9 @@ describe Remedy::Frame do
       before do
         f.arrangement = :arbitrary
         f.available_size = sizeclass.zero
-        f1.depth = 3 # no longer respected??
-        f1.fill = ":"
+        f1.depth = 3
         f1.size = Tuple 1,2
-        f2.fill = "*"
         f2.size = Tuple 2,1
-        f3.fill = "#"
       end
 
       it "contents are not relative to others" do

@@ -8,8 +8,8 @@ describe Remedy::Frame do
   describe "#content_size" do
     it "returns a Tuple of the contents dimensions" do
       expected = Tuple 2, 4
-      f.contents << "1234"
-      f.contents << "567"
+      f << "1234"
+      f << "567"
 
       actual = f.content_size
       expect(actual).to eq expected
@@ -36,24 +36,24 @@ describe Remedy::Frame do
     it "compiles the contents of a single string" do
       expected = "foo"
       content = "foo"
-      f.contents << content
+      f << content
       actual = f.to_s
       expect(actual).to eq expected
     end
 
     it "compiles the contents of multiple strings" do
       expected = "foo\nbar\nbaz"
-      f.contents << "foo"
-      f.contents << "bar"
-      f.contents << "baz"
+      f << "foo"
+      f << "bar"
+      f << "baz"
       actual = f.to_s
       expect(actual).to eq expected
     end
 
     it "compiles the contents of partials" do
       expected = "foo\nbar"
-      f.contents << "foo"
-      f.contents << ::Remedy::Partial.new(["bar"])
+      f << "foo"
+      f << ::Remedy::Partial.new(["bar"])
       actual = f.to_s
       expect(actual).to eq expected
     end
@@ -66,9 +66,9 @@ describe Remedy::Frame do
         f.size = Tuple 5, 5
         f.available_size = Tuple 7, 7
 
-        f.contents << "foo"
-        f.contents << "bar"
-        f.contents << "baz"
+        f << "foo"
+        f << "bar"
+        f << "baz"
       end
 
       context "halign = :left" do
@@ -90,9 +90,9 @@ describe Remedy::Frame do
         f.size = :fill
         f.available_size = Tuple 6, 6
 
-        f.contents << "foo"
-        f.contents << "bar"
-        f.contents << "baz"
+        f << "foo"
+        f << "bar"
+        f << "baz"
       end
 
       context "halign = :left" do
@@ -140,9 +140,9 @@ describe Remedy::Frame do
         f.size = :auto
         f.available_size = Tuple 6, 6
 
-        f.contents << "foo"
-        f.contents << "bar"
-        f.contents << "bazyx"
+        f << "foo"
+        f << "bar"
+        f << "bazyx"
       end
 
       context "halign = :left" do
@@ -192,7 +192,7 @@ describe Remedy::Frame do
         f.size = Tuple(5,7)
         f.available_size = Tuple(11,11)
 
-        f.contents << "lol"
+        f << "lol"
       end
 
       it "content appears centered" do
@@ -226,7 +226,10 @@ describe Remedy::Frame do
           "       "
         ].join ?\n
 
-        f.contents = ["a", "b", "c\nd"]
+        f.reset!
+        f << "a"
+        f << "b"
+        f << "c\nd"
 
         actual = f.to_s
         expect(actual).to eq expected
@@ -240,7 +243,7 @@ describe Remedy::Frame do
         f.size = Tuple(5,7)
         f.available_size = Tuple(11,11)
 
-        f.contents << "lol"
+        f << "lol"
       end
 
       it "content appears centered in the bottom" do
@@ -264,7 +267,7 @@ describe Remedy::Frame do
         f.size = Tuple(0,7)
         f.available_size = Tuple(3,11)
 
-        f.contents << "lol"
+        f << "lol"
       end
       it "stretches to the vertical bounds of the container" do
         expected = [
@@ -285,7 +288,7 @@ describe Remedy::Frame do
         f.size = Tuple(1,0)
         f.available_size = Tuple(3,11)
 
-        f.contents << "lol"
+        f << "lol"
       end
 
       it "stretches to the horizontal bounds of the container" do
@@ -305,7 +308,7 @@ describe Remedy::Frame do
         f.size = Tuple(0,0.5)
         f.available_size = Tuple(3,11)
 
-        f.contents << "lol"
+        f << "lol"
       end
 
       it "stretches to half the horizontal bounds of the container" do
@@ -327,7 +330,7 @@ describe Remedy::Frame do
         f.size = Tuple(0.5,0)
         f.available_size = Tuple(4,11)
 
-        f.contents << "lol"
+        f << "lol"
       end
 
       it "stretches to half the vertical bounds of the container" do
@@ -346,9 +349,9 @@ describe Remedy::Frame do
 
     context "with strings"
     before do
-      f.contents << "a"
-      f.contents << "b"
-      f.contents << "c"
+      f << "a"
+      f << "b"
+      f << "c"
     end
 
     context "arrangement = stacked" do
@@ -379,17 +382,17 @@ describe Remedy::Frame do
   context "with nested frames" do
     let(:f1) do
       f1 = described_class.new name: "f1"
-      f1.contents << "a"
+      f1 << "a"
       f1
     end
     let(:f2) do
       f2 = described_class.new name: "f2"
-      f2.contents << "b"
+      f2 << "b"
       f2
     end
     let(:f3) do
       f3 = described_class.new name: "f3"
-      f3.contents << "c"
+      f3 << "c"
       f3.size = Tuple 3, 3
       f3.valign = :center
       f3.halign = :center
@@ -397,10 +400,10 @@ describe Remedy::Frame do
     end
 
     before do
-      f.contents.clear
-      f.contents << f1
-      f.contents << f2
-      f.contents << f3
+      f.reset!
+      f << f1
+      f << f2
+      f << f3
     end
 
     context "arrangement = stacked" do
@@ -430,7 +433,7 @@ describe Remedy::Frame do
     context "arrangement = arbitrary" do
       before do
         f.arrangement = :arbitrary
-        f1.depth = 3
+        f1.depth = 3 # no longer respected??
         f1.fill = ":"
         f1.size = Tuple 1,2
         f2.fill = "*"
@@ -453,7 +456,7 @@ describe Remedy::Frame do
     context "vorigin = :bottom" do
       let(:f1) do
         f1 = described_class.new
-        f1.contents << "a"
+        f1 << "a"
         f1.size = Tuple 3, 3
         f1.fill = "."
         f1
@@ -461,8 +464,8 @@ describe Remedy::Frame do
 
       before do
         f.size = Tuple 5, 5
-        f.contents = []
-        f.contents << f1
+        f.reset!
+        f << f1
       end
 
       it "puts the nested frame in the correct location" do
@@ -477,7 +480,7 @@ describe Remedy::Frame do
     let(:size_override){ Tuple 7, 7 }
     let(:f1) do
       f1 = described_class.new
-      f1.contents << "a"
+      f1 << "a"
       f1.size = Tuple 3, 3
       f1.fill = ":"
       f1.valign = :center
@@ -486,7 +489,7 @@ describe Remedy::Frame do
     end
     let(:f2) do
       f2 = described_class.new
-      f2.contents << "b"
+      f2 << "b"
       f2.size = Tuple 3, 3
       f2.offset = Tuple 2, 2
       f2.fill = "*"
@@ -497,7 +500,7 @@ describe Remedy::Frame do
     end
     let(:f3) do
       f3 = described_class.new
-      f3.contents << "c"
+      f3 << "c"
       f3.size = Tuple 3, 3
       f3.offset = Tuple 4, 4
       f3.fill = "#"
@@ -508,10 +511,10 @@ describe Remedy::Frame do
     end
 
     before do
-      f.contents.clear
-      f.contents << f1
-      f.contents << f2
-      f.contents << f3
+      f.reset!
+      f << f1
+      f << f2
+      f << f3
 
       f.available_size = size_override
       f.size = :fill

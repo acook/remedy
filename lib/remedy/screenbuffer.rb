@@ -1,5 +1,6 @@
 require "remedy/tuple"
 require "remedy/ansi"
+require "remedy/text_util"
 
 module Remedy
   # A screenbuffer is an in-memory representation of the terminal display.
@@ -139,7 +140,7 @@ module Remedy
     def replace_perline coords, value
       # Array() checks for `.to_a` on whatever is passed to it
       lines = Array(value).map do |line|
-        split line
+        TextUtil.nlclean line
       end.flatten
 
       lines.each.with_index do |line, index|
@@ -153,10 +154,6 @@ module Remedy
       fit = value[0,size.width - coords.col]
       fit[-1] = ellipsis[0,charwidth] if ellipsis && fit.length < value.length
       buf[coords.row][coords.col,fit.length] = fit
-    end
-
-    def split line
-      line.split(/\r\n|\n\r|\n|\r/)
     end
   end
 end

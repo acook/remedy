@@ -12,8 +12,8 @@ describe Remedy::Screen do
   let(:size_override){ Tuple 20, 40 }
   let(:frame) do
     f = fclass.new
-    f.contents << "foo"
-    f.contents << "bar\nbaz"
+    f << "foo"
+    f << "bar\nbaz"
     f.vorigin = :center
     f.horigin = :center
     f.valign = :center
@@ -80,8 +80,8 @@ describe Remedy::Screen do
 
     let(:frame) do
       f = fclass.new
-      f.contents << "foo"
-      f.contents << "bar\nbaz"
+      f << "foo"
+      f << "bar\nbaz"
       f
     end
 
@@ -167,7 +167,7 @@ describe Remedy::Screen do
       f1 = fclass.new
       f1.valign = :center
       f1.halign = :center
-      f1.contents << "a"
+      f1 << "a"
       f1.size = Tuple 3, 3
       f1.fill = ":"
       f1
@@ -176,7 +176,7 @@ describe Remedy::Screen do
       f2 = fclass.new
       f2.valign = :center
       f2.halign = :center
-      f2.contents << "b"
+      f2 << "b"
       f2.size = Tuple 3, 3
       f2.offset = Tuple 2, 2
       f2.fill = "*"
@@ -187,7 +187,7 @@ describe Remedy::Screen do
       f3 = fclass.new
       f3.valign = :center
       f3.halign = :center
-      f3.contents << "c"
+      f3 << "c"
       f3.size = Tuple 3, 3
       f3.offset = Tuple 4, 4
       f3.fill = "#"

@@ -152,9 +152,13 @@ module Remedy
     def compile_contents
       # TODO: insert dirty check and then skip the rest of this if no changes detected,
       #   also a param which overrides this
+
       c = arrange_contents
+
+      return c if size == :none
+
       csize = sizeof c
-      @computed_size = compute_actual_size(csize) or return c
+      @computed_size = compute_actual_size csize
 
       if buffer then
         buffer.reset!
@@ -173,9 +177,7 @@ module Remedy
 
     def compute_actual_size merged_size
       if size == :none then
-        # size none indicates that no further formatting should take place
-        # when we return nil from here, it will just return the merged array of content
-        return nil
+        frame.content_size
       elsif size == :fill then
         compile_size = available_size
       elsif size == :auto then

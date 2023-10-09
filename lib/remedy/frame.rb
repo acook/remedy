@@ -269,7 +269,7 @@ module Remedy
           end
           result << arranged_line
         end
-        result.flatten
+        result
       when :arbitrary
         arrange_arbitrary content_to_arrange
       else

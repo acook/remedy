@@ -3,7 +3,6 @@ require "remedy/align"
 require "remedy/screenbuffer"
 require "remedy/text_util"
 require "remedy"
-require "pry"
 
 module Remedy
   # Frames contain Panes and Panes contain Partials
@@ -72,6 +71,7 @@ module Remedy
     attr_accessor :vorigin, :horigin, :depth
     attr_accessor :name, :size, :available_size
     attr_accessor :nl, :fill, :halign, :valign
+    attr_reader :contents
 
 
     # Determines how contents are arranged when compiling.
@@ -111,8 +111,6 @@ module Remedy
     end
 
     def [] *index
-      # Can't decide if this should seek into the contents array or into the rendered output
-      #@contents[*index]
       to_a[*index]
     end
 

@@ -351,5 +351,8 @@ module Remedy
         content.depth
       else
         0
-  end
-end
+      end
+    end
+
+  end # Frame class
+end # Remedy module

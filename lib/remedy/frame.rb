@@ -282,7 +282,7 @@ module Remedy
     def arrange_arbitrary content_to_arrange
       arrange_buffer = Screenbuffer.new available_size, fill: fill
 
-      result = content_to_arrange.sort_by(&:depth).each do |frame|
+      result = depth_sort(content_to_arrange).each do |frame|
         frame.available_size = arrange_buffer.size
         content = frame.compile_contents
         fsize = frame.computed_size || frame.content_size
@@ -337,5 +337,17 @@ module Remedy
       end
       content_to_align
     end
+
+    def depth_sort list_of_content
+      list_of_content.sort do |a,b|
+        depthof(a) <=> depthof(b)
+      end
+    end
+
+    def depthof content
+      if content.is_a? Frame then
+        content.depth
+      else
+        0
   end
 end

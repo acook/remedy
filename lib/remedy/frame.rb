@@ -287,8 +287,6 @@ module Remedy
         content = frame.compile_contents
         fsize = frame.computed_size || frame.content_size
 
-        Remedy.log.debug "sizes", size, fsize
-
         case frame.vorigin
         when :top
           voffset = 0

@@ -442,7 +442,7 @@ describe Remedy::Frame do
       end
 
       it "arranges contents next to each other" do
-        expected = "ab###\n #c#\n ###"
+        expected = "ab###\n  #c#\n  ###"
         actual = f.to_s
         expect(actual).to eq expected
       end

@@ -257,19 +257,7 @@ module Remedy
         # TODO: insert padding?
         content_to_arrange.flatten
       when :columnar
-        rows = maxsizeof(content_to_arrange).row
-        result = Array.new
-        rows.times do |row|
-          arranged_line = ""
-          content_to_arrange.each do |content|
-            line = content[row]
-            if line then
-              arranged_line << line
-            end
-          end
-          result << arranged_line
-        end
-        result
+        arrange_columnar content_to_arrange
       when :arbitrary
         arrange_arbitrary content_to_arrange
       else
@@ -318,6 +306,34 @@ module Remedy
       end
 
       arrange_buffer.to_a
+    end
+
+    def arrange_columnar content_to_arrange
+      content_list = depth_sort(content_to_arrange)
+      rows = maxsizeof(content_list).row
+      result = Array.new
+
+      content_sizes = [0] # the first column starts with zero
+
+      content_list.each_with_object(content_sizes).with_index do |(content, cs), i|
+        content.available_size = available_size if content.respond_to? :available_size
+        cs << sizeof(content).width + cs[i]
+      end
+
+      rows.times do |row|
+        arranged_line = ""
+
+        content_list.each.with_index do |content, index|
+          line = content[row]
+          if line then
+            padding = fill * [content_sizes[index] - arranged_line.length, 0].max
+            arranged_line << padding
+            arranged_line << line
+          end
+        end
+        result << arranged_line
+      end
+      result
     end
 
     def align_contents! content_to_align, original_size

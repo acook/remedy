@@ -50,6 +50,39 @@ describe Remedy::Frame do
     end
   end
 
+  describe "#compute_actual_size" do
+    it "returns a Tuple of the rendered size" do
+      f << "1234"
+      f << "567"
+      arranged_size = Tuple(5, 5)
+
+      f.size = :none
+      expected = Tuple 2, 4
+      actual = f.compute_actual_size arranged_size
+      expect(actual).to eq expected
+
+      f.size = :fill
+      actual = f.compute_actual_size arranged_size
+      expect(actual).to eq console_size
+
+      f.size = :auto
+      actual = f.compute_actual_size arranged_size
+      expect(actual).to eq arranged_size
+
+      f.size = sizeclass.zero
+      actual = f.compute_actual_size arranged_size
+      expect(actual).to eq console_size
+
+      f.size = sizeclass.new 2, 2
+      actual = f.compute_actual_size arranged_size
+      expect(actual).to eq sizeclass.new(2, 2)
+
+      f.size = sizeclass.new 0.5, 0.74
+      actual = f.compute_actual_size arranged_size
+      expect(actual).to eq sizeclass.new(10, 29)
+    end
+  end
+
   describe "#to_s" do
     it "returns a string" do
       expected = String

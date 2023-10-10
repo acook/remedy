@@ -144,7 +144,6 @@ module Remedy
         end
       end
 
-      Remedy.log.debug "size", size, "actual_size", actual_size, "new_size", new_size, (new_size.height - size.height), "buf", @buf
       @size = new_size.dup
     end
     alias_method :size=, :resize
@@ -182,7 +181,8 @@ module Remedy
             return
           end
         end
-        replace_inline(new_coords, line)
+
+        replace_inline new_coords, line
       end
 
       self

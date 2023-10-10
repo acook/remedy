@@ -16,7 +16,8 @@ module Remedy
     # @param ellipsis [String] the character used to indicate truncated lines,
     #   if set to `nil` then content will extend to the edge of the screen
     # @param charwidth [Numeric] in case we are able to support multiple character widths in the future
-    def initialize size, fill: " ", nl: ?\n, ellipsis: "…", charwidth: 1, fit: false
+    def initialize size, fill: " ", nl: ?\n, ellipsis: "…", charwidth: 1, fit: false, parent: nil
+      raise ArgumentError, "size cannot be `nil'!" if size.nil?
       @charwidth = charwidth
       @size = size
       @fill = fill[0, charwidth]
@@ -24,8 +25,9 @@ module Remedy
       @ellipsis = ellipsis
       @buf = new_buf
       @fit = fit
+      @parent = parent
     end
-    attr_accessor :fill, :nl, :ellipsis, :charwidth, :fit
+    attr_accessor :fill, :nl, :ellipsis, :charwidth, :fit, :parent
 
     # Get the contents of the buffer at a given coordinate.
     #

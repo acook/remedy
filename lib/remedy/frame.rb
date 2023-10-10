@@ -264,8 +264,13 @@ module Remedy
     end
 
     def arrange_arbitrary content_to_arrange
-      expand_buffer = available_size.zero?
-      arrange_buffer = Screenbuffer.new available_size, fit: expand_buffer, fill: fill
+      if size.is_a? Tuple then
+        buffer_size = size
+      else
+        buffer_size = available_size
+        expand_buffer = available_size.zero?
+      end
+      arrange_buffer = Screenbuffer.new buffer_size, fit: expand_buffer, fill: fill
 
       result = depth_sort(content_to_arrange).each do |frame|
         # FIXME: what happens when the buffer size is zero? the buffer will grow, right?

@@ -525,6 +525,18 @@ describe Remedy::Frame do
         actual = f.to_s
         expect(actual).to eq expected
       end
+
+      context "available size is zero" do
+        before do
+          f.available_size = sizeclass.zero
+        end
+
+        it "still puts the nested frame at the bottom" do
+          expected = "     \n     \n ... \n .a. \n ... "
+          actual = f.to_s
+          expect(actual).to eq expected
+        end
+      end
     end
   end
 

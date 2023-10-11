@@ -549,6 +549,30 @@ describe Remedy::Frame do
           end
         end
       end
+
+      context "horigin = :center" do
+        before do
+          f.size = Tuple 5, 5
+          f.available_size = Tuple 5, 5
+          f.arrangement = :arbitrary
+          f.reset!
+
+          f1.size = Tuple 3, 3
+          f1.fill = "."
+
+          f1.horigin = :center
+          f << f1
+        end
+
+        xit "parent frame places it in the middle" do
+          expected = " ... \n .a. \n ... \n     \n     "
+        end
+      end
+
+      context "horigin = :right" do
+        xit "parent frame places it to the right"
+      end
+
     end
   end
 

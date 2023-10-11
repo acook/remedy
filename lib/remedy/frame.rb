@@ -316,7 +316,7 @@ module Remedy
         when :center
           hoffset = Align.mido fsize.width, buffer_size.width
         when :right
-          voffset = Align.boto fsize.height, buffer_size.height
+          hoffset = Align.boto fsize.width, buffer_size.width
         else
           raise "Unknown horigin:#{frame.horigin}"
         end

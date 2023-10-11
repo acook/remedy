@@ -13,6 +13,31 @@ describe Remedy::Screenbuffer do
     end
   end
 
+  describe "#to_a" do
+    it "dumps the screenbuffer" do
+      expected = ["..", ".."]
+      actual = sb.to_a
+      expect(actual).to eq expected
+    end
+
+    context "allocated size is larger than set size" do
+      it "dumps the screenbuffer" do
+        sb.resize Tuple 5, 5
+        expected = [".....", ".....", ".....", ".....", "....."]
+        actual = sb.to_a
+        expect(sb.buf.length).to eq 5
+        expect(actual).to eq expected
+
+        sb.resize Tuple 3, 3
+        expected = ["...", "...", "..."]
+        actual = sb.to_a
+        expect(sb.buf.length).to eq 5
+        expect(actual).to eq expected
+      end
+    end
+
+  end
+
   describe "#[]" do
     it "returns the character at a particular location" do
       expected = "x"

@@ -97,19 +97,21 @@ module Remedy
 
     # @return [Array<String>] the contents of the buffer as an array of strings
     def to_a
-      buf
+      buf[0,size.height].map do |line|
+        line[0,size.width]
+      end
     end
 
     # Convert screenbuffer to single String.
     # Concatenates the contents of the buffer with the `nl` attribute.
     def to_s
-      buf.join nl
+      to_a.join nl
     end
 
     # Convert screenbuffer to single string for output to a display using ANSI line motions.
     # Standard newlines at screen edges cause many terminals to display extraneous empty lines.
     def to_ansi
-      buf.join ANSI.cursor.next_line
+      to_a.join ANSI.cursor.next_line
     end
 
     # Reset contents of buffer to the empty state using the @fill character.
@@ -126,20 +128,20 @@ module Remedy
     # @raise [ArgumentError] if passed anything other than a Remedy::Tuple
     def resize new_size
       raise ArgumentError unless new_size.is_a? Tuple
-      # FIXME: @size is getting reset to old versions somehow.
-      #   But if we determine the actual size and use that instead,
-      #   then we work around that behavior at some performance cost.
+      # @size is set to the externally visible value,
+      #   this allows us to shrink the apparent size
+      #   without destroying the contents of the buffer
       actual_size = compute_actual_size
 
       if new_size.height > actual_size.height then
         grow_by = new_size.height - actual_size.height
         grow_by.times do
-          @buf << new_buf_line
+          buf << new_buf_line
         end
       end
       if new_size.width > actual_size.width then
         grow_by = new_size.width - actual_size.width
-        @buf.each do |l|
+        buf.each do |l|
           # TODO: handle char width?
           l << fill * grow_by
         end

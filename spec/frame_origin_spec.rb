@@ -66,4 +66,88 @@ describe Remedy::Frame do
       end
     end
   end
+
+  describe "vorigin = :bottom" do
+    before do
+      f.arrangement = :arbitrary
+      f.reset!
+
+      f1.size = Tuple 3, 3
+
+      f1.horigin = :center
+      f1.vorigin = :bottom
+      f << f1
+    end
+
+    it "puts the nested frame at the bottom" do
+      expected = "      \n      \n      \n :::  \n :a:  \n :::  "
+      actual = f.to_s
+      expect(actual).to eq expected
+    end
+
+    context "available_size.zero? = true" do
+      before do
+        f.available_size = sizeclass.zero
+        f.size = sizeclass.new 6, 6
+      end
+
+      it "still puts the nested frame at the bottom" do
+        expected = "      \n      \n      \n :::  \n :a:  \n :::  "
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+
+      context "size = :none" do
+        before do
+          f.size = :none
+          f1.depth = 2
+          f2.size = Tuple 2,1
+          f << f2
+        end
+
+        it "puts the frame at the bottom of the actual space" do
+          expected = "b  \n*  \n:::\n:a:\n:::"
+          actual = f.to_s
+          expect(actual).to eq expected
+        end
+      end
+    end
+
+    context "horigin = :center" do
+      before do
+        f.size = Tuple 5, 5
+        f.available_size = Tuple 5, 5
+        f.arrangement = :arbitrary
+        f.reset!
+
+        f1.horigin = :center
+        f << f1
+      end
+
+      it "parent frame places it in the middle" do
+        expected = "     \n     \n ::: \n :a: \n ::: "
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+
+    context "horigin = :right" do
+      before do
+        f.size = Tuple 5, 5
+        f.available_size = Tuple 5, 5
+        f.arrangement = :arbitrary
+        f.reset!
+
+        f1.horigin = :right
+        f << f1
+      end
+
+      it "parent frame places it to the right" do
+        expected = "     \n     \n  :::\n  :a:\n  :::"
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+
+  end
 end

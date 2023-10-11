@@ -273,6 +273,13 @@ module Remedy
       arrange_buffer = Screenbuffer.new buffer_size, fit: expand_buffer, fill: fill
 
       result = depth_sort(content_to_arrange).each do |frame|
+        # special case handling of plain Strings and Arrays
+        unless frame.is_a? Frame then
+          arrange_buffer[Tuple.zero] = frame
+          buffer_size = arrange_buffer.size
+          next
+        end
+
         # FIXME: what happens when the buffer size is zero? the buffer will grow, right?
         frame.available_size = buffer_size
         content = frame.compile_contents

@@ -144,10 +144,31 @@ module Remedy
           l << fill * grow_by
         end
       end
+      raise RangeError, "cannot have buffer width without buffer height! new_size: #{new_size}" if new_size.height < 1 and new_size.width > 0
 
       @size = new_size.dup
     end
     alias_method :size=, :resize
+
+    def fit_height height
+      grow_height height - @size.height
+    end
+
+    def fit_width width
+      grow_width width - @size.width
+    end
+
+    def grow_height additional_rows
+      grow Tuple(additional_rows, 0) if additional_rows > 0
+    end
+
+    def grow_width additional_cols
+      grow Tuple(0, additional_cols) if additional_cols > 0
+    end
+
+    def grow amount
+      resize @size + amount
+    end
 
     def compute_actual_size array2d = buf
       Tuple array2d.length, (array2d.map{|l|l.length}.max || 0)
@@ -175,8 +196,7 @@ module Remedy
         new_coords = coords + Tuple(index,0)
         if new_coords.height >= size.height then
           if fit then
-            grow_size = Tuple (new_coords.height + 1), size.width
-            resize(grow_size)
+            fit_height new_coords.height + 1
             size.height = new_coords.height
           else
             return
@@ -191,8 +211,7 @@ module Remedy
 
     def replace_inline coords, value
       if fit then
-        grow_size = Tuple size.height, value.length
-        resize(grow_size)
+        fit_width value.length
         truncated_value = value # not truncated
       else
         truncated_value = value[0,size.width - coords.col]

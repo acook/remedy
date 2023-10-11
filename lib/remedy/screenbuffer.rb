@@ -127,7 +127,7 @@ module Remedy
       raise ArgumentError unless new_size.is_a? Tuple
       # FIXME: @size is getting reset to old versions somehow.
       #   But if we determine the actual size and use that instead,
-      #   then we work around that behavior.
+      #   then we work around that behavior at some performance cost.
       actual_size = compute_actual_size
 
       if new_size.height > actual_size.height then

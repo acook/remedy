@@ -26,6 +26,7 @@ module Remedy
     attr_accessor :buffer
 
     # Draw the buffer to the console using raw output.
+    # @param override [Remedy::Frame,String] temporarily replace the contents with this instead (until the next redraw!)
     # @return [void]
     def draw override = nil
       if override then

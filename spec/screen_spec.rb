@@ -45,7 +45,7 @@ describe Remedy::Screen do
 
     describe "#draw" do
       context "tiny 2x2 screen" do
-        let(:size){ Tuple 2, 2 }
+        let(:size_override){ Tuple 2, 2 }
 
         it "writes the buffer to the output" do
           expected = "\e[H\e[J..\e[1B\e[0G..".inspect[1..-2]
@@ -58,7 +58,7 @@ describe Remedy::Screen do
       end
 
       context "small 3x20 screen" do
-        let(:size){ Tuple 3, 20 }
+        let(:size_override){ Tuple 3, 20 }
 
         it "can display single objects with the override parameter" do
           expected = "\\e[H\\e[J....................\\e[1B\\e[0G...hello, world!....\\e[1B\\e[0G...................."

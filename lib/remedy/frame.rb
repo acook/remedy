@@ -255,8 +255,7 @@ module Remedy
 
       case arrangement
       when :stacked
-        # TODO: insert padding?
-        content_to_arrange.flatten
+        arrange_stacked content_to_arrange
       when :columnar
         arrange_columnar content_to_arrange
       when :arbitrary
@@ -264,6 +263,14 @@ module Remedy
       else
         raise "unknown arrangement: #{arrangement}"
       end
+    end
+
+    def arrange_stacked content_to_arrange
+        # TODO: insert padding?
+        content_to_arrange.map do |content|
+          content.available_size = available_size if content.respond_to? :available_size
+          content.to_a
+        end.flatten
     end
 
     def arrange_arbitrary content_to_arrange

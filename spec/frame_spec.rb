@@ -543,7 +543,7 @@ describe Remedy::Frame do
           end
 
           it "puts the frame at the bottom of the actual space" do
-            expected = "b  \n...\n.a.\n..."
+            expected = "b  \n*  \n...\n.a.\n..."
             actual = f.to_s
             expect(actual).to eq expected
           end

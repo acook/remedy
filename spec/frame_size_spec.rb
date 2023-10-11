@@ -16,10 +16,11 @@ describe Remedy::Frame do
     f << "bar\nbaz"
   end
 
-  xit "occupies the size specified" do
+  it "occupies the size specified" do
+    expected = "foo  \nbar  \nbaz  \n     \n     "
     f.size = Tuple 5, 5
     actual = f.to_s
-    expect(actual).to eq "???"
+    expect(actual).to eq expected
   end
 
   describe "#resize" do

@@ -32,7 +32,7 @@ describe Remedy::Screen do
     before(:each) do
       console.input = stringio
       console.output = stringio
-      s.resized size
+      s.resize size, redraw: true # why does this need to be set to true??
       stringio.string = ""
     end
 
@@ -102,7 +102,7 @@ describe Remedy::Screen do
     end
   end
 
-  describe "#resized" do
+  describe "#resize" do
     let(:new_size_override){ Tuple 5, 9 }
 
     before do
@@ -123,7 +123,7 @@ describe Remedy::Screen do
 
       s.buffer.fill = " "
       s.frames << frame
-      s.resized new_size_override, redraw: false
+      s.resize new_size_override, redraw: false
       actual = s.to_s
 
       expect(actual).to eq expected

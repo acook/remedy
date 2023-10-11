@@ -338,35 +338,36 @@ describe Remedy::Frame do
   end
 
   describe "arrangement" do
-
-    context "with strings"
-    before do
-      f << "a"
-      f << "b"
-      f << "c"
-    end
-
-    context "arrangement = stacked" do
+    context "with strings" do
       before do
-        f.arrangement = :stacked
+        f.reset!
+        f << "a"
+        f << "b"
+        f << "c"
       end
 
-      it "arranges contents on top of each other" do
-        expected = "a\nb\nc"
-        actual = f.to_s
-        expect(actual).to eq expected
-      end
-    end
+      context "arrangement = stacked" do
+        before do
+          f.arrangement = :stacked
+        end
 
-    context "arrangement = columnar" do
-      before do
-        f.arrangement = :columnar
+        it "arranges contents on top of each other" do
+          expected = "a\nb\nc"
+          actual = f.to_s
+          expect(actual).to eq expected
+        end
       end
 
-      it "arranges contents next to each other" do
-        expected = "abc"
-        actual = f.to_s
-        expect(actual).to eq expected
+      context "arrangement = columnar" do
+        before do
+          f.arrangement = :columnar
+        end
+
+        it "arranges contents next to each other" do
+          expected = "abc"
+          actual = f.to_s
+          expect(actual).to eq expected
+        end
       end
     end
   end

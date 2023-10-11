@@ -20,7 +20,7 @@ class Example
   end
 
   def run
-    screen = Screen.new
+    screen = Screen.new name: "Main Screen"
     screen.frames << lsidebar
     screen.frames << rsidebar
     screen.frames << content

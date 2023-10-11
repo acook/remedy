@@ -8,7 +8,7 @@ module Remedy
   # Frames contain Panes and Panes contain Partials
   # Frames can be nested within other Frames or Panes
   class Frame
-    def initialize name: self.object_id, content: nil
+    def initialize name: self.object_id, content: nil, parent: nil
       @name = name
 
       # vorigin is where the frame will be attached vertically
@@ -66,13 +66,15 @@ module Remedy
 
       # newline character
       @nl = ?\n
+
+      @parent = parent
     end
 
     attr_accessor :vorigin, :horigin, :depth
     attr_accessor :name, :size, :available_size
     attr_accessor :nl, :fill, :halign, :valign
     attr_reader :contents
-
+    attr_accessor :parent
 
     # Determines how contents are arranged when compiling.
     #

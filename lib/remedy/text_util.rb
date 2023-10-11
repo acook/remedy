@@ -6,18 +6,12 @@ module Remedy
       case content
       when String
         nlsplit(content)
-      when Frame
-        content.to_a
-      when Partial
-        content.to_a
-      when View
-        content.to_a
       when Array
         content.map do |l|
           nlclean l
         end
       else
-        binding.pry
+        content.to_a
       end
     end
 

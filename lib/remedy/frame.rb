@@ -396,7 +396,8 @@ module Remedy
     end
 
     def depthof content
-      if content.is_a? Frame then
+      case content
+      when Frame
         content.depth
       else
         0

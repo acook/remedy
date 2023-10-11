@@ -16,7 +16,7 @@ module Remedy
     # @param auto_resize [Boolean] can be disabled if you are setting up your own console resize hook
     # @see #resize
     # @see Console.set_console_resized_hook!
-    def initialize auto_resize: true, auto_redraw: true
+    def initialize auto_resize: true, auto_redraw: true, name: object_id
       @mainframe = Frame.new name: "screen#init", parent: self
       mainframe.fill = "."
       mainframe.size = :fill
@@ -26,7 +26,7 @@ module Remedy
         resize new_size, redraw: auto_redraw
       end if auto_resize
     end
-    attr_accessor :mainframe
+    attr_accessor :mainframe, :name
 
     # Draw the buffer to the console using raw output.
     # @param override [Remedy::Frame,String] temporarily replace the contents with this instead (until the next redraw!)

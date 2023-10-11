@@ -14,13 +14,13 @@ module Remedy
     #   Might be good for having multiple workspaces.
     #
     # @param auto_resize [Boolean] can be disabled if you are setting up your own console resize hook
-    # @see #resized
+    # @see #resize
     # @see Console.set_console_resized_hook!
-    def initialize auto_resize: true
+    def initialize auto_resize: true, auto_redraw: true
       @buffer = Screenbuffer.new Console.size, fill: ".", parent: self, name: "screen#init"
 
       Console.set_console_resized_hook! do |new_size|
-        resized new_size
+        resize new_size, redraw: auto_redraw
       end if auto_resize
     end
     attr_accessor :buffer
@@ -52,13 +52,13 @@ module Remedy
     #
     # ```ruby
     # Console.set_console_resized_hook! do |new_size|
-    #   my_screen.resized new_size
+    #   my_screen.resize new_size
     # end
     # ```
     #
     # @param new_size [Remedy::Tuple] the new size of the terminal
     # @return [void]
-    def resized new_size, redraw: true
+    def resize new_size, redraw: true
       buffer.size = new_size
       draw if redraw
     end

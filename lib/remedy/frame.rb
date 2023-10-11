@@ -84,7 +84,7 @@ module Remedy
     # - `:columnar`
     # - `:arbitrary`
     #
-    # @return [Symbol] one of the preset arragements
+    # @return [Symbol] one of the preset arrangements
     attr_accessor :arrangement
 
     # Sets the offset from the origin point.

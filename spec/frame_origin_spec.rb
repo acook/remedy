@@ -44,106 +44,106 @@ describe Remedy::Frame do
       f << f1
   end
 
-  # HORIZONTAL ORIGIN
+  it "does all the things" do
+    topleft      = ":::   \n:a:   \n:::   \n      \n      \n      "
+    topcenter    = " :::  \n :a:  \n :::  \n      \n      \n      "
+    topright     = "   :::\n   :a:\n   :::\n      \n      \n      "
 
-  describe "horigin = :top" do
-    it "is the default" do
-      expected = :left
-      actual = described_class.new.horigin
-      expect(actual).to eq expected
-    end
+    centerleft   = "      \n:::   \n:a:   \n:::   \n      \n      "
+    centercenter = "      \n :::  \n :a:  \n :::  \n      \n      "
+    centerright  = "      \n   :::\n   :a:\n   :::\n      \n      "
+
+    bottomleft   = "      \n      \n      \n:::   \n:a:   \n:::   "
+    bottomcenter = "      \n      \n      \n :::  \n :a:  \n :::  "
+    bottomright  = "      \n      \n      \n   :::\n   :a:\n   :::"
+
+    actual = f.to_s
+    expect(actual).to eq topleft
+
+    f1.horigin = :center
+    actual = f.to_s
+    expect(actual).to eq topcenter
+
+    f1.horigin = :right
+    actual = f.to_s
+    expect(actual).to eq topright
+
+    f1.vorigin = :center
+
+    f1.horigin = :left
+    actual = f.to_s
+    expect(actual).to eq centerleft
+
+    f1.horigin = :center
+    actual = f.to_s
+    expect(actual).to eq centercenter
+
+    f1.horigin = :right
+    actual = f.to_s
+    expect(actual).to eq centerright
+
+    f1.vorigin = :bottom
+
+    f1.horigin = :left
+    actual = f.to_s
+    expect(actual).to eq bottomleft
+
+    f1.horigin = :center
+    actual = f.to_s
+    expect(actual).to eq bottomcenter
+
+    f1.horigin = :right
+    actual = f.to_s
+    expect(actual).to eq bottomright
   end
 
-  describe "horigin = :center" do
+  context "dynamic nested frame size" do
     before do
       f1.horigin = :center
+      f1.size = Tuple 0, 0.5
     end
 
     it "is centered" do
-      expected = " :::  \n :a:  \n :::  \n      \n      \n      "
+      expected = " :::  \n :::  \n :a:  \n :::  \n :::  \n :::  "
 
       actual = f.to_s
       expect(actual).to eq expected
     end
-
-    context "dynamic nested frame size" do
-      before do
-        f1.size = Tuple 0, 0.5
-      end
-
-      it "is centered" do
-        expected = " :::  \n :::  \n :a:  \n :::  \n :::  \n :::  "
-
-        actual = f.to_s
-        expect(actual).to eq expected
-      end
-    end
   end
 
-  # VERTICAL ORIGIN
-
-  describe "vorigin = :bottom" do
+  context "available_size.zero? = true" do
     before do
+      f.available_size = sizeclass.zero
       f1.vorigin = :bottom
+      f1.horigin = :center
     end
 
-    context "horigin = :center" do
+    context "size is Tuple" do
       before do
-        f1.horigin = :center
+        f.size = console_size
       end
 
-      it "parent frame places it in the bottom middle" do
+      it "still puts the nested frame at the bottom" do
         expected = "      \n      \n      \n :::  \n :a:  \n :::  "
         actual = f.to_s
         expect(actual).to eq expected
       end
     end
 
-    context "horigin = :right" do
+    context "size = :none" do
       before do
-        f1.horigin = :right
+        f.size = :none
+        f1.depth = 2
+        f2.size = Tuple 2,1
+        f << f2
       end
 
-      it "parent frame places it to the right" do
-        expected = "      \n      \n      \n   :::\n   :a:\n   :::"
+      it "puts the frame at the bottom of the actual space" do
+        expected = "b  \n*  \n:::\n:a:\n:::"
         actual = f.to_s
         expect(actual).to eq expected
       end
     end
-
-    context "available_size.zero? = true" do
-      before do
-        f.available_size = sizeclass.zero
-        f1.horigin = :center
-      end
-
-      context "size is Tuple" do
-        before do
-          f.size = console_size
-        end
-
-        it "still puts the nested frame at the bottom" do
-          expected = "      \n      \n      \n :::  \n :a:  \n :::  "
-          actual = f.to_s
-          expect(actual).to eq expected
-        end
-      end
-
-      context "size = :none" do
-        before do
-          f.size = :none
-          f1.depth = 2
-          f2.size = Tuple 2,1
-          f << f2
-        end
-
-        it "puts the frame at the bottom of the actual space" do
-          expected = "b  \n*  \n:::\n:a:\n:::"
-          actual = f.to_s
-          expect(actual).to eq expected
-        end
-      end
-    end
-
   end
+
 end

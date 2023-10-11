@@ -40,10 +40,23 @@ describe Remedy::Frame do
     f3
   end
 
+  before do
+      f << f1
+  end
+
+  # HORIZONTAL ORIGIN
+
+  describe "horigin = :top" do
+    it "is the default" do
+      expected = :left
+      actual = described_class.new.horigin
+      expect(actual).to eq expected
+    end
+  end
+
   describe "horigin = :center" do
     before do
       f1.horigin = :center
-      f << f1
     end
 
     it "is centered" do
@@ -67,34 +80,53 @@ describe Remedy::Frame do
     end
   end
 
+  # VERTICAL ORIGIN
+
   describe "vorigin = :bottom" do
     before do
-      f.arrangement = :arbitrary
-      f.reset!
-
-      f1.size = Tuple 3, 3
-
-      f1.horigin = :center
       f1.vorigin = :bottom
-      f << f1
     end
 
-    it "puts the nested frame at the bottom" do
-      expected = "      \n      \n      \n :::  \n :a:  \n :::  "
-      actual = f.to_s
-      expect(actual).to eq expected
+    context "horigin = :center" do
+      before do
+        f1.horigin = :center
+      end
+
+      it "parent frame places it in the bottom middle" do
+        expected = "      \n      \n      \n :::  \n :a:  \n :::  "
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
+    end
+
+    context "horigin = :right" do
+      before do
+        f1.horigin = :right
+      end
+
+      it "parent frame places it to the right" do
+        expected = "      \n      \n      \n   :::\n   :a:\n   :::"
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
     end
 
     context "available_size.zero? = true" do
       before do
         f.available_size = sizeclass.zero
-        f.size = sizeclass.new 6, 6
+        f1.horigin = :center
       end
 
-      it "still puts the nested frame at the bottom" do
-        expected = "      \n      \n      \n :::  \n :a:  \n :::  "
-        actual = f.to_s
-        expect(actual).to eq expected
+      context "size is Tuple" do
+        before do
+          f.size = console_size
+        end
+
+        it "still puts the nested frame at the bottom" do
+          expected = "      \n      \n      \n :::  \n :a:  \n :::  "
+          actual = f.to_s
+          expect(actual).to eq expected
+        end
       end
 
       context "size = :none" do
@@ -110,42 +142,6 @@ describe Remedy::Frame do
           actual = f.to_s
           expect(actual).to eq expected
         end
-      end
-    end
-
-    context "horigin = :center" do
-      before do
-        f.size = Tuple 5, 5
-        f.available_size = Tuple 5, 5
-        f.arrangement = :arbitrary
-        f.reset!
-
-        f1.horigin = :center
-        f << f1
-      end
-
-      it "parent frame places it in the middle" do
-        expected = "     \n     \n ::: \n :a: \n ::: "
-        actual = f.to_s
-        expect(actual).to eq expected
-      end
-    end
-
-    context "horigin = :right" do
-      before do
-        f.size = Tuple 5, 5
-        f.available_size = Tuple 5, 5
-        f.arrangement = :arbitrary
-        f.reset!
-
-        f1.horigin = :right
-        f << f1
-      end
-
-      it "parent frame places it to the right" do
-        expected = "     \n     \n  :::\n  :a:\n  :::"
-        actual = f.to_s
-        expect(actual).to eq expected
       end
     end
 

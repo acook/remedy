@@ -17,29 +17,39 @@ module Remedy
     # @see #resize
     # @see Console.set_console_resized_hook!
     def initialize auto_resize: true, auto_redraw: true
-      @buffer = Screenbuffer.new Console.size, fill: ".", parent: self, name: "screen#init"
+      @mainframe = Frame.new name: "screen#init", parent: self
+      mainframe.fill = "."
+      mainframe.size = :fill
+      mainframe.arrangement = :arbitrary
 
       Console.set_console_resized_hook! do |new_size|
         resize new_size, redraw: auto_redraw
       end if auto_resize
     end
-    attr_accessor :buffer
+    attr_accessor :mainframe
 
     # Draw the buffer to the console using raw output.
     # @param override [Remedy::Frame,String] temporarily replace the contents with this instead (until the next redraw!)
     # @return [void]
     def draw override = nil
       if override then
-        Align.hv_center override, buffer
+        f = Frame.new name: "screen#draw/override", parent: self, content: override
+        f.size = :fill
+        f.fill = "."
+        f.available_size = mainframe.available_size
+        f.halign = :center
+        f.valign = :center
+        frame = f
       else
-        refresh_buffer
+        refresh
+        frame = mainframe
       end
       ANSI.screen.safe_reset!
-      Console.output << buffer.to_ansi
+      Console.output << frame.to_ansi
     end
 
     def frames
-      @frames ||= Array.new
+      mainframe.contents
     end
 
     # This sets the new screen size and rebuilds the buffer before redrawing it.
@@ -59,63 +69,27 @@ module Remedy
     # @param new_size [Remedy::Tuple] the new size of the terminal
     # @return [void]
     def resize new_size, redraw: true
-      buffer.size = new_size
+      mainframe.available_size = new_size
       draw if redraw
     end
 
     def to_a
-      refresh_buffer
-      buffer.to_a
+      refresh
+      mainframe.to_a
     end
 
     def to_s
-      refresh_buffer
-      buffer.to_s
+      refresh
+      mainframe.to_s
     end
 
     def to_ansi
-      refresh_buffer
-      buffer.to_ansi
+      refresh
+      mainframe.to_ansi
     end
 
-    def refresh_buffer
-      buffer.reset!
-      populate_buffer
-    end
-
-    def populate_buffer
-      frames.sort_by(&:depth).each do |frame|
-        frame.available_size = buffer.size
-        content = frame.compile_contents
-        fsize = frame.computed_size
-
-        case frame.vorigin
-        when :top
-          voffset = 0
-        when :center
-          voffset = Align.mido fsize.height, buffer.size.height
-        when :bottom
-          voffset = buffer.size.height - fsize.height
-        else
-          raise "Unknown vorigin:#{frame.vorigin}"
-        end
-
-        case frame.horigin
-        when :left
-          hoffset = 0
-        when :center
-          hoffset = Align.mido fsize.width, buffer.size.width
-        when :right
-          hoffset = buffer.size.width - fsize.width
-        else
-          raise "Unknown horigin:#{frame.horigin}"
-        end
-
-        voffset += frame.offset.height
-        hoffset += frame.offset.width
-
-        buffer[voffset,hoffset] = content
-      end
+    def refresh
+      mainframe.compile_contents
     end
   end
 end

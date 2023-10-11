@@ -509,11 +509,8 @@ describe Remedy::Frame do
         f.arrangement = :arbitrary
         f.reset!
 
-
         f1.size = Tuple 3, 3
         f1.fill = "."
-        f1.valign = :center
-        f1.halign = :center
 
         f1.horigin = :center
         f1.vorigin = :bottom
@@ -526,7 +523,7 @@ describe Remedy::Frame do
         expect(actual).to eq expected
       end
 
-      context "available size is zero" do
+      context "available_size.zero? = true" do
         before do
           f.available_size = sizeclass.zero
         end
@@ -535,6 +532,21 @@ describe Remedy::Frame do
           expected = "     \n     \n ... \n .a. \n ... "
           actual = f.to_s
           expect(actual).to eq expected
+        end
+
+        context "size = :none" do
+          before do
+            f.size = :none
+            f1.depth = 2
+            f2.size = Tuple 2,1
+            f << f2
+          end
+
+          it "puts the frame at the bottom of the actual space" do
+            expected = "b  \n...\n.a.\n..."
+            actual = f.to_s
+            expect(actual).to eq expected
+          end
         end
       end
     end

@@ -38,6 +38,8 @@ module Remedy
       buffer[voffset,hoffset] = content
     end
 
+    # Middle offset.
+    #
     # Given the actual space something takes up,
     #   determine what the offset to get it centered in the available space.
     #
@@ -48,6 +50,20 @@ module Remedy
       return 0 unless actual < available
 
       offset = ((available - actual) / 2.0).floor
+    end
+
+    # Bottom offset.
+    #
+    # Given the actual space something takes up,
+    #   determine what the offset to get it at the far edge in the available space.
+    #
+    # @param actual [Numeric] the space already taken
+    # @param available [Numeric] the available space
+    # @return [Integer] the offset from the end of the availabe space to place the actual content at the end
+    def boto actual, available
+      return available unless actual < available
+
+      offset = available - actual
     end
 
     # Given the actual space something takes up,

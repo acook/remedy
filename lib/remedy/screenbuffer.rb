@@ -92,7 +92,7 @@ module Remedy
 
     # @return [Remedy::Tuple] the size of the buffer in rows and columns
     def size
-      @size
+      @size.dup
     end
 
     # @return [Array<String>] the contents of the buffer as an array of strings

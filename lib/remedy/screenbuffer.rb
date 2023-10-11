@@ -16,7 +16,7 @@ module Remedy
     # @param ellipsis [String] the character used to indicate truncated lines,
     #   if set to `nil` then content will extend to the edge of the screen
     # @param charwidth [Numeric] in case we are able to support multiple character widths in the future
-    def initialize size, fill: " ", nl: ?\n, ellipsis: "…", charwidth: 1, fit: false, parent: nil
+    def initialize size, fill: " ", nl: ?\n, ellipsis: "…", charwidth: 1, fit: false, parent: nil, name: object_id
       raise ArgumentError, "size cannot be `nil'!" if size.nil?
       @charwidth = charwidth
       @size = size
@@ -26,8 +26,9 @@ module Remedy
       @buf = new_buf
       @fit = fit
       @parent = parent
+      @name = name
     end
-    attr_accessor :fill, :nl, :ellipsis, :charwidth, :fit, :parent
+    attr_accessor :fill, :nl, :ellipsis, :charwidth, :fit, :parent, :name
 
     # Get the contents of the buffer at a given coordinate.
     #
@@ -197,6 +198,8 @@ module Remedy
         truncated_value = value[0,size.width - coords.col]
         truncated_value[-1] = ellipsis[0,charwidth] if ellipsis && truncated_value.length < value.length
       end
+
+      raise RangeError, "Negative range #{coords} extends beyond boundary #{size} by #{size.aogd coords.abs} for #{"#{parent.name}/" if parent && parent.respond_to?(:name)}#{name}" if (-coords.row) > size.height
 
       buf[coords.row][coords.col,truncated_value.length] = truncated_value
     end

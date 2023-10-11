@@ -17,7 +17,7 @@ module Remedy
     # @see #resized
     # @see Console.set_console_resized_hook!
     def initialize auto_resize: true
-      @buffer = Screenbuffer.new Console.size, fill: "."
+      @buffer = Screenbuffer.new Console.size, fill: ".", parent: self, name: "screen#init"
 
       Console.set_console_resized_hook! do |new_size|
         resized new_size

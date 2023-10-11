@@ -163,7 +163,7 @@ module Remedy
       if buffer then
         buffer.reset!
       else
-        @buffer = Screenbuffer.new computed_size, fill: fill, nl: nl
+        @buffer = Screenbuffer.new computed_size, fill: fill, nl: nl, parent: self, name: "compile_contents"
       end
 
       hoffset = compute_horizontal_offset csize, computed_size
@@ -270,7 +270,7 @@ module Remedy
         buffer_size = available_size
         expand_buffer = available_size.zero?
       end
-      arrange_buffer = Screenbuffer.new buffer_size, fit: expand_buffer, fill: fill
+      arrange_buffer = Screenbuffer.new buffer_size, fit: expand_buffer, fill: fill, parent: self, name: "arrange_arbitrary"
 
       result = depth_sort(content_to_arrange).each do |frame|
         # special case handling of plain Strings and Arrays

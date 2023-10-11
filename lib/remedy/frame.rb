@@ -165,6 +165,7 @@ module Remedy
 
       if buffer then
         buffer.reset!
+        buffer.resize computed_size
       else
         @buffer = Screenbuffer.new computed_size, fill: fill, nl: nl, parent: self, name: "compile_contents"
       end

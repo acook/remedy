@@ -274,7 +274,7 @@ module Remedy
 
       result = depth_sort(content_to_arrange).each do |frame|
         # FIXME: what happens when the buffer size is zero? the buffer will grow, right?
-        frame.available_size = arrange_buffer.size
+        frame.available_size = buffer_size
         content = frame.compile_contents
         fsize = frame.computed_size || frame.content_size
 
@@ -282,20 +282,24 @@ module Remedy
         when :top
           voffset = 0
         when :center
-          voffset = Align.mido fsize.height, arrange_buffer.size.height
+          voffset = Align.mido fsize.height, buffer_size.height
         when :bottom
-          voffset = arrange_buffer.size.height - fsize.height
+          voffset = Align.boto fsize.height, buffer_size.height
         else
           raise "Unknown vorigin:#{frame.vorigin}"
         end
+
+        # this line works around an edge case where only :top vorigins would
+        #   be rendered when available_size was zero and the frame size was :none
+        voffset = 0 if frame.vorigin != :top && buffer_size.height == 0 && voffset < 0
 
         case frame.horigin
         when :left
           hoffset = 0
         when :center
-          hoffset = Align.mido fsize.width, arrange_buffer.size.width
+          hoffset = Align.mido fsize.width, buffer_size.width
         when :right
-          hoffset = arrange_buffer.size.width - fsize.width
+          voffset = Align.boto fsize.height, buffer_size.height
         else
           raise "Unknown horigin:#{frame.horigin}"
         end
@@ -306,6 +310,7 @@ module Remedy
         offset = Tuple voffset, hoffset
 
         arrange_buffer[offset] = content
+        buffer_size = arrange_buffer.size
       end
 
       arrange_buffer.to_a

@@ -24,6 +24,7 @@ describe Remedy::Screen do
 
   before(:each) do
     console.size_override = size_override
+    s.resize size_override, redraw: false
   end
 
   context "captured STDIO" do
@@ -108,6 +109,8 @@ describe Remedy::Screen do
     before do
       frame.size = Tuple(0, 0.5)
       frame.fill = "."
+      s.mainframe.fill = " "
+      s.frames << frame
     end
 
     it "resizes internal frames" do
@@ -121,8 +124,6 @@ describe Remedy::Screen do
         "  ....   "
       ].join ?\n
 
-      s.buffer.fill = " "
-      s.frames << frame
       s.resize new_size_override, redraw: false
       actual = s.to_s
 
@@ -141,6 +142,8 @@ describe Remedy::Screen do
       frame.offset = Tuple -1, -2
       frame.size = Tuple(4, 0.5)
       frame.fill = "."
+      s.mainframe.fill = " "
+      s.frames << frame
     end
 
     it "moves the frame away from the point of origin" do
@@ -153,8 +156,6 @@ describe Remedy::Screen do
         "         "
       ].join ?\n
 
-      s.buffer.fill = " "
-      s.frames << frame
       actual = s.to_s
 
       expect(actual).to eq expected

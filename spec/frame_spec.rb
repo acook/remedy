@@ -571,8 +571,8 @@ describe Remedy::Frame do
       f.fill = "."
     end
 
-    it "places frames on top of each other according to their depth and order" do
-      expected = [
+    let(:expected) do
+      [
         ":::....",
         ":a:....",
         "::***..",
@@ -581,14 +581,32 @@ describe Remedy::Frame do
         "....#c#",
         "....###"
       ].join ?\n
+    end
+
+    it "places frames on top of each other according to their depth and order" do
+      actual = f.to_s
+      expect(actual).to eq expected
+    end
+
+    it "treats plain strings as layer 0" do
+      f.reset!
+      f << f2
+      f << f3
+      f << f1.to_s
 
       actual = f.to_s
       expect(actual).to eq expected
     end
 
-    xit "treats plain strings as layer 0" do
-      actual = f.to_s
-      expect(actual).to eq expected
+    context "negative depth" do
+      before do
+        f1.depth = -1
+      end
+
+      it "places frames properly" do
+        actual = f.to_s
+        expect(actual).to eq expected
+      end
     end
   end
 end

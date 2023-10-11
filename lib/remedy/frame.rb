@@ -104,7 +104,8 @@ module Remedy
     attr_accessor :buffer
 
     def << new_content
-      if new_content.is_a? String or new_content.is_a? Array then
+      case new_content
+      when String, Array
         conformed_content = TextUtil.nlclean(new_content)
       else
         conformed_content = new_content
@@ -250,7 +251,7 @@ module Remedy
     end
 
     def arrange_contents
-      content_to_arrange = @contents
+      content_to_arrange = depth_sort
 
       case arrangement
       when :stacked
@@ -274,7 +275,7 @@ module Remedy
       end
       arrange_buffer = Screenbuffer.new buffer_size, fit: expand_buffer, fill: fill, parent: self, name: "arrange_arbitrary"
 
-      result = depth_sort(content_to_arrange).each do |frame|
+      result = content_to_arrange.each do |frame|
         # special case handling of plain Strings and Arrays
         unless frame.is_a? Frame then
           arrange_buffer[Tuple.zero] = frame
@@ -326,7 +327,7 @@ module Remedy
     end
 
     def arrange_columnar content_to_arrange
-      content_list = depth_sort(content_to_arrange)
+      content_list = content_to_arrange
       rows = maxsizeof(content_list).row
       result = Array.new
 
@@ -393,6 +394,8 @@ module Remedy
 
     def depth_sort content_list = contents
       content_list.sort do |a,b|
+        a.parent = self if a.respond_to? :parent=
+        b.parent = self if b.respond_to? :parent=
         depthof(a) <=> depthof(b)
       end
     end

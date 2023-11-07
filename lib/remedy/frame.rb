@@ -45,7 +45,7 @@ module Remedy
 
       # the maximum size that this frame wants to be, the actual size may be smaller
       # :none - frame has no size, contents are not aligned
-      # :auto - frame conforms to the size of its largest content and alignts to it
+      # :auto - frame conforms to the size of its largest content and aligns to it
       # :fill - the frame tries to fill as much space as possible
       # Tuple - specify a Tuple to constrain it to a specific size
       # Tuple.zero is same as :none

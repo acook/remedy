@@ -1,8 +1,9 @@
 module Remedy
-    # Formerly known as "Remedy::Size", with related concepts in my other projects
-    #   called things like "Coordinate", "Pair", or similar
     # Used primarily to contain dimensional numeric values such as the sizes of screen areas,
-    #   offsets in two or more dimensions, etc
+    #   offsets in two or more dimensions, etc.
+    #
+    # Formerly known as `Remedy::Size`. Related to concepts in other projects
+    #   called things like `Coordinate`, `Pair`, `Vector`, or similar.
   class Tuple
     def initialize *new_dimensions
       dims = new_dimensions.flatten

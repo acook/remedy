@@ -1,5 +1,7 @@
 require_relative 'spec_helper'
 require 'remedy/screenbuffer'
+require "remedy/partial"
+require "remedy/view"
 
 describe Remedy::Screenbuffer do
   subject(:sb){ described_class.new size, fill: "." }

@@ -220,6 +220,7 @@ module Remedy
         raise "Unknown max_size:#{size}"
       end
     end
+    alias_method :actual_size, :compute_actual_size
 
     def compute_horizontal_offset original_size, actual_size
       case halign

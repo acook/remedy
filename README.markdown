@@ -45,7 +45,7 @@ There are objects for input as well as output, including low level console keyst
 
 The `Interaction` object wraps raw keyboard reads and streamlines some aspects of accepting keyboard input.
 
-For instance to get a keypress from the terminal and display it:
+For instance to get a keypress from the terminal and display what it is called:
 
 ```ruby
   include Remedy
@@ -75,7 +75,7 @@ Content in `Remedy::Partial`s will be truncated as needed to accommodate the hea
 ```ruby
   include Remedy
   title = Partial.new
-  title << "Someone Said These Were Good"
+  title << "Two Longer Jokes"
 
   jokes = Content.new
   jokes << %q{1. A woman gets on a bus with her baby. The bus driver says: 'Ugh, that's the ugliest baby I've ever seen!' The woman walks to the rear of the bus and sits down, fuming. She says to a man next to her: 'The driver just insulted me!' The man says: 'You go up there and tell him off. Go on, I'll hold your monkey for you.'}
@@ -85,7 +85,9 @@ Content in `Remedy::Partial`s will be truncated as needed to accommodate the hea
   disclaimer << "According to a survey they were funny. I didn't make them."
 
   screen = Viewport.new
-  screen.draw jokes, Size.new(0,0), title, disclaimer
+  screen.header = title
+  screen.footer = disclaimer
+  screen.draw jokes
 ```
 
 ### Console
@@ -101,8 +103,8 @@ The most interesting function in my opinion is the callback that gets triggered 
 
   Console.set_console_resized_hook! do |size|
     notice = Partial.new
-    notice << "You just resized your screen!\n\nNew size:"
-    notice << size
+    notice << "You just resized your screen!"
+    notice << "New size: #{size}"
     screen.draw notice
   end
 ```

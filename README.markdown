@@ -110,7 +110,7 @@ The most interesting function in my opinion is the callback that gets triggered 
 Remedy in the Wild
 ------------------
 
-Remedy was originally written for my own console-based game which was sort of like Dwarf Fortress. Most of the project files were lost, but since Remedy was extracted from it and open-sourced it has lived on.
+Remedy was originally written for my own console-based game. Remedy was extracted from it and open-sourced and it has lived on.
 
 Here are some projects that use Remedy:
 

@@ -37,6 +37,7 @@ module Remedy; module Console; module Resize
         end
       end
 
+    ensure
       resized!
     end
   end

@@ -68,7 +68,7 @@ module Remedy
       print " -- #{message}" if message
 
       ANSI.cursor.hide!
-      key = Keyboard.get
+      Keyboard.get
     end
   end
 end

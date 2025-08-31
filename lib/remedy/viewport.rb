@@ -8,7 +8,7 @@ module Remedy
     def draw content, scroll = Size.zero, header = Partial.new, footer = Partial.new
       range = range_find content, scroll, available_space(header,footer)
 
-      viewable_content = content.excerpt *range
+      viewable_content = content.excerpt(*range)
 
       view = View.new viewable_content, header, footer
 

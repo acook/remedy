@@ -80,7 +80,7 @@ module Remedy
 
     def set_console_resized_hook!
       Console::Resize.set_console_resized_hook! do |*args|
-        yield *args
+        yield(*args)
       end
     end
 

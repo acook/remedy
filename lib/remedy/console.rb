@@ -31,6 +31,9 @@ module Remedy
       @output = new_output
     end
 
+    # Put the terminal into raw mode and evaluates the provided block before returning to cooked mode.
+    #
+    # @yieldparams [Tuple] (see size)
     def raw
       raw!
       result = yield
@@ -39,26 +42,31 @@ module Remedy
       return result
     end
 
+    # Sets raw mode on the terminal and disables keypress echo.
     def raw!
       input.echo = false
       input.raw!
     end
 
+    # Sets cooked mode on the terminal enabled keypress echo.
     def cooked!
       input.echo = true
       input.cooked!
     end
 
+    # @return [Numeric] the number of columns available in the terminal
     def columns
       size.cols
     end
     alias_method :width, :columns
 
+    # @return [Numeric] the number of rows available in the terminal
     def rows
       size.rows
     end
     alias_method :height, :rows
 
+    # @return [Tuple] the size of the terminal in rows and columns
     def size
       return @size_override if @size_override
 
@@ -70,14 +78,20 @@ module Remedy
       end
     end
 
+    # @note Useful for testing but should not be used in normal operation without good cause.
+    #   Cannot change the actual size of the terminal.
     def size_override= new_size
       @size_override = new_size
     end
 
+    # Detect if the terminal is interactive or if the program is being run in a pipe.
     def interactive?
       input.isatty
     end
 
+    # @note One of the most powerful methods in the whole library for building robust TUIs!
+    #
+    # Pass a block to this method to perform an action when the terminal is resized. Typically this will be to redraw the contents to fit the new size, such as with {Screen.draw}.
     def set_console_resized_hook!
       Console::Resize.set_console_resized_hook! do |*args|
         yield(*args)

@@ -24,6 +24,8 @@ module Remedy
     end
 
     # This is the target size of this pane, but may still be truncated if there is not enough room
+    #
+    # @return [Tuple] the size of the Pane
     def size
       Tuple(height, width)
     end

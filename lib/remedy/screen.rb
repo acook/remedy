@@ -8,10 +8,11 @@ module Remedy
   class Screen
     # Create a new Screen object.
     #
-    # Only one Screen object should be in use at a time
-    #   because they talk directly to the raw terminal.
-    #   But feel free to have multiple available and swap between them,
-    #   Might be good for having multiple workspaces.
+    # @note Only one Screen object should be in ***use*** at a time because a Screen instance will take over the whole terminal.
+    #   But you can have multiple {Screen} instances available and swap between them on the fly.
+    #   Good for having different workspaces and layouts or managing multiple applets that the user can switch to.
+    #
+    #   Just remember to reset the {Console.set_console_resized_hook!} for the correct Screen!
     #
     # @param auto_resize [Boolean] can be disabled if you are setting up your own console resize hook
     # @see #resize
@@ -26,12 +27,24 @@ module Remedy
         resize new_size, redraw: auto_redraw
       end if auto_resize
     end
-    attr_accessor :mainframe, :name
 
-    # Draw the buffer to the console using raw output.
-    # @param override [Remedy::Frame,String] temporarily replace the contents with this instead (until the next redraw!)
+    # @return [Frame] the {Frame} object which the {Screen} will use to draw to the terminal
+    attr_accessor :mainframe
+    # @return [String] the name of this {Screen} - can be anything to help you keep track of it and assist with debugging
+    attr_accessor :name
+
+    # Draw to the terminal.
+    #
+    # @note Any `override` will only be applied for this single draw call.
+    #   If there is a {redraw} such as due to a {resize} event, it will draw the original contents.
+    #   An `override` is good for testing but not general use.
+    #
+    #   If you want the change to persist then consider replacing the {mainframe} instead.
+    #
+    # @param override [Remedy::Frame,String] temporarily replace the contents of the {Screen} with this instead (until the next redraw!)
     # @return [void]
     def draw override = nil
+      # FIXME: Remove this call to Console.size, it is redundant.
       mainframe.available_size = Console.size
       if override then
         f = Frame.new name: "screen#draw/override", parent: self, content: override
@@ -49,16 +62,17 @@ module Remedy
       Console.output << frame.to_ansi
     end
 
+    # @return [Array<Frame>] the list of top level frames inside the {mainframe}
     def frames
       mainframe.contents
     end
 
-    # This sets the new screen size and rebuilds the buffer before redrawing it.
+    # Resize the internal representation of the screen and optionally redraw the terminal.
     #
-    # Called automatically unless `auto_resize` was set to `false`,
-    #   or if the console resized hook was changed to something else.
+    # - If `redraw` is `false`, then `new_size` is stored in preparation for the next {draw} call.
+    # - If `redraw` is `true` then after it stores the `new_size` it also immediately calls {draw}.
     #
-    # If setting up your own `Console.set_console_resized_hook!` callback
+    # If setting up your own {Console.set_console_resized_hook!} callback
     #   then you can use this as a starting point:
     #
     # ```ruby
@@ -67,7 +81,11 @@ module Remedy
     # end
     # ```
     #
-    # @param new_size [Remedy::Tuple] the new size of the terminal
+    # @note This method is called automatically when the terminal is resized unless `auto_resize` was set to `false` on {initialize}
+    #   or if the {Console.set_console_resized_hook!} is overwritten by something else (such as by another {Screen} instance).
+    #
+    # @param new_size [Remedy::Tuple] the updated dimensions of the terminal, which will be sent to {Screen}'s internal {mainframe} object using the {Frame#size} method
+    # @param redraw [Boolean] whether the terminal should immediately be redrawn by calling {draw}
     # @return [void]
     def resize new_size, redraw: true
       mainframe.available_size = new_size

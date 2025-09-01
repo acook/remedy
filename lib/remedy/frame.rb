@@ -158,6 +158,7 @@ module Remedy
 
       c = arrange_contents
 
+      # Give up and return the raw arranged contents since we have no idea what the size of the terminal is.
       return c if size == :none
 
       csize = sizeof c
@@ -188,7 +189,7 @@ module Remedy
     #   Technically, `:none` will always result in `content_size`,
     #   while `:auto` could in theory be further modified by the alignment and later processing.
     #
-    # @parram arranged_size [Remedy::Tuple] an externally determined size after preprocessing
+    # @param arranged_size [Remedy::Tuple] an externally determined size after preprocessing
     # @return [Remedy::Tuple] output size in rows/height and columns/width
     def compute_actual_size arranged_size = content_size
       case size

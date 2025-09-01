@@ -1,0 +1,86 @@
+module Remedy
+  module Align
+
+    module_function
+
+    # Center content with a single line by padding out the left and right sides.
+    #
+    # @param content [String] the line to be centered
+    # @param size [Remedy::Tuple] a Tuple with a width - it controls the centering
+    # @param fill [String] the string to fill the space with
+    def h_center_p content, size, fill: " "
+      head, tail = middle_spacing content.length, size.width
+      (fill * head) + content + (fill * tail)
+    end
+
+    # Left align by padding the right side to fill out the total width.
+    def left_p content, size, fill: " "
+      space = size.width - content.length
+      return content if space < 0
+      content + (fill * space)
+    end
+
+    # Right align by padding the left side to fill out the total width.
+    def right_p content, size, fill: " "
+      space = size.width - content.length
+      return content if space < 0
+      (fill * space) + content
+    end
+
+    # Center content in the middle of a buffer, both vertically and horizontally.
+    #
+    # @param content [Remedy::Partial] any object that responds to `height`, `width`, and a `to_a` that returns an array of strings
+    # @param buffer [Remedy::Screenbuffer] a screenbuffer to write to
+    # @return [content] whatever was passed in as the `content` param will be returned
+    def hv_center content, buffer
+      voffset = mido content.height, buffer.size.height
+      hoffset = mido content.width, buffer.size.width
+      buffer[voffset,hoffset] = content
+    end
+
+    # Middle offset.
+    #
+    # Given the actual space something takes up,
+    #   determine what the offset to get it centered in the available space.
+    #
+    # @param actual [Numeric] the space already taken
+    # @param available [Numeric] the available space
+    # @return [Integer] the offset from the end of the availabe space to center the actual content
+    def mido actual, available
+      return 0 unless actual < available
+
+      offset = ((available - actual) / 2.0).floor
+    end
+
+    # Bottom offset.
+    #
+    # Given the actual space something takes up,
+    #   determine what the offset to get it at the far edge in the available space.
+    #
+    # @param actual [Numeric] the space already taken
+    # @param available [Numeric] the available space
+    # @return [Integer] the offset from the end of the availabe space to place the actual content at the end
+    def boto actual, available
+      return available unless actual < available
+
+      offset = available - actual
+    end
+
+    # Given the actual space something takes up,
+    #   determine what the offset to get it centered in the available space,
+    #   including the trailing space remaining.
+    #
+    # @param actual [Numeric] the space already taken
+    # @param available [Numeric] the available space
+    # @return [Array<Integer>] two element Array with the remaining space on each side
+    #   (since contents may be shifted to one side or the other by 1 space)
+    def middle_spacing actual, available
+      return [0,0] unless actual < available
+
+      head = mido actual, available
+      tail = available - (head + actual)
+
+      [head, tail]
+    end
+  end
+end

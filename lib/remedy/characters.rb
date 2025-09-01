@@ -127,6 +127,7 @@ module Remedy
 
     # Glyphs and Alternate Names
 
+    # Single unicode glyphs to represent whitespace and unprintable control characters.
     def gremlins
       {
         space:           "\u2420",

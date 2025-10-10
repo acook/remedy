@@ -144,7 +144,11 @@ module Remedy
     end
   end
 
-  def Key object
+  # @note This method only exists if the file `remedy/key.rb` is loaded.
+  # @param object [Key] a {Key} that will be returned, unchanged
+  # @param object [String] a String that will be used to initialize a new {Key}
+  # @return [Key] either the existing {Key} that was passed in or a new {Key} that wraps the `object` passed in.
+  def self.Key object
     if object.is_a? Key then
       object
     else

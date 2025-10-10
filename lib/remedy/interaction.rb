@@ -13,10 +13,7 @@ module Remedy
     # A simple way to ask a user to confirm an action.
     # @return [Boolean] `true` if the use presses `y`, otherwise `false`
     def confirm message = 'Confirm?'
-      ANSI.cursor.home!
-      ANSI.command.clear_line!
-
-      print message, ' y/n '
+      display message, ' y/n '
       if Keyboard.get === :y then
         yield if block_given?
         true
@@ -45,11 +42,25 @@ module Remedy
     def debug!
       require 'pry'
       binding.pry
+    rescue LoadError => ex
+      warn 'Unable to load Pry!'
+      warn ex.full_message(true)
     end
 
-    def display key
+    # Display a response to the user.
+    #
+    # It displays the message *in place* (eg overwriting the current line) rather than on the next line.
+    #
+    # @return `nil`
+    def display message
       ANSI.command.clear_line!
-      print " -- You pressed: #{key.inspect}"
+      print "#{message}"
+    end
+
+    # Display a {Key}'s internals for debugging purpose.
+    # @return `nil`
+    def display_key key
+      display " -- You pressed: #{key.inspect}"
     end
 
     # A quick-and-dirty way to integrate {Remedy} and interactivity into your Ruby command line application.
@@ -99,16 +110,16 @@ module Remedy
       Keyboard.raise_on_control_c!
 
       super do
-        print " -- #{message}" if message
+        display " -- #{message}" if message
 
         ANSI.cursor.hide!
         key = Keyboard.get
 
         if key == ?\C-q then
-          display key
+          display_key key
           quit!
         elsif key == ?\C-d and defined? Pry then
-          display key
+          display_key key
           debug!
         end
 
@@ -116,13 +127,14 @@ module Remedy
       end
     end
 
-    # @note If you called {initialize} with a `message` parameter, that same `message` will be displayed as a prompt.
+    # @note If you called {initialize} with a `message` parameter, that same `message` will be displayed
+    #   to the user before it reads the user's key press.
     #
     # Get a single key press from the user.
     #
     # @return [Key] the key the user pressed
     def get_key
-      print " -- #{message}" if message
+      display " -- #{message}" if message
 
       ANSI.cursor.hide!
       Keyboard.get

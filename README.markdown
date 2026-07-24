@@ -117,7 +117,7 @@ Here are some projects that use Remedy:
 - A screenreader-friendly code editor for blind and visually impaired programmers: [Viper](https://github.com/edhowland/viper)
 - [The Official ElasticSearch Ruby Connector](https://github.com/elastic/connectors-ruby)
 - A multiplayer Yahtzee for web and console: [YahtzeeGame](https://github.com/ProgrammingPractice/YahtzeeGame)
-- Twitter/RSS/Facebook reader: [noizee](https://github.com/acook/noizee)
+- Twitter/RSS/Facebook reader: [noizee](https://codeberg.org/acook/noizee)
 
 Check them out!
 

@@ -4,7 +4,11 @@ source 'https://rubygems.org'
 gemspec
 
 unless ENV['CI'] then
-  gem 'pry'
-  gem 'pry-doc'
-  gem 'pry-theme'
+  gem "pry"
+  gem "pry-doc"
+  gem "pry-coolline"
+  gem "pry-theme"
+  gem "logsaber"
+  gem "yard"
+  gem "webrick"
 end

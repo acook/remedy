@@ -7,6 +7,7 @@ class Menu
 
   def initialize
     @viewport = Viewport.new
+    @pane = Pane.new viewport: @viewport
   end
 
   # will do basic setup and then loop over user input
@@ -34,7 +35,10 @@ class Menu
 
   # this tells the Viewport to draw to the screen
   def draw
-    @viewport.draw content, Size.zero, header, footer
+    @viewport.content = content
+    @viewport.header = header
+    @viewport.footer = footer
+    @viewport.draw
   end
 
   # this is the body of our menu, it will be squished if the terminal is too small

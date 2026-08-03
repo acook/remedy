@@ -1,0 +1,8 @@
+source "https://rubygems.org"
+
+gem "remedy", path: "../.."
+gem "pry"
+gem "pry-doc"
+gem "pry-coolline"
+gem "pry-theme"
+gem "logsaber"

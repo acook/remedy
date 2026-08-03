@@ -37,7 +37,7 @@ module Remedy
     end
 
     def size
-      Size.new height, width
+      Tuple.new height, width
     end
 
     def to_a
